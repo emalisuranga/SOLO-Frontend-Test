@@ -15,7 +15,7 @@ import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import { useParams } from "react-router-dom";
 import useSalarySlipStore from "../../../store/salarySlipStore";
-// import Loading from "../../../component/Common/Loading";
+import Loading from "../../../component/Common/Loading";
 import {
   CustomTableCell,
   SmallTypography,
@@ -122,7 +122,7 @@ const SalarySlipDetails = () => {
           height: "100vh",
         }}
       >
-        {/* <Loading /> */}
+        <Loading />
       </Box>
     );
   }
