@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
-import SideBar from './component/SideBar';
+import SideBar from './component/sidebar/SideBar';
 import AppRoutes from './routes/AppRoutes';
 
 const App = () => {
