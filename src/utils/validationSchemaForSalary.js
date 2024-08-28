@@ -58,7 +58,7 @@ export const getSalaryValidationSchema = (t) => {
       function () {
         const { scheduledWorkingDays, numberOfWorkingDays, numberOfPaidHolidays = 0, numberOfNonPaidLeave = 0 } = this.parent;
 
-        const checkCorrectDayOff = scheduledWorkingDays - numberOfWorkingDays;
+        const checkCorrectDayOff = Math.max(scheduledWorkingDays - numberOfWorkingDays, 0);
         const currantDayOff = numberOfNonPaidLeave + numberOfPaidHolidays;
 
         return checkCorrectDayOff === currantDayOff;
