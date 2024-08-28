@@ -16,6 +16,7 @@ import {
 } from "../../utils/formUtils";
 import useSalaryStore from "../../store/salaryStore";
 import useEmployeeStore from "../../store/employeeStore";
+import Loading from "../../component/Common/Loading";
 
 function CustomStepperForSalary({ sections, initialData }) {
   const navigate = useNavigate();
@@ -28,7 +29,7 @@ function CustomStepperForSalary({ sections, initialData }) {
       setErrors: state.setErrors,
       errors: state.errors,
     }));
-  const { saveSalary, updateSalary, calculateSalaryDetails, generateIncomeTax } = useSalaryStore();
+  const { saveSalary, updateSalary, calculateSalaryDetails, generateIncomeTax, loading } = useSalaryStore();
   const { fetchEmployeeDetails } = useEmployeeStore();
 
   const [activeStep, setActiveStep] = useState(0);
@@ -71,18 +72,16 @@ function CustomStepperForSalary({ sections, initialData }) {
       return;
     }
     setErrors({});
-    // if (!initialData?.employeeId) {
-      if (activeStep === sections.length - 2) {
+    if (activeStep === sections.length - 2) {
         let initialFormData = {};
         const transformedData = transformFormDataForSalary(formData, initialData);
         initialData = await calculateSalaryDetails(transformedData);
         initialFormData = initializeUpdateSalaryFormData(sections, initialData);
         setFormData(initialFormData);
     }  
-    // }
     
-
     if (activeStep === sections.length - 1) {
+
       const transformedData = transformFormDataForSalary(formData, initialData);
 
       try {
@@ -163,6 +162,12 @@ function CustomStepperForSalary({ sections, initialData }) {
   };
 
   const handleFormChange = handleFormChangeUtil(formData, setFormData, setShowGenerateButton);
+
+  if (loading) {
+    return (
+        <Loading />
+    );
+  }
 
   return (
     <form onSubmit={(event) => event.preventDefault()}>

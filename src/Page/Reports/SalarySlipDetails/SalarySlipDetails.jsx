@@ -114,16 +114,7 @@ const SalarySlipDetails = () => {
 
   if (loading) {
     return (
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-        }}
-      >
         <Loading />
-      </Box>
     );
   }
 

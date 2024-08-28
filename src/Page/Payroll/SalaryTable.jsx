@@ -100,10 +100,10 @@ const SalaryTable = ({ salaries, onDelete }) => {
     setPage(0);
   };
 
-  const paginatedSalaries = salaries.slice(
+  const paginatedSalaries = Array.isArray(salaries) ? salaries.slice(
     page * rowsPerPage,
     page * rowsPerPage + rowsPerPage
-  );
+  ) : [];
 
   return (
     <>

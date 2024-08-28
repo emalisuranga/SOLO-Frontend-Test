@@ -41,8 +41,10 @@ const useEmployeeStore = create((set) => ({
     }
   },
   saveData: async (data) => {
+    set({ loading: true, error: null });
     try {
       const response = await api.post("/employees/save", data);
+      set({ employee: response.data, loading: false });
       return response.data;
     } catch (error) {
       console.error("Error saving data:", error);
@@ -50,11 +52,14 @@ const useEmployeeStore = create((set) => ({
     }
   },
   updateData: async (data) => {
+    set({ loading: true, error: null });
     try {
       const response = await api.put(`/employees/${data.id}`, data);
+      set({ employee: response.data, loading: false });
       return response.data;
     } catch (error) {
       console.error("Error updating data:", error);
+      set({ error: "Error fetching Update Employee details", loading: false });
       throw error;
     }
   },

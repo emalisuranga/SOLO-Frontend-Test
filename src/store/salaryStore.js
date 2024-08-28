@@ -62,9 +62,10 @@ const useSalaryStore = create((set) => ({
   },
 
   saveSalary: async (data) => {
-    set({ error: null }); // Reset error state before making the request
+    set({ loading: true, error: null });
     try {
       const response = await api.post("/salary-details/save", data);
+      set({ salaries: response.data, loading: false });
       return response.data;
     } catch (error) {
       return handleError(set, error, "Error saving salary data");
@@ -72,9 +73,10 @@ const useSalaryStore = create((set) => ({
   },
 
   updateSalary: async (id, data) => {
-    set({ error: null }); // Reset error state before making the request
+    set({ loading: true, error: null });
     try {
       const response = await api.put(`/salary-details/payment/${id}`, data);
+      set({ salaries: response.data, loading: false });
       return response.data;
     } catch (error) {
       return handleError(set, error, "Error updating salary data");
