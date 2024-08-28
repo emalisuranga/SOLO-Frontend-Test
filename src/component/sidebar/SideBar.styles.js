@@ -3,7 +3,7 @@ import MuiDrawer from '@mui/material/Drawer';
 import MuiAppBar from '@mui/material/AppBar';
 import ListItemButton from '@mui/material/ListItemButton';
 
-const drawerWidth = 240;
+const drawerWidth = 270;
 
 export const openedMixin = (theme) => ({
   width: drawerWidth,
