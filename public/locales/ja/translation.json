@@ -42,7 +42,8 @@
     "salaryDataUpdated": "給与データが正常に更新されました",
     "deleteConfirmationMessageEmployee": "この従業員を無効にしますか？ 後で再有効化することができます。",
     "deleteConfirmationMessageSalary": "この給与明細を削除してもよろしいですか？ この操作は元に戻せません。",
-    "validationError": "アプリケーションに検証エラーがあります。確認してください。"
+    "validationError": "アプリケーションに検証エラーがあります。確認してください。",
+    "remark_submit_message": "備考付きでフォームが送信されました"
   },
   "fields": {
     "firstName": "名前",

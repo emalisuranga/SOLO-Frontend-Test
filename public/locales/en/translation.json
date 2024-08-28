@@ -38,7 +38,8 @@
     "salaryDataUpdated": "Salary Data Updated successfully",
     "deleteConfirmationMessageEmployee": "Are you sure you want to deactivate this employee? You can reactivate them later if needed.",
     "deleteConfirmationMessageSalary": "Are you sure you want to delete this Salary Details? This action cannot be undone.",
-    "validationError": "Your application has validation errors, please check."
+    "validationError": "Your application has validation errors, please check.",
+    "remark_submit_message": "Form submitted with remarks"
   },
   "fields": {
     "firstName": "First Name",

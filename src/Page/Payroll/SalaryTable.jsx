@@ -16,6 +16,7 @@ import {
   DialogContentText,
   DialogTitle,
   Button,
+  TablePagination, // Import TablePagination
 } from "@mui/material";
 import {
   MoreVert as MoreVertIcon,
@@ -38,6 +39,10 @@ const SalaryTable = ({ salaries, onDelete }) => {
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
   const { deleteSalary, fetchSalaryDetailsByMonth } = useSalaryStore();
 
+  // Pagination states
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+
   const handleActionClick = (event, row) => {
     setAnchorEl(event.currentTarget);
     setCurrentRow(row);
@@ -49,7 +54,6 @@ const SalaryTable = ({ salaries, onDelete }) => {
   };
 
   const handleView = (row) => {
-    // onView(row.id);
     navigate(`/salary-details/view/${row.id}`);
     handleActionClose();
   };
@@ -60,7 +64,6 @@ const SalaryTable = ({ salaries, onDelete }) => {
   };
 
   const handlePrintPDF = (row) => {
-    // onView(row.id);
     navigate(`/salary-slip/${row.employeeId}/${row.id}`);
     handleActionClose();
   };
@@ -88,6 +91,20 @@ const SalaryTable = ({ salaries, onDelete }) => {
     }
   };
 
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  const paginatedSalaries = salaries.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage
+  );
+
   return (
     <>
       <TableContainer component={Paper}>
@@ -104,7 +121,7 @@ const SalaryTable = ({ salaries, onDelete }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {salaries.map((salary) => (
+            {paginatedSalaries.map((salary) => (
               <TableRow key={salary.id}>
                 <TableCell>{salary.employee.id}</TableCell>
                 <TableCell>{salary.employee.firstName}</TableCell>
@@ -139,6 +156,16 @@ const SalaryTable = ({ salaries, onDelete }) => {
             ))}
           </TableBody>
         </Table>
+        <TablePagination
+          rowsPerPageOptions={[5, 10]}
+          component="div"
+          count={salaries.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+          labelRowsPerPage={t("table.rowsPerPage")}
+        />
       </TableContainer>
 
       <Dialog open={openDialog} onClose={handleDialogClose}>

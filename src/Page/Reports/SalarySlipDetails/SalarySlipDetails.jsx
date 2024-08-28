@@ -72,7 +72,7 @@ const SalarySlipDetails = () => {
         setSnackbarMessage,
         setSnackbarSeverity,
         setSnackbarOpen,
-        t("actions.update_success")
+        t("actions.remark_submit_message")
       );
       exportAsPDF();
     } catch (error) {
