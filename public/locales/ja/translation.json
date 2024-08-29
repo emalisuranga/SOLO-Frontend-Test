@@ -44,7 +44,9 @@
     "deleteConfirmationMessageSalary": "この給与明細を削除してもよろしいですか？ この操作は元に戻せません。",
     "validationError": "アプリケーションに検証エラーがあります。確認してください。",
     "remark_submit_message": "備考付きでフォームが送信されました",
-    "duplicate_error": "同じ詳細を持つ従業員がすでに存在します。 情報を確認してもう一度お試しください。"
+    "duplicate_error": "同じ詳細を持つ従業員がすでに存在します。 情報を確認してもう一度お試しください。",
+    "fetchSalarySlipError": "給与明細の取得に失敗しました",
+    "fetchSalarySlipSuccess": "給与明細が正常に取得されました"
   },
   "fields": {
     "firstName": "名前",
