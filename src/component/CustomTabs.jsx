@@ -70,9 +70,12 @@ function CustomTabs({ sections, mode = 'add', initialData = {} }) {
         await saveData(formData);
         handleSuccess(setSnackbarMessage, setSnackbarSeverity, setSnackbarOpen, t("actions.add_success"));
       }
-      setTimeout(() => navigate("/employee"), 2000);
+      setTimeout(() => navigate("/employee"), 0);
     } catch (error) {
-      handleError(setSnackbarMessage, setSnackbarSeverity, setSnackbarOpen, error, t("actions.add_error"));
+      const errorMessage = error.response && error.response.status === 409 
+      ? t("actions.duplicate_error") 
+      : t("actions.add_error");
+      handleError(setSnackbarMessage, setSnackbarSeverity, setSnackbarOpen, error, errorMessage);
       console.error("Failed to save data", error);
     }
   }, [formData, t, updateData, saveData, setSnackbarMessage, setSnackbarSeverity, setSnackbarOpen, navigate]);
