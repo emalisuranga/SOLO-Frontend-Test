@@ -10,6 +10,7 @@ import { useTranslation } from "react-i18next";
 import CustomSnackbar from "./Common/CustomSnackbar";
 import { validateForm,initializeFormData, handleFormChange as handleChangeUtil } from "../utils/formUtils";
 import { handleSuccess, handleError } from "../utils/responseHandlers";
+import Loading from "../component/Common/Loading";
 
 function CustomTabs({ sections, mode = 'add', initialData = {} }) {
   const navigate = useNavigate();
@@ -26,7 +27,7 @@ function CustomTabs({ sections, mode = 'add', initialData = {} }) {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
-  const { saveData, updateData } = useEmployeeStore();
+  const { saveData, updateData,loading } = useEmployeeStore();
   const initialDataRef = useRef(initialData);
   const modeRef = useRef(mode);
 
@@ -91,6 +92,11 @@ function CustomTabs({ sections, mode = 'add', initialData = {} }) {
   const handleClear = () => {
     clearFormData();
   };
+  if (loading) {
+    return (
+        <Loading />
+    );
+  }
 
   return (
     <form onSubmit={handleSubmit}>
