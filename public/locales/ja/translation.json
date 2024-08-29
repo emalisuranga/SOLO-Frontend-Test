@@ -160,5 +160,15 @@
     "back": "戻る",
     "clear": "クリア",
     "generateIncomeTax": "所得税を計算"
+  },
+  "navigation": {
+    "dashboard": "ダッシュボード",
+    "employee": "従業員",
+    "salaryDetails": "給与",
+    "settings": {
+      "label": "設定",
+      "socialInsurance": "社会保険計算",
+      "monthlyRemuneration": "月額報酬"
+    }
   }
 }

@@ -156,5 +156,15 @@
     "back": "Back",
     "clear": "Clear",
     "generateIncomeTax": "Generate Income Tax"
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "employee": "Employee",
+    "salaryDetails": "Salary Details",
+    "settings": {
+      "label": "Settings",
+      "socialInsurance": "Social Insurance",
+      "monthlyRemuneration": "Monthly Remuneration"
+    }
   }
 }
