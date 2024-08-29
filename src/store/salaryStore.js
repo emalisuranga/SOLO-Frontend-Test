@@ -99,6 +99,7 @@ const useSalaryStore = create((set) => ({
     set({ loading: true, error: null });
     try {
       const response = await api.post('/salary-details/income-tax', insuranceData);
+      set({ loading: false });
       return response.data;
     } catch (error) {
       return handleError(set, error, "Error generating income tax");
