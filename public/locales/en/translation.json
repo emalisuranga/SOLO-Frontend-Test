@@ -40,7 +40,9 @@
     "deleteConfirmationMessageSalary": "Are you sure you want to delete this Salary Details? This action cannot be undone.",
     "validationError": "Your application has validation errors, please check.",
     "remark_submit_message": "Form submitted with remarks",
-    "duplicate_error": "An employee with the same details already exists. Please check the information and try again."
+    "duplicate_error": "An employee with the same details already exists. Please check the information and try again.",
+    "fetchSalarySlipError": "Failed to fetch salary slip details",
+    "fetchSalarySlipSuccess": "Salary slip details fetched successfully"
   },
   "fields": {
     "firstName": "First Name",

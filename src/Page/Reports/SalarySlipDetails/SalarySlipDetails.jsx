@@ -46,14 +46,14 @@ const SalarySlipDetails = () => {
       if (result) {
         const formattedData = formatSalarySlipData(result);
         setSalarySlip(formattedData);
-        handleSuccess(setSnackbarMessage, setSnackbarSeverity, setSnackbarOpen, "Salary slip details fetched successfully");
+        handleSuccess(setSnackbarMessage, setSnackbarSeverity, setSnackbarOpen, t("actions.fetchSalarySlipSuccess"));
       } else {
         throw new Error('Data not found');
       }
     } catch (error) {
-      handleError(setSnackbarMessage, setSnackbarSeverity, setSnackbarOpen, error, "Failed to fetch salary slip details");
+      handleError(setSnackbarMessage, setSnackbarSeverity, setSnackbarOpen, error, t("actions.fetchSalarySlipError"));
     }
-  }, [employeeId, paymentDetailsId, fetchSalarySlipDetails, setSalarySlip]);
+  }, [employeeId, paymentDetailsId, fetchSalarySlipDetails, setSalarySlip, t]);
 
   useEffect(() => {
     fetchAndSetSalarySlipDetails();
