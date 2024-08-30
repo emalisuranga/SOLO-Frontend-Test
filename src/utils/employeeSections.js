@@ -29,10 +29,10 @@ const createFields = (employee, fieldsConfig) =>
     {
       label: t("sections.personalInfo"),
       fields: createFields(employee, [
-        { name: "firstName", type: "text", required: true },
         { name: "lastName", type: "text", required: true },
-        { name: "furiganaFirstName", type: "text", required: true },
+        { name: "firstName", type: "text", required: true },
         { name: "furiganaLastName", type: "text", required: true },
+        { name: "furiganaFirstName", type: "text", required: true },
         { name: "phone", type: "text", required: true },
         { name: "address", type: "text", required: true },
         { name: "dateOfBirth", type: "date", required: true },
