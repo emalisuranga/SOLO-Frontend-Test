@@ -13,8 +13,8 @@ const useSocialInsuranceCalculationStore = create((set) => ({
   fetchSocialInsuranceCalculationDetails: async (id) => {
     set({ loading: true, error: null });
     try {
-      const response = await api.get(`/social-insurance-calculation/${id}`);
-      set({ socialInsuranceCalculation: response.data, loading: false });
+      const response = await api.get(`/social-insurance-calculation`);
+      set({ socialInsuranceCalculation: response.data.data, loading: false });
       return response.data;
     } catch (error) {
       set({

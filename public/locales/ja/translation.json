@@ -98,7 +98,16 @@
     "slipName": "伝票名",
     "spouseDeduction": "配偶者控除",
     "dependentDeduction": "扶養控除",
-    "numberOfNonPaidLeave": "無給休暇日数"
+    "numberOfNonPaidLeave": "無給休暇日数",
+    "healthInsurancePercentage": "健康保険料率",
+    "longTermInsurancePercentage": "長期保険料率",
+    "employeePensionPercentage": "従業員年金料率",
+    "regularEmployeeInsurancePercentage": "正社員保険料率",
+    "specialEmployeeInsurancePercentage": "特別社員保険料率",
+    "pensionStartMonthlySalary": "年金開始月給",
+    "pensionEndMonthlySalary": "年金終了月給",
+    "pensionStartSalary": "年金開始給与",
+    "pensionEndSalary": "年金終了給与"
   },
   "sections": {
     "personalInfo": "個人情報",
@@ -108,7 +117,9 @@
     "earnings": "収入",
     "deductions": "控除",
     "totalEarnings": "総収入",
-    "summary": "概要"
+    "summary": "概要",
+    "insuranceInfo": "保険情報",
+    "pensionInfo": "年金情報"
   },
   "validation": {
     "lettersOnly": "{{field}} は文字のみ使用できます",
@@ -162,7 +173,8 @@
     "next": "次へ",
     "back": "戻る",
     "clear": "クリア",
-    "generateIncomeTax": "所得税を計算"
+    "generateIncomeTax": "所得税を計算",
+    "submit": "送信"
   },
   "navigation": {
     "dashboard": "ダッシュボード",

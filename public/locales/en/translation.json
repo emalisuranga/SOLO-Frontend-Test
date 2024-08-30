@@ -94,7 +94,16 @@
     "slipName": "Slip Name",
     "spouseDeduction": "Spouse Deduction",
     "dependentDeduction": "Dependent Deduction",
-    "numberOfNonPaidLeave": "Number of Non-Paid Leave"
+    "numberOfNonPaidLeave": "Number of Non-Paid Leave",
+    "healthInsurancePercentage": "Health Insurance Percentage",
+    "longTermInsurancePercentage": "Long-Term Insurance Percentage",
+    "employeePensionPercentage": "Employee Pension Percentage",
+    "regularEmployeeInsurancePercentage": "Regular Employee Insurance Percentage",
+    "specialEmployeeInsurancePercentage": "Special Employee Insurance Percentage",
+    "pensionStartMonthlySalary": "Pension Start Monthly Salary",
+    "pensionEndMonthlySalary": "Pension End Monthly Salary",
+    "pensionStartSalary": "Pension Start Salary",
+    "pensionEndSalary": "Pension End Salary"
   },
   "sections": {
     "personalInfo": "Employee Info",
@@ -104,7 +113,9 @@
     "earnings": "Earnings",
     "deductions": "Deductions",
     "totalEarnings": "Total Earnings",
-    "summary": "Summary"
+    "summary": "Summary",
+    "insuranceInfo": "Insurance Information",
+    "pensionInfo": "Pension Information"
   },
   "validation": {
     "lettersOnly": "{{field}} can only contain letters",
@@ -158,7 +169,8 @@
     "next": "Next",
     "back": "Back",
     "clear": "Clear",
-    "generateIncomeTax": "Generate Income Tax"
+    "generateIncomeTax": "Generate Income Tax",
+    "submit": "Submit"
   },
   "navigation": {
     "dashboard": "Dashboard",

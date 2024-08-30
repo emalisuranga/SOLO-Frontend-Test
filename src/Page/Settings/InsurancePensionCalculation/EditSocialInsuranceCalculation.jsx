@@ -8,7 +8,6 @@ import Loading from "../../../component/Common/Loading";
 
 const EditSocialInsuranceCalculation = () => {
   const { t } = useTranslation();
-  const [sections, setSections] = useState([]);
 
   const { socialInsuranceCalculation, loading, fetchSocialInsuranceCalculationDetails } = useSocialInsuranceCalculationStore((state) => ({
     socialInsuranceCalculation: state.socialInsuranceCalculation,
@@ -19,13 +18,13 @@ const EditSocialInsuranceCalculation = () => {
   useEffect(() => {
     const fetchData = async () => {
       await fetchSocialInsuranceCalculationDetails();
-      const fetchedSections = getSocialInsuranceFields();
-      setSections(fetchedSections);
     };
 
     fetchData();
   }, [fetchSocialInsuranceCalculationDetails]);
 
+  const fetchedSections = getSocialInsuranceFields();
+  
   if (loading) {
     return (
         <Loading />
@@ -33,7 +32,6 @@ const EditSocialInsuranceCalculation = () => {
   }
 
   const handleSubmit = (data) => {
-    // Implement the submission logic here
     console.log('Submitted data:', data);
   };
 
@@ -44,7 +42,7 @@ const EditSocialInsuranceCalculation = () => {
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
             <Typography variant="h5">{t('Employee Details')}</Typography>
           </Box>
-          {/* <InsurancePensionForm sections={sections} onSubmit={handleSubmit} /> */}
+          <InsurancePensionForm sections={fetchedSections} onSubmit={handleSubmit} />
         </Grid>
       </Grid>
     </Box>
