@@ -76,7 +76,7 @@ const SalarySlipPrint = ({ salarySlip }) => {
                     alignItems: "center",
                   }}
                 >
-                  <Typography variant="body1">{`${salarySlip.employee.firstName} ${salarySlip.employee.lastName}`}</Typography>
+                  <Typography variant="body1">{`${salarySlip.employee.lastName} ${salarySlip.employee.firstName}`}</Typography>
                   <Typography variant="body1">殿</Typography>
                 </Box>
               </CustomTableCell>
@@ -95,6 +95,7 @@ const SalarySlipPrint = ({ salarySlip }) => {
                 </CustomTableCell>
                 <CustomTableCell>
                   <Typography variant="body2" align="center"></Typography>
+                  {`${salarySlip.employee.department}`}
                 </CustomTableCell>
               </TableRow>
               <TableRow>
@@ -123,10 +124,10 @@ const SalarySlipPrint = ({ salarySlip }) => {
           </Table>
         </Box>
 
-        <Grid container spacing={2} sx={{ mt: 10 }}>
+        {/* <Grid container spacing={2} sx={{ mt: 10 }}>
           <Grid item xs={5}>
             <Typography variant="body2" align="left">
-            {salarySlip.slipName}
+              {salarySlip.slipName}
             </Typography>
           </Grid>
           <Grid item xs={3}>
@@ -134,9 +135,9 @@ const SalarySlipPrint = ({ salarySlip }) => {
               給料明細書
             </Typography>
           </Grid>
-        </Grid>
+        </Grid> */}
 
-        <Box
+        {/* <Box
           sx={{
             mt: 2,
             display: "flex",
@@ -183,9 +184,9 @@ const SalarySlipPrint = ({ salarySlip }) => {
               </TableRow>
             </TableBody>
           </Table>
-        </Box>
+        </Box> */}
 
-        <Grid container columnSpacing={{ md: 30 }} sx={{ mt: 1 }}>
+        <Grid container columnSpacing={{ md: 30 }} sx={{ mt: 1, marginTop: '50px' }}>
           <Grid item xs={8}>
             <Table sx={{ height: 100, width: "100%" }}>
               <TableBody>
@@ -389,7 +390,7 @@ const SalarySlipPrint = ({ salarySlip }) => {
                 </CustomTableCell>
                 <CustomTableCell>
                   <Typography variant="body2" align="center">
-                  {`${salarySlip.earnings.holidayAllowance}`}
+                    {`${salarySlip.earnings.holidayAllowance}`}
                   </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
@@ -535,7 +536,7 @@ const SalarySlipPrint = ({ salarySlip }) => {
                 </CustomTableCell>
                 <CustomTableCell>
                   <Typography variant="body2" align="center">
-                  {`${salarySlip.deductions.socialInsurance}`}
+                    {`${salarySlip.deductions.socialInsurance}`}
                   </Typography>
                 </CustomTableCell>
               </TableRow>
