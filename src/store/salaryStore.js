@@ -40,6 +40,7 @@ const useSalaryStore = create((set) => ({
   },
 
   calculateSalaryDetails: async (salaryData) => {
+    console.log(salaryData);
     set({ loading: true, error: null });
     try {
       const response = await api.post('/salary-details/calculate-salary', salaryData);
