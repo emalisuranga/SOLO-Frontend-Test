@@ -112,8 +112,7 @@ const SalaryTable = ({ salaries, onDelete }) => {
           <TableHead>
             <TableRow>
               <TableCell>{t("table.employeeId")}</TableCell>
-              <TableCell>{t("table.firstName")}</TableCell>
-              <TableCell>{t("table.lastName")}</TableCell>
+              <TableCell>{t("table.fullName")}</TableCell>
               <TableCell>{t("table.totalEarnings")}</TableCell>
               <TableCell>{t("table.totalDeductions")}</TableCell>
               <TableCell>{t("table.netSalary")}</TableCell>
@@ -124,8 +123,7 @@ const SalaryTable = ({ salaries, onDelete }) => {
             {paginatedSalaries.map((salary) => (
               <TableRow key={salary.id}>
                 <TableCell>{salary.employee.id}</TableCell>
-                <TableCell>{salary.employee.firstName}</TableCell>
-                <TableCell>{salary.employee.lastName}</TableCell>
+                <TableCell>{`${salary.employee.lastName} ${salary.employee.firstName}`}</TableCell>
                 <TableCell>{salary.totalEarnings}</TableCell>
                 <TableCell>{salary.totalDeductions}</TableCell>
                 <TableCell>{salary.netSalary}</TableCell>
