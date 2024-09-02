@@ -190,7 +190,7 @@ const SalarySlipDetails = () => {
                     alignItems: "center",
                   }}
                 >
-                  <SmallTypography variant="body1">{`${salarySlip.employee.firstName} ${salarySlip.employee.lastName}`}</SmallTypography>
+                  <SmallTypography variant="body1">{`${salarySlip.employee.lastName} ${salarySlip.employee.firstName}`}</SmallTypography>
                   <SmallTypography variant="body1">殿</SmallTypography>
                 </Box>
               </CustomTableCell>

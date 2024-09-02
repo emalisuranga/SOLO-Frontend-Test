@@ -120,7 +120,7 @@ const EmployeeTable = ({ data }) => {
           {paginatedData.map((row) => (
             <TableRow hover key={row.id}>
               <TableCell>{row.id}</TableCell>
-              <TableCell>{`${row.firstName} ${row.lastName}`}</TableCell>
+              <TableCell>{`${row.lastName} ${row.firstName}`}</TableCell>
               <TableCell>{row.phone}</TableCell>
               <TableCell>
                 {new Date(row.joinDate).toLocaleDateString()}
