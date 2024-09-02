@@ -27,6 +27,16 @@ export const VerticalTableCell = styled(TableCell)({
   backgroundColor: "#739dce"
 });
 
+export const VerticalTableCellPrint = styled(TableCell)({
+  border: "2px solid black",
+  padding: "8px",
+  boxSizing: "border-box",
+  writingMode: 'vertical-rl',
+  textAlign: 'center',
+  verticalAlign: 'middle',
+  width: "10px"
+});
+
 export const SmallTypography = styled(Typography)({
   fontSize: '10px',
 });
