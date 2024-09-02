@@ -208,10 +208,9 @@ const SalarySlipDetails = () => {
                   </SmallTypography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography
-                    variant="body2"
-                    align="center"
-                  ></SmallTypography>
+                <SmallTypography variant="body2" align="center">
+                    {`${salarySlip.employee.department}`}
+                  </SmallTypography>
                 </CustomTableCell>
               </TableRow>
               <TableRow>
@@ -243,7 +242,7 @@ const SalarySlipDetails = () => {
           </Table>
         </Box>
 
-        <Grid container spacing={2} sx={{ mt: 1 }}>
+        {/* <Grid container spacing={2} sx={{ mt: 1 }}>
           <Grid item xs={5}>
             <SmallTypography variant="body2" align="left">
             {salarySlip.slipName}
@@ -254,9 +253,9 @@ const SalarySlipDetails = () => {
               給料明細書
             </Typography>
           </Grid>
-        </Grid>
+        </Grid> */}
 
-        <Box
+        {/* <Box
           sx={{
             mt: 1,
             display: "flex",
@@ -302,9 +301,9 @@ const SalarySlipDetails = () => {
               </TableRow>
             </TableBody>
           </Table>
-        </Box>
+        </Box> */}
 
-        <Grid container columnSpacing={{ md: 30 }} sx={{ mt: 1 }}>
+        <Grid container columnSpacing={{ md: 30 }} sx={{ mt: 1, marginTop: '50px' }}>
           <Grid item xs={8}>
             <Table sx={{ height: 100, width: "100%" }}>
               <TableBody>

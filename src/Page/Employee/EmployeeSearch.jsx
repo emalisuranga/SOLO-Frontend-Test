@@ -47,7 +47,7 @@ const EmployeeSearch = ({ onSearch }) => {
     const selectedName = e.target.value;
     setSearchName(selectedName);
     const selectedEmployee = employeeList.find(
-      (item) => `${item.firstName} ${item.lastName}` === selectedName
+      (item) => `${item.lastName} ${item.firstName}` === selectedName
     );
     setSearchId(selectedEmployee ? selectedEmployee.id : '');
   }, [employeeList]);
@@ -74,8 +74,8 @@ const EmployeeSearch = ({ onSearch }) => {
           sx={{ width: 200 }}
         >
           {employeeList.map((item) => (
-            <MenuItem key={item.id} value={`${item.firstName} ${item.lastName}`}>
-              {`${item.firstName} ${item.lastName}`}
+            <MenuItem key={item.id} value={`${item.lastName} ${item.firstName}`}>
+              {`${item.lastName} ${item.firstName}`}
             </MenuItem>
           ))}
         </TextField>
