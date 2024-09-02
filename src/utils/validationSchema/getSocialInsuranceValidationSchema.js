@@ -1,38 +1,39 @@
 import * as Yup from "yup";
 
+// Reusable function for percentage fields
+const percentageFieldValidation = (t, fieldName) => 
+  Yup.number()
+    .typeError(t("validation.numbersOnly", { field: t(`fields.${fieldName}`) }))
+    .required(t("validation.required", { field: t(`fields.${fieldName}`) }))
+    .test(
+      'is-float',
+      t("validation.numbersOnly", { field: t(`fields.${fieldName}`) }),
+      (value) => value === undefined || value.toString().match(/^\d*\.?\d+$/)
+    );
+
+// Reusable function for salary fields with a minimum value
+const salaryFieldValidation = (t, fieldName, minValue = 0) =>
+  Yup.number()
+    .typeError(t("validation.numbersOnly", { field: t(`fields.${fieldName}`) }))
+    .min(minValue, t("validation.minValue", { field: t(`fields.${fieldName}`), min: minValue }))
+    .required(t("validation.required", { field: t(`fields.${fieldName}`) }))
+    .test(
+      'is-float',
+      t("validation.numbersOnly", { field: t(`fields.${fieldName}`) }),
+      (value) => value === undefined || value.toString().match(/^\d*\.?\d+$/)
+    );
+
 const getSocialInsuranceValidationSchema = (t) => {
   return Yup.object().shape({
-    healthInsurancePercentage: Yup.number()
-      .matches(/^\d*\.?\d+$/, t("validation.numbersOnly", { field: t("fields.healthInsurancePercentage") }))
-      .required(t("validation.required", { field: t("fields.healthInsurancePercentage") })),
-    longTermInsurancePercentage: Yup.number()
-      .matches(/^\d*\.?\d+$/, t("validation.numbersOnly", { field: t("fields.longTermInsurancePercentage") }))
-      .required(t("validation.required", { field: t("fields.longTermInsurancePercentage") })),
-    employeePensionPercentage: Yup.number()
-      .matches(/^\d*\.?\d+$/, t("validation.numbersOnly", { field: t("fields.employeePensionPercentage") }))
-      .required(t("validation.required", { field: t("fields.employeePensionPercentage") })),
-    regularEmployeeInsurancePercentage: Yup.number()
-      .matches(/^\d*\.?\d+$/, t("validation.numbersOnly", { field: t("fields.regularEmployeeInsurancePercentage") }))
-      .required(t("validation.required", { field: t("fields.regularEmployeeInsurancePercentage") })),
-    specialEmployeeInsurancePercentage: Yup.number()
-      .matches(/^\d*\.?\d+$/, t("validation.numbersOnly", { field: t("fields.specialEmployeeInsurancePercentage") }))
-      .required(t("validation.required", { field: t("fields.specialEmployeeInsurancePercentage") })),
-    pensionStartMonthlySalary: Yup.number()
-      .matches(/^\d*\.?\d+$/, t("validation.numbersOnly", { field: t("fields.pensionStartMonthlySalary") }))
-      .min(0, t("validation.minValue", { field: t("fields.pensionStartMonthlySalary"), min: 0 }))
-      .required(t("validation.required", { field: t("fields.pensionStartMonthlySalary") })),
-    pensionEndMonthlySalary: Yup.number()
-      .matches(/^\d*\.?\d+$/, t("validation.numbersOnly", { field: t("fields.pensionEndMonthlySalary") }))
-      .min(0, t("validation.minValue", { field: t("fields.pensionEndMonthlySalary"), min: 0 }))
-      .required(t("validation.required", { field: t("fields.pensionEndMonthlySalary") })),
-    pensionStartSalary: Yup.number()
-      .matches(/^\d*\.?\d+$/, t("validation.numbersOnly", { field: t("fields.pensionStartSalary") }))
-      .min(0, t("validation.minValue", { field: t("fields.pensionStartSalary"), min: 0 }))
-      .required(t("validation.required", { field: t("fields.pensionStartSalary") })),
-    pensionEndSalary: Yup.number()
-      .matches(/^\d*\.?\d+$/, t("validation.numbersOnly", { field: t("fields.pensionEndSalary") }))
-      .min(0, t("validation.minValue", { field: t("fields.pensionEndSalary"), min: 0 }))
-      .required(t("validation.required", { field: t("fields.pensionEndSalary") })),
+    healthInsurancePercentage: percentageFieldValidation(t, "healthInsurancePercentage"),
+    longTermInsurancePercentage: percentageFieldValidation(t, "longTermInsurancePercentage"),
+    employeePensionPercentage: percentageFieldValidation(t, "employeePensionPercentage"),
+    regularEmployeeInsurancePercentage: percentageFieldValidation(t, "regularEmployeeInsurancePercentage"),
+    specialEmployeeInsurancePercentage: percentageFieldValidation(t, "specialEmployeeInsurancePercentage"),
+    pensionStartMonthlySalary: salaryFieldValidation(t, "pensionStartMonthlySalary"),
+    pensionEndMonthlySalary: salaryFieldValidation(t, "pensionEndMonthlySalary"),
+    pensionStartSalary: salaryFieldValidation(t, "pensionStartSalary"),
+    pensionEndSalary: salaryFieldValidation(t, "pensionEndSalary"),
   });
 };
 

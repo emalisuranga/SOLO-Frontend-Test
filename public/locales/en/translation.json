@@ -120,7 +120,7 @@
   "validation": {
     "lettersOnly": "{{field}} can only contain letters",
     "phoneDigits": "Phone must be an 11 digit number",
-    "number": "{{field}} must be a number",
+    "numbersOnly": "{{field}} must be a number",
     "required": "{{field}} is required",
     "invalidDate": "{{field}} must be a valid date.",
     "lessThanRemainingVacationDays": "{{numberOfPaidHolidays}} must be less than {{remainingPaidVacationDays}}.",

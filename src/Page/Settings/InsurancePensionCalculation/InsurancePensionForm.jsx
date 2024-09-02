@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Box, Button, Stack, Tab,Tabs } from "@mui/material";
+import { Box, Button, Stack, Tab, Tabs } from "@mui/material";
 import PropTypes from "prop-types";
 import CustomTabPanel from "../../../component/CustomTabPanel";
 import RegisterForm from "../../../component/RegisterForm";
@@ -7,9 +7,10 @@ import CustomSnackbar from "../../../component/Common/CustomSnackbar";
 import useFormStore from "../../../store/formStore";
 import useSocialInsuranceCalculationStore from "../../../store/useSocialInsuranceCalculationStore";
 import { useTranslation } from "react-i18next";
-import { cleanInitializeFormData, validateForm, initializeFormData, handleFormChange as handleChangeUtil } from "../../../utils/socialInsuranceFormUtils";
+import { cleanInitializeFormData, validateForm, initializeFormData, handleChangeUtil } from "../../../utils/socialInsuranceFormUtils";
+import { handleSuccess, handleError } from "../../../utils/responseHandlers";
 
-const InsurancePensionForm = ({sections}) => {
+const InsurancePensionForm = ({ sections }) => {
   const { t } = useTranslation();
   const { formData, setFormData, clearFormData, setErrors, errors } =
     useFormStore((state) => ({
@@ -19,30 +20,54 @@ const InsurancePensionForm = ({sections}) => {
       setErrors: state.setErrors,
       errors: state.errors,
     }));
-  const { socialInsuranceCalculation, saveSocialInsuranceCalculation, updateSocialInsuranceCalculation } =
+  const { socialInsuranceCalculation, updateSocialInsuranceCalculation } =
     useSocialInsuranceCalculationStore();
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
-  const [initialData, setInitialData] = useState(null);
-  const [fields, setFields] = useState([]);
   const [value, setValue] = useState(0);
 
   useEffect(() => {
     const initialFormData = initializeFormData(sections, socialInsuranceCalculation);
     setFormData(initialFormData);
     setErrors({});
-  }, [sections, initialData, setFormData, setErrors]);
+  }, [sections, socialInsuranceCalculation, setFormData, setErrors]);
 
-  const handleSave = async () => {
-  };
+  const handleFormChange = handleChangeUtil(formData, setFormData);
+
+  // const handleFormChange = useCallback(
+  //   (event) => {
+  //     const { name, value } = event.target;
+  //     console.log("Field changed:", name, "Value:", value);
+      
+  //     setFormData((prevData) => {
+  //       const newData = {
+  //         ...prevData,
+  //         [name]: value,
+  //       };
+  //       console.log("Updated formData:", newData);
+  //       return newData;
+  //     });
+  //   },
+  //   [setFormData]
+  // );
+
+  const handleDataSave = useCallback(async () => {
+    try {
+      await updateSocialInsuranceCalculation(formData.id, formData);
+      handleSuccess(setSnackbarMessage, setSnackbarSeverity, setSnackbarOpen, t("actions.update_success"));
+    } catch (error) {
+      handleError(setSnackbarMessage, setSnackbarSeverity, setSnackbarOpen, error, t("actions.update_error"));
+      console.error("Failed to save data", error);
+    }
+  }, [formData, t, updateSocialInsuranceCalculation]);
 
   const validateAndSetErrors = useCallback(async () => {
     const validationErrors = await validateForm(formData, t);
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
-      setSnackbarSeverity('error');
+      setSnackbarSeverity("error");
       setSnackbarMessage(t("actions.validationError"));
       setSnackbarOpen(true);
       return false;
@@ -51,19 +76,22 @@ const InsurancePensionForm = ({sections}) => {
     return true;
   }, [formData, t, setErrors, setSnackbarSeverity, setSnackbarMessage, setSnackbarOpen]);
 
-  const handleSubmit = useCallback(async (event) => {
-    event.preventDefault();
-    const isValid = await validateAndSetErrors();
-    if (isValid) {
-      await handleSave();
-    }
-  }, [handleSave, validateAndSetErrors]);
-
- 
+  const handleSubmit = useCallback(
+    async (event) => {
+      event.preventDefault();
+      const isValid = await validateAndSetErrors();
+      if (isValid) {
+        await handleDataSave();
+      }
+    },
+    [handleDataSave, validateAndSetErrors]
+  );
 
   const handleClear = () => {
     cleanInitializeFormData();
+    clearFormData();
   };
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -72,33 +100,31 @@ const InsurancePensionForm = ({sections}) => {
     setSnackbarOpen(false);
   };
 
-  const handleFormChange = () => handleChangeUtil(formData, setFormData);
-
-    return (
-      <form onSubmit={handleSubmit}>
-        <Box sx={{ width: "100%" }}>
-          <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-            {sections.map((section, index) => (
-              <Tab key={index} label={section.label} {...a11yProps(index)} />
-            ))}
-          </Tabs>
+  return (
+    <form onSubmit={handleSubmit}>
+      <Box sx={{ width: "100%" }}>
+        <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
           {sections.map((section, index) => (
-            <CustomTabPanel key={index} value={value} index={index}>
-              <RegisterForm fields={section.fields} formData={formData} onChange={handleFormChange} errors={errors} />
-            </CustomTabPanel>
+            <Tab key={index} label={section.label} {...a11yProps(index)} />
           ))}
-          <Stack direction="row" spacing={2} sx={{ marginTop: 2, justifyContent: "flex-end" }}>
-            <Button variant="contained" color="primary" type="submit">
+        </Tabs>
+        {sections.map((section, index) => (
+          <CustomTabPanel key={index} value={value} index={index}>
+            <RegisterForm fields={section.fields} formData={formData} onChange={handleFormChange} errors={errors} />
+          </CustomTabPanel>
+        ))}
+        <Stack direction="row" spacing={2} sx={{ marginTop: 2, justifyContent: "flex-end" }}>
+          <Button variant="contained" color="primary" type="submit">
             {t("button.submit")}
-            </Button>
-            <Button variant="outlined" color="primary" onClick={handleClear}>
+          </Button>
+          <Button variant="outlined" color="primary" onClick={handleClear}>
             {t("button.clear")}
-            </Button>
-          </Stack>
-        </Box>
-        <CustomSnackbar open={snackbarOpen} message={snackbarMessage} severity={snackbarSeverity} onClose={handleCloseSnackbar} />
-      </form>
-    );
+          </Button>
+        </Stack>
+      </Box>
+      <CustomSnackbar open={snackbarOpen} message={snackbarMessage} severity={snackbarSeverity} onClose={handleCloseSnackbar} />
+    </form>
+  );
 };
 
 InsurancePensionForm.propTypes = {
@@ -125,6 +151,5 @@ function a11yProps(index) {
     "aria-controls": `simple-tabpanel-${index}`,
   };
 }
-
 
 export default InsurancePensionForm;

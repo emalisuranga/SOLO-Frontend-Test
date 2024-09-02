@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Box, Typography, Grid } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import getSocialInsuranceFields from "../../../utils/sections/insurancePensionSections";
@@ -9,7 +9,7 @@ import Loading from "../../../component/Common/Loading";
 const EditSocialInsuranceCalculation = () => {
   const { t } = useTranslation();
 
-  const { socialInsuranceCalculation, loading, fetchSocialInsuranceCalculationDetails } = useSocialInsuranceCalculationStore((state) => ({
+  const { loading, fetchSocialInsuranceCalculationDetails } = useSocialInsuranceCalculationStore((state) => ({
     socialInsuranceCalculation: state.socialInsuranceCalculation,
     loading: state.loading,
     fetchSocialInsuranceCalculationDetails: state.fetchSocialInsuranceCalculationDetails,
