@@ -108,7 +108,7 @@ const SalarySlipDetails = () => {
     const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
     pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, pdfHeight);
-    const fileName = `${salarySlip.slipName}_${salarySlip.employee.firstName}_${salarySlip.employee.lastName}.pdf`;
+    const fileName = `${salarySlip.slipName}_${salarySlip.employee.lastName}_${salarySlip.employee.firstName}.pdf`;
     pdf.save(fileName);
   };
 
