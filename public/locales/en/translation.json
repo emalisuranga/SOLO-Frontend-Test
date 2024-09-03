@@ -54,6 +54,7 @@
     "dateOfBirth": "Date of Birth",
     "joinDate": "Join Date",
     "department": "Department",
+    "jobTitle": "Job Title",
     "bankAccountNumber": "Bank Account Number",
     "bankName": "Bank Name",
     "branchCode": "Branch Code",

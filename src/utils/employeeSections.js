@@ -38,6 +38,7 @@ const createFields = (employee, fieldsConfig) =>
         { name: "dateOfBirth", type: "date", required: true },
         { name: "joinDate", type: "date", required: true },
         { name: "department", type: "text", required: true },
+        { name: "jobTitle", type: "text", required: true },
         { name: "spouseDeduction", type: "text", required: true },
         { name: "dependentDeduction", type: "text", required: true },
       ]),

@@ -98,6 +98,7 @@ const EmployeeDetails = () => {
               {renderEmployeeDetail(t("fields.dateOfBirth"), formatDate(employee.dateOfBirth))}
               {renderEmployeeDetail(t("fields.joinDate"), formatDate(employee.joinDate))}
               {renderEmployeeDetail(t("fields.department"), employee.department)}
+              {renderEmployeeDetail(t("fields.jobTitle"), employee.jobTitle)}
               
               <Grid item xs={12}>
                 <Typography variant="h6" gutterBottom>{t("sections.bankDetails")}</Typography>

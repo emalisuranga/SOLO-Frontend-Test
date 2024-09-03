@@ -106,7 +106,9 @@ const SalarySlipPrint = ({ salarySlip }) => {
                   </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <Typography variant="body2" align="center"></Typography>
+                  <Typography variant="body2" align="center">
+                  {`${salarySlip.employee.jobTitle}`}
+                  </Typography>
                 </CustomTableCell>
               </TableRow>
               <TableRow>
