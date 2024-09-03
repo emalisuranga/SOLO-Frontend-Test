@@ -58,7 +58,7 @@ const EmployeeSearch = ({ onSearch }) => {
     const selectedEmployee = employeeList.find(
       (item) => item.id === parseInt(selectedId, 10)
     );
-    setSearchName(selectedEmployee ? `${selectedEmployee.firstName} ${selectedEmployee.lastName}` : '');
+    setSearchName(selectedEmployee ? `${selectedEmployee.lastName } ${selectedEmployee.firstName}` : '');
   }, [employeeList]);
 
   return (

@@ -220,10 +220,9 @@ const SalarySlipDetails = () => {
                   </SmallTypography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography
-                    variant="body2"
-                    align="center"
-                  ></SmallTypography>
+                  <SmallTypography variant="body2" align="center">
+                  {`${salarySlip.employee.jobTitle}`}
+                  </SmallTypography>
                 </CustomTableCell>
               </TableRow>
               <TableRow>

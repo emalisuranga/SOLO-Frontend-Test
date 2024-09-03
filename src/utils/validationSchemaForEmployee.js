@@ -47,6 +47,9 @@ const getValidationSchema = (t) => {
     department: Yup.string().required(
       t("validation.required", { field: t("fields.department") })
     ),
+    jobTitle: Yup.string().required(
+      t("validation.required", { field: t("fields.jobTitle") })
+    ),
     bankAccountNumber: Yup.number()
       .nullable()
       .transform((value, originalValue) =>

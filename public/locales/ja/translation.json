@@ -58,6 +58,7 @@
     "dateOfBirth": "生年月日",
     "joinDate": "入社日",
     "department": "部署",
+    "jobTitle": "職名",
     "bankAccountNumber": "銀行口座番号",
     "bankName": "銀行名",
     "branchCode": "支店コード",
