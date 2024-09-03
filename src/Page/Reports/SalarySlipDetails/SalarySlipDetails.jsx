@@ -1,4 +1,4 @@
-import React, { useState, useEffect,  useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Table,
   TableBody,
@@ -27,14 +27,20 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { handleSuccess, handleError } from "../../../utils/responseHandlers";
 import CustomSnackbar from "../../../component/Common/CustomSnackbar";
-import { formatSalarySlipData } from '../../../utils/formatUtils';
+import { formatSalarySlipData } from "../../../utils/formatUtils";
 
 const SalarySlipDetails = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { employeeId, paymentDetailsId } = useParams();
-  const { salarySlip, loading, error, fetchSalarySlipDetails, updateRemarks, setSalarySlip } =
-    useSalarySlipStore();
+  const {
+    salarySlip,
+    loading,
+    error,
+    fetchSalarySlipDetails,
+    updateRemarks,
+    setSalarySlip,
+  } = useSalarySlipStore();
   const [remarks, setRemarks] = useState("");
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
@@ -42,16 +48,30 @@ const SalarySlipDetails = () => {
 
   const fetchAndSetSalarySlipDetails = useCallback(async () => {
     try {
-      const result = await fetchSalarySlipDetails(parseInt(employeeId, 10), parseInt(paymentDetailsId, 10));
+      const result = await fetchSalarySlipDetails(
+        parseInt(employeeId, 10),
+        parseInt(paymentDetailsId, 10)
+      );
       if (result) {
         const formattedData = formatSalarySlipData(result);
         setSalarySlip(formattedData);
-        handleSuccess(setSnackbarMessage, setSnackbarSeverity, setSnackbarOpen, t("actions.fetchSalarySlipSuccess"));
+        handleSuccess(
+          setSnackbarMessage,
+          setSnackbarSeverity,
+          setSnackbarOpen,
+          t("actions.fetchSalarySlipSuccess")
+        );
       } else {
-        throw new Error('Data not found');
+        throw new Error("Data not found");
       }
     } catch (error) {
-      handleError(setSnackbarMessage, setSnackbarSeverity, setSnackbarOpen, error, t("actions.fetchSalarySlipError"));
+      handleError(
+        setSnackbarMessage,
+        setSnackbarSeverity,
+        setSnackbarOpen,
+        error,
+        t("actions.fetchSalarySlipError")
+      );
     }
   }, [employeeId, paymentDetailsId, fetchSalarySlipDetails, setSalarySlip, t]);
 
@@ -113,9 +133,7 @@ const SalarySlipDetails = () => {
   };
 
   if (loading) {
-    return (
-        <Loading />
-    );
+    return <Loading />;
   }
 
   if (error) {
@@ -208,7 +226,7 @@ const SalarySlipDetails = () => {
                   </SmallTypography>
                 </CustomTableCell>
                 <CustomTableCell>
-                <SmallTypography variant="body2" align="center">
+                  <SmallTypography variant="body2" align="center">
                     {`${salarySlip.employee.department}`}
                   </SmallTypography>
                 </CustomTableCell>
@@ -221,7 +239,7 @@ const SalarySlipDetails = () => {
                 </CustomTableCell>
                 <CustomTableCell>
                   <SmallTypography variant="body2" align="center">
-                  {`${salarySlip.employee.jobTitle}`}
+                    {`${salarySlip.employee.jobTitle}`}
                   </SmallTypography>
                 </CustomTableCell>
               </TableRow>
@@ -302,7 +320,11 @@ const SalarySlipDetails = () => {
           </Table>
         </Box> */}
 
-        <Grid container columnSpacing={{ md: 30 }} sx={{ mt: 1, marginTop: '50px' }}>
+        <Grid
+          container
+          columnSpacing={{ md: 30 }}
+          sx={{ mt: 1, marginTop: "50px" }}
+        >
           <Grid item xs={8}>
             <Table sx={{ height: 100, width: "100%" }}>
               <TableBody>
@@ -462,7 +484,7 @@ const SalarySlipDetails = () => {
                 </ColoredTableCell>
                 <ColoredTableCell>
                   <SmallTypography variant="body2" align="center">
-                    精勤手当
+                    休日手当
                   </SmallTypography>
                 </ColoredTableCell>
                 <CustomTableCell>
@@ -592,9 +614,7 @@ const SalarySlipDetails = () => {
                 </CustomTableCell>
                 <CustomTableCell>
                   <SmallTypography variant="body2" align="center">
-                    {`${
-                      salarySlip.totalEarnings
-                    }`}
+                    {`${salarySlip.totalEarnings}`}
                   </SmallTypography>
                 </CustomTableCell>
               </TableRow>
@@ -687,7 +707,7 @@ const SalarySlipDetails = () => {
                 </CustomTableCell>
                 <CustomTableCell>
                   <SmallTypography variant="body2" align="center">
-                  {`${salarySlip.deductions.socialInsurance}`}
+                    {`${salarySlip.deductions.socialInsurance}`}
                   </SmallTypography>
                 </CustomTableCell>
               </TableRow>
