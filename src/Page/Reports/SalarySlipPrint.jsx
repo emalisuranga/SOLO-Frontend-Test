@@ -360,7 +360,7 @@ const SalarySlipPrint = ({ salarySlip }) => {
                 </CustomTableCell>
                 <CustomTableCell>
                   <Typography variant="body2" align="center">
-                    精勤手当
+                    休日手当
                   </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
