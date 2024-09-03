@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import PropTypes from "prop-types";
 import { Stack, Button, Box, Stepper, Step, StepLabel, Typography } from "@mui/material";
 import CustomSnackbar from "../../component/Common/CustomSnackbar";
@@ -138,7 +138,26 @@ function CustomStepperForSalary({ sections, initialData }) {
     clearFormData();
   };
 
-  const handleGenerateIncomeTax = async () => {
+  const updateFormDataWithResponse = useCallback((currentFormData, responseData) => {
+    const { incomeTax, socialInsuranceAmount } = responseData;
+  
+    if (
+      currentFormData.incomeTax !== incomeTax ||
+      currentFormData.socialInsurance !== socialInsuranceAmount ||
+      currentFormData.refundAmount !== incomeTax
+    ) {
+      return {
+        ...currentFormData,
+        incomeTax,
+        socialInsurance: socialInsuranceAmount,
+        refundAmount: incomeTax,
+      };
+    }
+  
+    return currentFormData;
+  }, []);
+
+  const handleGenerateIncomeTax = useCallback(async () => {
     const transformedData = transformFormDataForIncomeTax(formData, initialData);
   
     try {
@@ -148,18 +167,19 @@ function CustomStepperForSalary({ sections, initialData }) {
         throw new Error(response?.error || "Failed to generate income tax");
       }
   
-      const { incomeTax, socialInsuranceAmount } = response.data;
-      setFormData({
-        incomeTax,
-        socialInsuranceAmount,
-        refundAmount: incomeTax, // Assuming refundAmount should match incomeTax
-      });
+      const newFormData = updateFormDataWithResponse(formData, response.data);
+  
+      if (newFormData !== formData) {
+        setFormData(newFormData);
+        console.log("Updated formData:", JSON.stringify(newFormData, null, 2));
+      }
+  
       setShowGenerateButton(false);
   
     } catch (error) {
       console.error("Error generating income tax:", error);
     }
-  };
+  }, [formData, setFormData, initialData, updateFormDataWithResponse]);
 
   const handleFormChange = handleFormChangeUtil(formData, setFormData, setShowGenerateButton);
 

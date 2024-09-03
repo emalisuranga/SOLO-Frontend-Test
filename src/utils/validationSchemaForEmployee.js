@@ -47,11 +47,10 @@ const getValidationSchema = (t) => {
     department: Yup.string().required(
       t("validation.required", { field: t("fields.department") })
     ),
-    jobTitle: Yup.string()
-  .matches(
-    /^[A-Za-z\s\u3040-\u30FF\u4E00-\u9FFF]*$/,
-    t("validation.lettersOnly", { field: t("fields.jobTitle") })
-  ),
+    jobTitle: Yup.string().matches(
+      /^[A-Za-z\s\u3040-\u30FF\u4E00-\u9FFF]*$/,
+      t("validation.lettersOnly", { field: t("fields.jobTitle") })
+    ),
     bankAccountNumber: Yup.number()
       .nullable()
       .transform((value, originalValue) =>
