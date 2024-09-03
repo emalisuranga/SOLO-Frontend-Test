@@ -47,9 +47,11 @@ const getValidationSchema = (t) => {
     department: Yup.string().required(
       t("validation.required", { field: t("fields.department") })
     ),
-    jobTitle: Yup.string().required(
-      t("validation.required", { field: t("fields.jobTitle") })
-    ),
+    jobTitle: Yup.string()
+  .matches(
+    /^[A-Za-z\s\u3040-\u30FF\u4E00-\u9FFF]*$/,
+    t("validation.lettersOnly", { field: t("fields.jobTitle") })
+  ),
     bankAccountNumber: Yup.number()
       .nullable()
       .transform((value, originalValue) =>
@@ -113,14 +115,12 @@ const getValidationSchema = (t) => {
       .required(
         t("validation.required", { field: t("fields.specialAllowance") })
       ),
-      spouseDeduction: Yup.number()
-      .typeError(
-        t("validation.number", { field: t("fields.spouseDeduction") })
-      ),
-      dependentDeduction: Yup.number()
-      .typeError(
-        t("validation.number", { field: t("fields.dependentDeduction") })
-      ),
+    spouseDeduction: Yup.number().typeError(
+      t("validation.number", { field: t("fields.spouseDeduction") })
+    ),
+    dependentDeduction: Yup.number().typeError(
+      t("validation.number", { field: t("fields.dependentDeduction") })
+    ),
   });
 };
 
