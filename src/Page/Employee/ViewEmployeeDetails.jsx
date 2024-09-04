@@ -88,7 +88,7 @@ const EmployeeDetails = () => {
       <Box sx={{ p: 3 }}>
         <Card>
           <CardContent>
-            <Typography variant="h4" gutterBottom>{`${employee.lastName} ${employee.firstName} `}</Typography>
+            <Typography variant="h4" gutterBottom>{`${employee.lastName} ${employee.firstName} (ID: ${employee.employeeNumber})`}</Typography>
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <Typography variant="h6" gutterBottom>{t("fields.personalInformation")}</Typography>

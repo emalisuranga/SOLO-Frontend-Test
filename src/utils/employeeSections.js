@@ -33,6 +33,7 @@ const createFields = (employee, fieldsConfig) =>
         { name: "firstName", type: "text", required: true },
         { name: "furiganaLastName", type: "text", required: true },
         { name: "furiganaFirstName", type: "text", required: true },
+        { name: "employeeNumber", type: "text", required: true },
         { name: "phone", type: "text", required: true },
         { name: "address", type: "text", required: true },
         { name: "dateOfBirth", type: "date", required: true },

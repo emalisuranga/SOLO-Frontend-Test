@@ -49,6 +49,7 @@
     "fetchSalarySlipSuccess": "給与明細が正常に取得されました"
   },
   "fields": {
+    "employeeNumber": "社員番号*",
     "firstName": "名前",
     "lastName": "姓",
     "furiganaFirstName": "フリガナ名前",
@@ -119,7 +120,8 @@
     "invalidDate": "{{field}}は有効な日付でなければなりません。",
     "lessThanRemainingVacationDays": "{{numberOfPaidHolidays}}は{{remainingPaidVacationDays}}より少なくなければなりません。",
     "greaterThanZero": "{{field}}はゼロより大きくなければなりません。",
-    "daysOffMismatch": "休暇の日数を確認してください。予想される値と一致していません。"
+    "daysOffMismatch": "休暇の日数を確認してください。予想される値と一致していません。",
+    "alphanumericJapaneseOnly": "{{field}}には、英字、数字、および日本語の文字のみ使用できます。"
   },
   "months": {
     "january": "1月",

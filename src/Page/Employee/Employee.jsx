@@ -46,7 +46,7 @@ const EmployeeDetails = () => {
         {selectedEmployee ? (
           <Grid item xs={12}>
             <Typography variant="h6">
-              {`${selectedEmployee.lastName} ${selectedEmployee.firstName} (ID: ${selectedEmployee.id})`}
+              {`${selectedEmployee.lastName} ${selectedEmployee.firstName} (ID: ${selectedEmployee.employeeNumber})`}
             </Typography>
             <EmployeeTable data={[selectedEmployee]} />
           </Grid>
