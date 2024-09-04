@@ -122,7 +122,7 @@ const SalaryTable = ({ salaries, onDelete }) => {
           <TableBody>
             {paginatedSalaries.map((salary) => (
               <TableRow key={salary.id}>
-                <TableCell>{salary.employee.id}</TableCell>
+                <TableCell>{salary.employee.employeeNumber}</TableCell>
                 <TableCell>{`${salary.employee.lastName} ${salary.employee.firstName}`}</TableCell>
                 <TableCell>{salary.totalEarnings}</TableCell>
                 <TableCell>{salary.totalDeductions}</TableCell>

@@ -251,7 +251,7 @@ const SalarySlipDetails = () => {
                 </CustomTableCell>
                 <CustomTableCell>
                   <SmallTypography variant="body2" align="center">
-                    {`${salarySlip.employeeId}`}
+                    {`${salarySlip.employee.employeeNumber}`}
                   </SmallTypography>
                 </CustomTableCell>
               </TableRow>

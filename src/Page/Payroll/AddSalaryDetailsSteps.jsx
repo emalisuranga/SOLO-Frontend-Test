@@ -179,7 +179,7 @@ function CustomStepperForSalary({ sections, initialData }) {
     } catch (error) {
       console.error("Error generating income tax:", error);
     }
-  }, [formData, setFormData, initialData, updateFormDataWithResponse]);
+  }, [formData, setFormData, initialData, generateIncomeTax, updateFormDataWithResponse]);
 
   const handleFormChange = handleFormChangeUtil(formData, setFormData, setShowGenerateButton);
 

@@ -45,6 +45,7 @@
     "fetchSalarySlipSuccess": "Salary slip details fetched successfully"
   },
   "fields": {
+    "employeeNumber": "Employee Number",
     "firstName": "First Name",
     "lastName": "Last Name",
     "furiganaFirstName": "Furigana First Name",
@@ -115,7 +116,8 @@
     "invalidDate": "{{field}} must be a valid date.",
     "lessThanRemainingVacationDays": "{{numberOfPaidHolidays}} must be less than {{remainingPaidVacationDays}}.",
     "greaterThanZero": "{{field}} must be greater than zero.",
-    "daysOffMismatch": "Please check the number of days off. They do not match the expected values."
+    "daysOffMismatch": "Please check the number of days off. They do not match the expected values.",
+    "alphanumericJapaneseOnly": "The field {{field}} can only contain letters, numbers, and Japanese characters."
   },
   "months": {
     "january": "January",

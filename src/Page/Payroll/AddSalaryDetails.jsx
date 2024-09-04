@@ -42,7 +42,7 @@ const AddSalary = () => {
               {`${selectedEmployee.lastName} ${selectedEmployee.firstName}`}
             </EmployeeInfo>
             <EmployeeInfo variant="h4" gutterBottom>
-              {selectedEmployee.id}
+              {selectedEmployee.employeeNumber}
             </EmployeeInfo>
           </EmployeeInfoContainer>
           <AddSalaryDetailsSteps

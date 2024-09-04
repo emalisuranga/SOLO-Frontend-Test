@@ -90,7 +90,7 @@ const EmployeeSearch = ({ onSearch }) => {
         >
           {employeeList.map((item) => (
             <MenuItem key={item.id} value={item.id}>
-              {item.id}
+              {item.employeeNumber}
             </MenuItem>
           ))}
         </TextField>

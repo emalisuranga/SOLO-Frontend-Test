@@ -2,6 +2,9 @@ import * as Yup from "yup";
 
 const getValidationSchema = (t) => {
   return Yup.object().shape({
+    employeeNumber: Yup.string()
+      .matches(/^[A-Za-z0-9\u3040-\u30FF\u4E00-\u9FFF]+$/, t("validation.alphanumericJapaneseOnly", { field: t("fields.employeeNumber") }))
+      .required(t("validation.required", { field: t("fields.employeeNumber") })),
     firstName: Yup.string()
       .matches(
         /^[A-Za-z\s\u3040-\u30FF\u4E00-\u9FFF]+$/,
