@@ -171,5 +171,12 @@ export const getSalaryValidationSchema = (t) => {
       .required(
         t("validation.required", { field: t("fields.nonEmploymentDeduction") })
       ),
+      overtimePay: Yup.number()
+      .typeError(
+        t("validation.number", { field: t("fields.overtimePay") })
+      )
+      .required(
+        t("validation.required", { field: t("fields.overtimePay") })
+      ),
   });
 };

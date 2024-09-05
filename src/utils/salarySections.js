@@ -4,7 +4,7 @@ import { generatePaymentText } from './dateUtils';
 const formatDate = (dateString) => {
   if (!dateString) return '';
   const date = new Date(dateString);
-  return date.toISOString().split('T')[0]; // Extract only the date part
+  return date.toISOString().split('T')[0]; 
 };
 
 const createField = (name, type, required, defaultValue) => ({
@@ -49,6 +49,7 @@ const getSalarySections = (data) => [
       { name: "leaveAllowance", type: "text", required: true },
       { name: "specialAllowance", type: "text", required: true },
       { name: "holidayAllowance", type: "text", required: true },
+      { name: "overtimePay", type: "text", required: true },
       { name: "nonEmploymentDeduction", type: "text", required: true },
     ]),
   },

@@ -72,3 +72,9 @@ export const parseInputValue = (name, value) => {
       "longTermCareInsurance",
     ].includes(name);
   };
+
+  export const calculateOvertimePayment = (workDetails) => {
+    const { basicSalary, scheduledWorkingDays, overtime } = workDetails;
+    const calculatedValue = (((basicSalary / scheduledWorkingDays) / 8) * 1.25) * overtime;
+    return Math.floor(calculatedValue) + (calculatedValue % 1 !== 0 ? 1 : 0);
+};

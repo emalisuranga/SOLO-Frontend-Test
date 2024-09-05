@@ -171,7 +171,6 @@ function CustomStepperForSalary({ sections, initialData }) {
   
       if (newFormData !== formData) {
         setFormData(newFormData);
-        console.log("Updated formData:", JSON.stringify(newFormData, null, 2));
       }
   
       setShowGenerateButton(false);
