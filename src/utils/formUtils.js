@@ -2,7 +2,7 @@ import getValidationSchema from "./validationSchemaForEmployee";
 import { getSalaryValidationSchema } from "./validationSchemaForSalary";
 import getSections from "./employeeSections";
 import { generatePaymentText } from "./dateUtils";
-import { parseInputValue, calculateDeductionsAndAllowance, shouldShowGenerateButton } from '../helpers/ salaryInputProcessors';
+import { parseInputValue, calculateDeductionsAndAllowance, shouldShowGenerateButton, calculateOvertimePayment } from '../helpers/ salaryInputProcessors';
 
 const formatDate = (dateString) => {
   if (!dateString) return "";
@@ -273,6 +273,13 @@ export const handleFormChangeUtil = (formData, setFormData, setShowGenerateButto
     if (deductionsAndAllowance) {
       updatedFormData.nonEmploymentDeduction = deductionsAndAllowance.nonEmploymentDeduction;
       updatedFormData.holidayAllowance = deductionsAndAllowance.holidayAllowance;
+    }
+  }
+
+  if (["overtime"].includes(name)) {
+    const overtimePay = calculateOvertimePayment(updatedFormData);
+    if (overtimePay) {
+      updatedFormData.overtimePay =overtimePay;
     }
   }
 
