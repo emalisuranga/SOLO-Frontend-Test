@@ -1,17 +1,22 @@
 import React from "react";
 import { Snackbar, Alert } from "@mui/material";
+import { useSnackbarStore } from "../../store/snackbarStore"; 
 
-const CustomSnackbar = ({ open, message, severity, onClose }) => (
-  <Snackbar
-    open={open}
-    autoHideDuration={6000}
-    onClose={onClose}
-    anchorOrigin={{ vertical: "top", horizontal: "right" }}
-  >
-    <Alert onClose={onClose} severity={severity} sx={{ width: "100%" }}>
-      {message}
-    </Alert>
-  </Snackbar>
-);
+const CustomSnackbar = () => {
+  const { snackbarOpen, snackbarMessage, snackbarSeverity, closeSnackbar } = useSnackbarStore();
+
+  return (
+    <Snackbar
+      open={snackbarOpen}
+      autoHideDuration={4000}
+      onClose={closeSnackbar}
+      anchorOrigin={{ vertical: "top", horizontal: "right" }}
+    >
+      <Alert onClose={closeSnackbar} severity={snackbarSeverity} sx={{ width: "100%" }}>
+        {snackbarMessage}
+      </Alert>
+    </Snackbar>
+  );
+};
 
 export default CustomSnackbar;

@@ -22,8 +22,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useTranslation } from "react-i18next";
 import useEmployeeStore from "../../store/employeeStore";
 import { useNavigate } from "react-router-dom";
-import CustomSnackbar from "../../component/Common/CustomSnackbar";
-import { handleSuccess, handleError } from "../../utils/responseHandlers";
+import { useSnackbarStore } from "../../store/snackbarStore";
 
 const EmployeeTable = ({ data }) => {
   const { t } = useTranslation();
@@ -32,11 +31,10 @@ const EmployeeTable = ({ data }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [currentRow, setCurrentRow] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const setSnackbar = useSnackbarStore((state) => state.setSnackbar);
+  
 
   useEffect(() => {
     if (currentRow) {
@@ -67,18 +65,14 @@ const EmployeeTable = ({ data }) => {
     setCurrentRow(null);
   };
 
-  const handleCloseSnackbar = () => {
-    setSnackbarOpen(false);
-  };
-
   const handleDeleteConfirm = async () => {
     if (currentRow) {
       try {
         await softDeleteEmployee(currentRow.id);
-        handleSuccess(setSnackbarMessage, setSnackbarSeverity, setSnackbarOpen, t("actions.delete_success"));
+        setSnackbar(t("actions.delete_success"), "success");
         setTimeout(() => fetchEmployees(), 2000);
       } catch (error) {
-        handleError(setSnackbarMessage, setSnackbarSeverity, setSnackbarOpen, error, t("actions.delete_error"));
+        setSnackbar(t("actions.delete_error"), "error");
         console.error("Failed to save data", error);
       }
       handleDialogClose();
@@ -188,12 +182,6 @@ const EmployeeTable = ({ data }) => {
           </Button>
         </DialogActions>
       </Dialog>
-      <CustomSnackbar
-        open={snackbarOpen}
-        message={snackbarMessage}
-        severity={snackbarSeverity}
-        onClose={handleCloseSnackbar}
-      />
     </TableContainer>
   );
 };

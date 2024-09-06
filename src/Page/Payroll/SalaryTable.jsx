@@ -24,9 +24,8 @@ import {
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import CustomSnackbar from "../../component/Common/CustomSnackbar";
 import useSalaryStore from "../../store/salaryStore";
-import { handleSuccess, handleError } from "../../utils/responseHandlers";
+import { useSnackbarStore } from "../../store/snackbarStore";
 
 const SalaryTable = ({ salaries, onDelete }) => {
   const navigate = useNavigate();
@@ -34,10 +33,8 @@ const SalaryTable = ({ salaries, onDelete }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [currentRow, setCurrentRow] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
   const { deleteSalary, fetchSalaryDetailsByMonth } = useSalaryStore();
+  const setSnackbar = useSnackbarStore((state) => state.setSnackbar);
 
   // Pagination states
   const [page, setPage] = useState(0);
@@ -73,18 +70,14 @@ const SalaryTable = ({ salaries, onDelete }) => {
     setCurrentRow(null);
   };
 
-  const handleCloseSnackbar = () => {
-    setSnackbarOpen(false);
-  };
-
   const handleDeleteConfirm = async () => {
     if (currentRow) {
       try {
         await deleteSalary(currentRow.id);
-        handleSuccess(setSnackbarMessage, setSnackbarSeverity, setSnackbarOpen, t("actions.delete_success"));
+        setSnackbar(t("actions.delete_success"), "success");
         setTimeout(() => fetchSalaryDetailsByMonth(currentRow.month, currentRow.year), 2000);
       } catch (error) {
-        handleError(setSnackbarMessage, setSnackbarSeverity, setSnackbarOpen, error, t("actions.delete_error"));
+        setSnackbar(t("actions.delete_error"), "error");
         console.error("Failed to save data", error);
       }
       handleDialogClose();
@@ -182,12 +175,6 @@ const SalaryTable = ({ salaries, onDelete }) => {
           </Button>
         </DialogActions>
       </Dialog>
-      <CustomSnackbar
-        open={snackbarOpen}
-        message={snackbarMessage}
-        severity={snackbarSeverity}
-        onClose={handleCloseSnackbar}
-      />
     </>
   );
 };

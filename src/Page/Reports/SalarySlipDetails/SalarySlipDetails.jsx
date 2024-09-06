@@ -25,9 +25,8 @@ import {
 import SalarySlipPrint from "../SalarySlipPrint";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { handleSuccess, handleError } from "../../../utils/responseHandlers";
-import CustomSnackbar from "../../../component/Common/CustomSnackbar";
 import { formatSalarySlipData } from "../../../utils/formatUtils";
+import { useSnackbarStore } from "../../../store/snackbarStore";
 
 const SalarySlipDetails = () => {
   const { t } = useTranslation();
@@ -42,9 +41,7 @@ const SalarySlipDetails = () => {
     setSalarySlip,
   } = useSalarySlipStore();
   const [remarks, setRemarks] = useState("");
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
+  const setSnackbar = useSnackbarStore((state) => state.setSnackbar);
 
   const fetchAndSetSalarySlipDetails = useCallback(async () => {
     try {
@@ -55,25 +52,14 @@ const SalarySlipDetails = () => {
       if (result) {
         const formattedData = formatSalarySlipData(result);
         setSalarySlip(formattedData);
-        handleSuccess(
-          setSnackbarMessage,
-          setSnackbarSeverity,
-          setSnackbarOpen,
-          t("actions.fetchSalarySlipSuccess")
-        );
+        setSnackbar(t("actions.fetchSalarySlipSuccess"), "success");
       } else {
         throw new Error("Data not found");
       }
     } catch (error) {
-      handleError(
-        setSnackbarMessage,
-        setSnackbarSeverity,
-        setSnackbarOpen,
-        error,
-        t("actions.fetchSalarySlipError")
-      );
+      setSnackbar(t("actions.fetchSalarySlipError"), "error");
     }
-  }, [employeeId, paymentDetailsId, fetchSalarySlipDetails, setSalarySlip, t]);
+  }, [employeeId, paymentDetailsId, fetchSalarySlipDetails, setSalarySlip, t, setSnackbar]);
 
   useEffect(() => {
     fetchAndSetSalarySlipDetails();
@@ -88,27 +74,12 @@ const SalarySlipDetails = () => {
   const handleSubmit = async () => {
     try {
       await updateRemarks(paymentDetailsId, remarks);
-      handleSuccess(
-        setSnackbarMessage,
-        setSnackbarSeverity,
-        setSnackbarOpen,
-        t("actions.remark_submit_message")
-      );
+      setSnackbar(t("actions.remark_submit_message"), "success");
       exportAsPDF();
     } catch (error) {
       console.error("Error updating remarks:", error);
-      handleError(
-        setSnackbarMessage,
-        setSnackbarSeverity,
-        setSnackbarOpen,
-        error,
-        t("actions.update_error")
-      );
+      setSnackbar(t("actions.update_error"), "error");
     }
-  };
-
-  const handleCloseSnackbar = () => {
-    setSnackbarOpen(false);
   };
 
   const exportAsPDF = async () => {
@@ -825,12 +796,6 @@ const SalarySlipDetails = () => {
           {t("button.backToSalaryDetails")}
         </Button>
       </Stack>
-      <CustomSnackbar
-        open={snackbarOpen}
-        message={snackbarMessage}
-        severity={snackbarSeverity}
-        onClose={handleCloseSnackbar}
-      />
     </Box>
   );
 };
