@@ -117,7 +117,8 @@
     "lessThanRemainingVacationDays": "{{numberOfPaidHolidays}} must be less than {{remainingPaidVacationDays}}.",
     "greaterThanZero": "{{field}} must be greater than zero.",
     "daysOffMismatch": "Please check the number of days off. They do not match the expected values.",
-    "alphanumericJapaneseOnly": "The field {{field}} can only contain letters, numbers, and Japanese characters."
+    "alphanumericJapaneseOnly": "The field {{field}} can only contain letters, numbers, and Japanese characters.",
+    "onlyKatakana": "The field {{field}} can only contain katakana characters."
   },
   "months": {
     "january": "January",
