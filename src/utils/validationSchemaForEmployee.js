@@ -19,16 +19,16 @@ const getValidationSchema = (t) => {
       .required(t("validation.required", { field: t("fields.lastName") })),
     furiganaFirstName: Yup.string()
       .matches(
-        /^[A-Za-z\s\u3040-\u30FF\u4E00-\u9FFF]+$/,
-        t("validation.lettersOnly", { field: t("fields.furiganaFirstName") })
+        /^[\u30A0-\u30FFー]+$/,
+        t("validation.onlyKatakana", { field: t("fields.furiganaFirstName") })
       )
       .required(
         t("validation.required", { field: t("fields.furiganaFirstName") })
       ),
     furiganaLastName: Yup.string()
       .matches(
-        /^[A-Za-z\s\u3040-\u30FF\u4E00-\u9FFF]+$/,
-        t("validation.lettersOnly", { field: t("fields.furiganaLastName") })
+        /^[\u30A0-\u30FFー]+$/,
+        t("validation.onlyKatakana", { field: t("fields.furiganaLastName") })
       )
       .required(
         t("validation.required", { field: t("fields.furiganaLastName") })
