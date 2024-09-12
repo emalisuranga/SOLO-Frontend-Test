@@ -67,14 +67,14 @@ const SalarySlipDetails = () => {
 
   useEffect(() => {
     if (salarySlip && salarySlip.remarks !== undefined) {
-      setRemarks(salarySlip.remarks || "");
+      setRemarks(salarySlip.remarks ? salarySlip.remarks.trim() : "");
     }
   }, [salarySlip]);
 
   const handleSubmit = async () => {
     try {
-      if (remarks && remarks.trim() !== "") {
-        await updateRemarks(paymentDetailsId, remarks);
+      await updateRemarks(paymentDetailsId, remarks);
+      if (remarks !== "") {
         setSnackbar(t("actions.remark_submit_message"), "success");
       }
   
