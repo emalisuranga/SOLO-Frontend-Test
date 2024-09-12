@@ -67,14 +67,17 @@ const SalarySlipDetails = () => {
 
   useEffect(() => {
     if (salarySlip && salarySlip.remarks !== undefined) {
-      setRemarks(salarySlip.remarks || "");
+      setRemarks(salarySlip.remarks ? salarySlip.remarks.trim() : "");
     }
   }, [salarySlip]);
 
   const handleSubmit = async () => {
     try {
       await updateRemarks(paymentDetailsId, remarks);
-      setSnackbar(t("actions.remark_submit_message"), "success");
+      if (remarks !== "") {
+        setSnackbar(t("actions.remark_submit_message"), "success");
+      }
+  
       exportAsPDF();
     } catch (error) {
       console.error("Error updating remarks:", error);
@@ -229,67 +232,6 @@ const SalarySlipDetails = () => {
             </TableBody>
           </Table>
         </Box>
-
-        {/* <Grid container spacing={2} sx={{ mt: 1 }}>
-          <Grid item xs={5}>
-            <SmallTypography variant="body2" align="left">
-            {salarySlip.slipName}
-            </SmallTypography>
-          </Grid>
-          <Grid item xs={6}>
-            <Typography variant="body2" align="left">
-              給料明細書
-            </Typography>
-          </Grid>
-        </Grid> */}
-
-        {/* <Box
-          sx={{
-            mt: 1,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Table sx={{ width: 1000 }}>
-            <TableBody>
-              <TableRow>
-                <ColoredTableCell>
-                  <SmallTypography variant="body2" align="center">
-                    部門名
-                  </SmallTypography>
-                </ColoredTableCell>
-                <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
-                    {`${salarySlip.employee.department}`}
-                  </SmallTypography>
-                </CustomTableCell>
-                <ColoredTableCell>
-                  <SmallTypography variant="body2" align="center">
-                    社員NO
-                  </SmallTypography>
-                </ColoredTableCell>
-                <CustomTableCell>
-                  <SmallTypography
-                    variant="body2"
-                    align="center"
-                  >{`${salarySlip.employeeId}`}</SmallTypography>
-                </CustomTableCell>
-                <ColoredTableCell>
-                  <SmallTypography variant="body2" align="center">
-                    氏名
-                  </SmallTypography>
-                </ColoredTableCell>
-                <CustomTableCell>
-                  <SmallTypography
-                    variant="body2"
-                    align="center"
-                  >{`${salarySlip.employee.firstName} ${salarySlip.employee.lastName}`}</SmallTypography>
-                </CustomTableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </Box> */}
 
         <Grid
           container
