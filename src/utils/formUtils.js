@@ -3,6 +3,7 @@ import { getSalaryValidationSchema } from "./validationSchemaForSalary";
 import getSections from "./employeeSections";
 import { generatePaymentText } from "./dateUtils";
 import { parseInputValue, calculateDeductionsAndAllowance, shouldShowGenerateButton, calculateOvertimePayment } from '../helpers/ salaryInputProcessors';
+import { employeeStore } from "../store/employeeStore";
 
 const formatDate = (dateString) => {
   if (!dateString) return "";
@@ -46,11 +47,16 @@ const getFieldValue = (initialData, field) => {
 };
 
 export const initializeFormData = (sections, initialData = {}) => {
+  const nextEmployeeNumber = employeeStore().nextEmployeeNumber;
   const formData = {};
 
   sections.forEach((section) => {
     section.fields.forEach((field) => {
-      formData[field.name] = getFieldValue(initialData, field);
+      if (field.name === 'employeeNumber') {
+        formData[field.name] = nextEmployeeNumber || ""; 
+      } else {
+        formData[field.name] = getFieldValue(initialData, field); 
+      }
     });
   });
 
@@ -91,6 +97,7 @@ export const initializeAddSalaryFormData = (sections, employeeData = {}) => {
   formData.basicSalary =
     salaryDetails?.basicSalary !== undefined ? salaryDetails.basicSalary : 0;
   formData.slipName = generatePaymentText();
+  console.log(formData);
 
   return formData;
 };
@@ -289,85 +296,3 @@ export const handleFormChangeUtil = (formData, setFormData, setShowGenerateButto
 
   setFormData(updatedFormData);
 };
-
-// export const handleFormChangeUtil = (formData, setFormData, setShowGenerateButton) => (event) => {
-//     const { name, value } = event.target;
-// let parsedValue;
-
-// if (name === 'slipName') {
-//   parsedValue = value; 
-// } else {
-//   if (!isNaN(value) && value.trim() !== '') {
-//     parsedValue = Number(value); 
-//   } else {
-//     parsedValue = 0;
-//     console.warn(`Invalid input for ${name}: "${value}". Expected a number.`);
-//   }
-// }
-// const updatedFormData = { ...formData, [name]: parsedValue };
-
-//     if (
-//       name === "numberOfWorkingDays" ||
-//       name === "numberOfPaidHolidays" ||
-//       name === "numberOfNonPaidLeave"
-//     ) {
-//       const {
-//         scheduledWorkingDays,
-//         numberOfWorkingDays,
-//         numberOfPaidHolidays,
-//         numberOfNonPaidLeave,
-//         basicSalary,
-//       } = updatedFormData;
-
-//       const adjustedScheduledWorkingDays = scheduledWorkingDays - (numberOfPaidHolidays || 0);
-//       const adjustedWorkingDays = numberOfWorkingDays - (numberOfNonPaidLeave || 0);
-
-//       if (scheduledWorkingDays < numberOfWorkingDays) {
-//         const nonEmploymentDeduction = calculateNonEmploymentDeduction(
-//           {
-//             adjustedScheduledWorkingDays: adjustedScheduledWorkingDays,
-//             adjustedWorkingDays: adjustedWorkingDays,
-//             scheduledWorkingDays: scheduledWorkingDays,
-//             numberOfPaidHolidays,
-//           },
-//           basicSalary
-//         );
-
-//         const holidayAllowance = calculateHolidayAllowance(basicSalary, {
-//           scheduledWorkingDays: adjustedScheduledWorkingDays,
-//           numberOfWorkingDays: adjustedWorkingDays,
-//         });
-//         updatedFormData.nonEmploymentDeduction = nonEmploymentDeduction;
-//         updatedFormData.holidayAllowance = holidayAllowance;
-//       } else {
-//         const checkCorrectDayOff = scheduledWorkingDays - numberOfWorkingDays;
-//         const currantDayOff = numberOfNonPaidLeave + numberOfPaidHolidays;
-
-//         if (checkCorrectDayOff == currantDayOff) {
-//           const totalNonPaidDaysOff = Math.max(0,numberOfNonPaidLeave - numberOfPaidHolidays);
-//           const deduction = calculateDeduction(
-//             basicSalary,
-//             scheduledWorkingDays,
-//             totalNonPaidDaysOff
-//           );
-//           updatedFormData.nonEmploymentDeduction = deduction;
-//           updatedFormData.holidayAllowance = 0;
-//         } else {
-//           console.log("Please check the number of days off");
-//         }
-//       }
-//     }
-
-//     if (
-//       [
-//         "healthInsurance",
-//         "employeePensionInsurance",
-//         "employmentInsurance",
-//         "longTermCareInsurance",
-//       ].includes(name)
-//     ) {
-//       setShowGenerateButton(true);
-//     }
-
-//     setFormData(updatedFormData);
-//   };

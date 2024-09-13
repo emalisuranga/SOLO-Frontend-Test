@@ -10,6 +10,8 @@ const useEmployeeStore = create((set) => ({
   employee: null,
   loading: false,
   error: null,
+  nextEmployeeNumber: "",
+  
   fetchEmployees: async () => {
     set({ loading: true, error: null });
     try {
@@ -74,6 +76,21 @@ const useEmployeeStore = create((set) => ({
       throw error;
     }
   },
+  fetchNextEmployeeNumber: async () => {
+    set({ loading: true, error: null });
+    try {
+      const response = await api.get('/employees/next-employee-number');
+      set({ nextEmployeeNumber: response.data.data.nextEmployeeNumber, loading: false });
+      return response.data.data.nextEmployeeNumber;
+    } catch (error) {
+      console.error("Error fetching next employee number:", error);
+      set({ error: "Error fetching next employee number", loading: false });
+      throw error;
+    }
+  },
 }));
 
+
+
 export default useEmployeeStore;
+export const employeeStore = useEmployeeStore.getState;

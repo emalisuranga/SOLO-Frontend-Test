@@ -32,7 +32,6 @@ export const parseInputValue = (name, value) => {
       const currantDayOff = numberOfNonPaidLeave + numberOfPaidHolidays;
   
       if (checkCorrectDayOff !== currantDayOff) {
-        console.log("Please check the number of days off");
         return null;
       }
   
