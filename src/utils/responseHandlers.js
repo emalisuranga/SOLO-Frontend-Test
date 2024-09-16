@@ -1,5 +1,4 @@
 export const handleSuccess = (setSnackbarMessage, setSnackbarSeverity, setSnackbarOpen, message) => {
-  console.log("message:", message);
     setSnackbarMessage(message || "Operation successful.");
     setSnackbarSeverity("success");
     setSnackbarOpen(true);
