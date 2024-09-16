@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from "react";
 import {  CircularProgress, Box } from "@mui/material";
-import CustomTabs from "../../component/CustomTabs";
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import useEmployeeStore from '../../store/employeeStore';
 import getSections from '../../utils/employeeSections';
 import EmployeeHeader from '../../Page/Employee/EmployeeHeader';
+import CustomStepperForEmployee from "./CustomStepperForEmployee";
 
 const EditEmployee = () => {
   const { id } = useParams();
   const { employee, fetchEmployeeDetails } = useEmployeeStore();
-  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [sections, setSections] = useState([]);
 
@@ -33,9 +32,6 @@ const EditEmployee = () => {
     }
   }, [employee]);
 
-  const handleSubmit = (formData) => {
-    navigate('/employee');
-  };
 
   if (loading) {
     return (
@@ -55,7 +51,8 @@ const EditEmployee = () => {
   return (
     <React.Fragment>
       <EmployeeHeader titleKey="updateForm" />
-      <CustomTabs sections={sections} mode="edit" initialData={employee} onSubmit={handleSubmit} />
+      {/* <CustomTabs sections={sections} mode="edit" initialData={employee} onSubmit={handleSubmit} /> */}
+      <CustomStepperForEmployee sections={sections} mode="edit" initialData={employee}/>
     </React.Fragment>
   );
 };

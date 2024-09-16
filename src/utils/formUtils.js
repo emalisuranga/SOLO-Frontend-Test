@@ -12,50 +12,58 @@ const formatDate = (dateString) => {
 };
 
 const getFieldValue = (initialData, field) => {
-  const nestedValue = initialData[field.name];
-
-  if (field.type === "date") {
-    return nestedValue ? formatDate(nestedValue) : "";
-  } else {
-    if (nestedValue !== undefined) {
-      return nestedValue;
-    } else if (
-      initialData.bankDetails &&
-      initialData.bankDetails[field.name] !== undefined
-    ) {
-      return initialData.bankDetails[field.name];
-    } else if (
-      initialData.salaryDetails &&
-      initialData.salaryDetails[field.name] !== undefined
-    ) {
-      return initialData.salaryDetails[field.name];
-    } else {
-      return [
-        // "overtimePay",
-        "transportationCosts",
-        "familyAllowance",
-        "attendanceAllowance",
-        "leaveAllowance",
-        "specialAllowance",
-        "spouseDeduction",
-        "dependentDeduction",
-      ].includes(field.name)
-        ? "0"
-        : "";
+  if (initialData[field.name] !== undefined) {
+    if (field.type === 'date') {
+      return formatDate(initialData[field.name]);
     }
+    return initialData[field.name];
   }
+
+  if (initialData.bankDetails?.[field.name] !== undefined) {
+    return initialData.bankDetails[field.name];
+  }
+
+  if (initialData.salaryDetails?.[field.name] !== undefined) {
+    return initialData.salaryDetails[field.name];
+  }
+
+  const defaultFields = [
+    'transportationCosts',
+    'familyAllowance',
+    'attendanceAllowance',
+    'leaveAllowance',
+    'specialAllowance',
+    'spouseDeduction',
+    'dependentDeduction',
+  ];
+
+  if (defaultFields.includes(field.name)) {
+    return '0'; 
+  }
+
+  return ''; 
 };
 
 export const initializeFormData = (sections, initialData = {}, mode) => {
   const formData = {};
+  console.log('sections', sections);
 
   sections.forEach((section) => {
     section.fields.forEach((field) => {
-      if ( mode === 'add' && field.name === 'employeeNumber') {
+      console.log('field', field);
+      if (mode === 'add' && field.name === 'employeeNumber') {
         const nextEmployeeNumber = employeeStore().nextEmployeeNumber;
-        formData[field.name] = nextEmployeeNumber; 
+        formData[field.name] = {
+          ...field,
+          value: nextEmployeeNumber,
+        };
       } else {
-        formData[field.name] = getFieldValue(initialData, field); 
+        const fieldValue = getFieldValue(initialData, field);
+
+        formData[field.name] = {
+          ...field, 
+          value: fieldValue !== undefined ? fieldValue : '', 
+        };
       }
     });
   });
@@ -140,6 +148,7 @@ export const handleFormChange = (formData, setFormData) => (event) => {
 };
 
 export const validateForm = async (formData, t) => {
+  // console.log(formData);
   const validationSchema = getValidationSchema(t);
 
   try {
@@ -152,6 +161,7 @@ export const validateForm = async (formData, t) => {
         validationErrors[error.path] = error.message;
       });
     }
+    console.log("validationErrors", validationErrors);
     return validationErrors;
   }
 };

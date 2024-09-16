@@ -6,30 +6,33 @@ const formatDate = (dateString) => {
   return date.toISOString().split('T')[0]; // Extract only the date part
 };
 
-const createField = (name, type, required, defaultValue) => ({
+const createField = (name, type, required = false, defaultValue = '') => ({
   name,
   type,
-  label: t(`fields.${name}`), 
+  label: t(`fields.${name}`),  
   required,
   defaultValue,
 });
 
-const createFields = (employee, fieldsConfig) => 
-  fieldsConfig.map(field => 
-    createField(
+const createFields = (employee, fieldsConfig) =>
+  fieldsConfig.map((field) => {
+    const fieldValue = field.type === 'date'
+      ? formatDate(employee?.[field.name]) 
+      : employee?.[field.name] || '';      
+
+    return createField(
       field.name,
       field.type,
-      field.label,
       field.required,
-      field.type === 'date' ? formatDate(employee?.[field.name]) : employee?.[field.name] || ''
-    )
-  );
+      fieldValue
+    );
+  });
 
   const getSections = (employee) => [
     {
       label: t("sections.personalInfo"),
       fields: createFields(employee, [
-        { name: "lastName", type: "text", required: true },
+        { name: "lastName", type: "text", required: true, defaultValue: '' },
         { name: "firstName", type: "text", required: true },
         { name: "furiganaLastName", type: "text", required: true },
         { name: "furiganaFirstName", type: "text", required: true },
