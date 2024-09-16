@@ -46,14 +46,14 @@ const getFieldValue = (initialData, field) => {
   }
 };
 
-export const initializeFormData = (sections, initialData = {}) => {
-  const nextEmployeeNumber = employeeStore().nextEmployeeNumber;
+export const initializeFormData = (sections, initialData = {}, mode) => {
   const formData = {};
 
   sections.forEach((section) => {
     section.fields.forEach((field) => {
-      if (field.name === 'employeeNumber') {
-        formData[field.name] = nextEmployeeNumber || ""; 
+      if ( mode === 'add' && field.name === 'employeeNumber') {
+        const nextEmployeeNumber = employeeStore().nextEmployeeNumber;
+        formData[field.name] = nextEmployeeNumber; 
       } else {
         formData[field.name] = getFieldValue(initialData, field); 
       }

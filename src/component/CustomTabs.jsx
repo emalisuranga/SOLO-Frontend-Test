@@ -29,10 +29,10 @@ function CustomTabs({ sections, mode = 'add', initialData = {} }) {
   const setSnackbar = useSnackbarStore((state) => state.setSnackbar);
 
   useEffect(() => {
-    const initialFormData = initializeFormData(sections, initialData);
+    const initialFormData = initializeFormData(sections, initialData, mode);
     setFormData(initialFormData);
     setErrors({});
-  }, [sections, initialData, setFormData, setErrors]);
+  }, [sections, initialData, setFormData, setErrors, mode]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
