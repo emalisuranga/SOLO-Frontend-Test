@@ -32,7 +32,7 @@ const EmployeeTable = ({ data }) => {
   const [currentRow, setCurrentRow] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const setSnackbar = useSnackbarStore((state) => state.setSnackbar);
   
 
