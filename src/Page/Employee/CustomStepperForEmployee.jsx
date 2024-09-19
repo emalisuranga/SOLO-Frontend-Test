@@ -21,20 +21,21 @@ function CustomStepperForEmployee({
 }) {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { formData, setFormData, clearFormData, setErrors, errors } =
-    useFormStore((state) => ({
+
+  const { formData, setFormData, clearFormData, setErrors, errors } = useFormStore(
+    (state) => ({
       formData: state.formData,
       setFormData: state.setFormData,
       clearFormData: state.clearFormData,
       setErrors: state.setErrors,
       errors: state.errors,
-    }));
+    })
+  );
 
   const { saveData, updateData, loading } = useEmployeeStore();
+  const setSnackbar = useSnackbarStore((state) => state.setSnackbar);
   const initialDataRef = useRef(initialData);
   const modeRef = useRef(mode);
-  const setSnackbar = useSnackbarStore((state) => state.setSnackbar);
-
   const [activeStep, setActiveStep] = useState(0);
 
   useEffect(() => {
@@ -43,13 +44,14 @@ function CustomStepperForEmployee({
     setErrors({});
   }, [sections, initialData, setFormData, setErrors, mode]);
 
+  const handleFormChange = handleChangeUtil(formData, setFormData);
+
   const handleNext = async () => {
     const validationErrors = await validateForm(formData, t);
 
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       setSnackbar(t("actions.validationError"), "error");
-
       return;
     }
     setErrors({});
@@ -57,20 +59,17 @@ function CustomStepperForEmployee({
     if (activeStep === sections.length - 1) {
       if (formData.basicSalary.value === 0) {
         setSnackbar(t("validation.basicSalaryCanBeZero"), "error");
-        return;
       } else {
         await handleDataSave();
       }
     } else {
-      setActiveStep((prevActiveStep) => prevActiveStep + 1);
+      setActiveStep((prevStep) => prevStep + 1);
     }
   };
 
   const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    setActiveStep((prevStep) => prevStep - 1);
   };
-
-  const handleFormChange = handleChangeUtil(formData, setFormData);
 
   const handleDataSave = useCallback(async () => {
     try {
@@ -82,22 +81,24 @@ function CustomStepperForEmployee({
         });
         setSnackbar(t("actions.update_success"), "success");
       } else {
-        await saveData(formData);
+        const deepCopyFormData = JSON.parse(JSON.stringify(formData));
+        await saveData(deepCopyFormData);
         setSnackbar(t("actions.add_success"), "success");
       }
       setTimeout(() => navigate("/employee"), 100);
     } catch (error) {
-      const errorMessage =
-        error.response?.status === 409
-          ? t("actions.duplicate_error")
-          : t("actions.add_error");
+      const errorMessage = error.response?.status === 409
+        ? t("actions.duplicate_error")
+        : t("actions.add_error");
       setSnackbar(errorMessage, "error");
+  
+      console.error("Error during data save:", error);
     }
   }, [formData, t, updateData, saveData, navigate, setSnackbar]);
 
-  const handleClear = () => {
+  const handleClear = useCallback(() => {
     clearFormData();
-  };
+  }, [clearFormData]);
 
   if (loading) {
     return <Loading />;
@@ -113,33 +114,31 @@ function CustomStepperForEmployee({
             </Step>
           ))}
         </Stepper>
+
         {sections.map((section, index) => (
           <div key={index} hidden={activeStep !== index}>
             <Box sx={{ mt: 2, mb: 1 }}>
               <CustomTextField
                 fields={section.fields}
-                formData={formData}
+                formData={{...formData}}
                 onChange={handleFormChange}
                 errors={errors}
               />
             </Box>
           </div>
         ))}
-        <Stack
-          direction="row"
-          spacing={2}
-          sx={{ marginTop: 2, justifyContent: "flex-end" }}
-        >
+
+        <Stack direction="row" spacing={2} sx={{ marginTop: 2, justifyContent: "flex-end" }}>
           <Button variant="contained" color="primary" onClick={handleNext}>
-            {activeStep === sections.length - 1
-              ? t("button.finish")
-              : t("button.next")}
+            {activeStep === sections.length - 1 ? t("button.finish") : t("button.next")}
           </Button>
+
           {activeStep > 0 && (
             <Button variant="outlined" color="primary" onClick={handleBack}>
               {t("button.back")}
             </Button>
           )}
+
           {activeStep === sections.length - 1 && (
             <Button variant="outlined" color="primary" onClick={handleClear}>
               {t("button.clear")}
