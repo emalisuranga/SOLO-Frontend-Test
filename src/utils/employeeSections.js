@@ -12,6 +12,7 @@ const createField = (name, type, required = false, defaultValue = '') => ({
   label: t(`fields.${name}`),  
   required,
   defaultValue,
+  readOnly: name === 'employeeNumber'
 });
 
 const createFields = (employee, fieldsConfig) =>
@@ -32,11 +33,11 @@ const createFields = (employee, fieldsConfig) =>
     {
       label: t("sections.personalInfo"),
       fields: createFields(employee, [
-        { name: "lastName", type: "text", required: true, defaultValue: '' },
+        { name: "lastName", type: "text", required: true },
         { name: "firstName", type: "text", required: true },
         { name: "furiganaLastName", type: "text", required: true },
         { name: "furiganaFirstName", type: "text", required: true },
-        { name: "employeeNumber", type: "text", required: true },
+        { name: "employeeNumber", type: "text", required: true, readOnly: true },
         { name: "phone", type: "text", required: true },
         { name: "address", type: "text", required: true },
         { name: "dateOfBirth", type: "date", required: true },

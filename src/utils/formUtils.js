@@ -2,7 +2,7 @@ import getValidationSchema from "./validationSchemaForEmployee";
 import { getSalaryValidationSchema } from "./validationSchemaForSalary";
 import getSections from "./employeeSections";
 import { generatePaymentText } from "./dateUtils";
-import { parseInputValue, calculateDeductionsAndAllowance, shouldShowGenerateButton, calculateOvertimePayment } from '../helpers/ salaryInputProcessors';
+import { parseInputValue, calculateDeductionsAndAllowance, shouldShowGenerateButton, calculateOvertimePayment } from '../helpers/salaryInputProcessors';
 import { employeeStore } from "../store/employeeStore";
 
 const formatDate = (dateString) => {
@@ -12,19 +12,22 @@ const formatDate = (dateString) => {
 };
 
 const getFieldValue = (initialData, field) => {
-  if (initialData[field.name] !== undefined) {
-    if (field.type === 'date') {
-      return formatDate(initialData[field.name]);
+  const { name, type } = field;
+
+  if (initialData[name] !== undefined) {
+    if (['basicSalary', 'transportationCosts', 'familyAllowance', 'attendanceAllowance', 'leaveAllowance', 'specialAllowance', 'spouseDeduction', 'dependentDeduction'].includes(name)) {
+      return Number(initialData[name]);
     }
-    return initialData[field.name];
+    
+    return type === 'date' ? formatDate(initialData[name]) : initialData[name];
   }
 
-  if (initialData.bankDetails?.[field.name] !== undefined) {
-    return initialData.bankDetails[field.name];
+  if (initialData.bankDetails?.[name] !== undefined) {
+    return initialData.bankDetails[name];
   }
 
-  if (initialData.salaryDetails?.[field.name] !== undefined) {
-    return initialData.salaryDetails[field.name];
+  if (initialData.salaryDetails?.[name] !== undefined) {
+    return Number(initialData.salaryDetails[name]); 
   }
 
   const defaultFields = [
@@ -37,8 +40,8 @@ const getFieldValue = (initialData, field) => {
     'dependentDeduction',
   ];
 
-  if (defaultFields.includes(field.name)) {
-    return '0'; 
+  if (defaultFields.includes(name)) {
+    return 0; 
   }
 
   return ''; 
@@ -46,28 +49,41 @@ const getFieldValue = (initialData, field) => {
 
 export const initializeFormData = (sections, initialData = {}, mode) => {
   const formData = {};
-  console.log('sections', sections);
 
   sections.forEach((section) => {
     section.fields.forEach((field) => {
-      console.log('field', field);
-      if (mode === 'add' && field.name === 'employeeNumber') {
+      const fieldName = field.name;
+
+      if (mode === 'add' && fieldName === 'employeeNumber') {
         const nextEmployeeNumber = employeeStore().nextEmployeeNumber;
-        formData[field.name] = {
+        formData[fieldName] = {
           ...field,
           value: nextEmployeeNumber,
         };
       } else {
         const fieldValue = getFieldValue(initialData, field);
 
-        formData[field.name] = {
-          ...field, 
-          value: fieldValue !== undefined ? fieldValue : '', 
+        const numericFields = [
+          'basicSalary', 
+          'transportationCosts',
+          'familyAllowance',
+          'attendanceAllowance',
+          'leaveAllowance',
+          'specialAllowance',
+          'spouseDeduction',
+          'dependentDeduction',
+        ];
+
+        formData[fieldName] = {
+          ...field,
+          value: numericFields.includes(fieldName) 
+            ? Number(fieldValue || 0)  
+            : (fieldValue !== undefined ? fieldValue : ''), 
+          defaultValue: numericFields.includes(fieldName) ? 0 : '', 
         };
       }
     });
   });
-
   return formData;
 };
 
@@ -105,7 +121,6 @@ export const initializeAddSalaryFormData = (sections, employeeData = {}) => {
   formData.basicSalary =
     salaryDetails?.basicSalary !== undefined ? salaryDetails.basicSalary : 0;
   formData.slipName = generatePaymentText();
-  console.log(formData);
 
   return formData;
 };
@@ -141,18 +156,25 @@ export const initializeUpdateSalaryFormData = (sections, salaryData = {}) => {
 
 export const handleFormChange = (formData, setFormData) => (event) => {
   const { name, value } = event.target;
+
   setFormData({
     ...formData,
-    [name]: value,
+    [name]: {
+      ...formData[name],  
+      value: value,       
+    },
   });
 };
 
 export const validateForm = async (formData, t) => {
-  // console.log(formData);
   const validationSchema = getValidationSchema(t);
+  const formValues = Object.keys(formData).reduce((acc, key) => {
+    acc[key] = formData[key].value;
+    return acc;
+  }, {});
 
   try {
-    await validationSchema.validate(formData, { abortEarly: false });
+    await validationSchema.validate(formValues, { abortEarly: false });
     return {};
   } catch (validationError) {
     const validationErrors = {};
@@ -161,7 +183,6 @@ export const validateForm = async (formData, t) => {
         validationErrors[error.path] = error.message;
       });
     }
-    console.log("validationErrors", validationErrors);
     return validationErrors;
   }
 };

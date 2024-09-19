@@ -121,7 +121,8 @@
     "lessThanRemainingVacationDays": "{{numberOfPaidHolidays}}は{{remainingPaidVacationDays}}より少なくなければなりません。",
     "greaterThanZero": "{{field}}はゼロより大きくなければなりません。",
     "daysOffMismatch": "休暇の日数を確認してください。予想される値と一致していません。",
-    "alphanumericJapaneseOnly": "{{field}}には、英字、数字、および日本語の文字のみ使用できます。"
+    "alphanumericJapaneseOnly": "{{field}}には、英字、数字、および日本語の文字のみ使用できます。",
+    "basicSalaryCanBeZero": "基本給はゼロでも構いません。"
   },
   "months": {
     "january": "1月",

@@ -3,23 +3,32 @@ import PropTypes from "prop-types";
 import { Stack, Button, Box, Stepper, Step, StepLabel } from "@mui/material";
 import CustomTextField from "../../component/CustomTextField";
 import useFormStore from "../../store/formStore";
-import useEmployeeStore from '../../store/employeeStore';
+import useEmployeeStore from "../../store/employeeStore";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { validateForm, initializeFormData, handleFormChange as handleChangeUtil } from "../../utils/formUtils";
+import {
+  validateForm,
+  initializeFormData,
+  handleFormChange as handleChangeUtil,
+} from "../../utils/formUtils";
 import Loading from "../../component/Common/Loading";
 import { useSnackbarStore } from "../../store/snackbarStore";
 
-function CustomStepperForEmployee({ sections, mode = 'add', initialData = {} }) {
+function CustomStepperForEmployee({
+  sections,
+  mode = "add",
+  initialData = {},
+}) {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { formData, setFormData, clearFormData, setErrors, errors } = useFormStore((state) => ({
-    formData: state.formData,
-    setFormData: state.setFormData,
-    clearFormData: state.clearFormData,
-    setErrors: state.setErrors,
-    errors: state.errors,
-  }));
+  const { formData, setFormData, clearFormData, setErrors, errors } =
+    useFormStore((state) => ({
+      formData: state.formData,
+      setFormData: state.setFormData,
+      clearFormData: state.clearFormData,
+      setErrors: state.setErrors,
+      errors: state.errors,
+    }));
 
   const { saveData, updateData, loading } = useEmployeeStore();
   const initialDataRef = useRef(initialData);
@@ -32,27 +41,26 @@ function CustomStepperForEmployee({ sections, mode = 'add', initialData = {} }) 
     const initialFormData = initializeFormData(sections, initialData, mode);
     setFormData(initialFormData);
     setErrors({});
-    // console.log("FormData", formData);
   }, [sections, initialData, setFormData, setErrors, mode]);
 
   const handleNext = async () => {
     const validationErrors = await validateForm(formData, t);
 
     if (Object.keys(validationErrors).length > 0) {
-        setErrors(validationErrors);
-    
-        if (validationErrors.daysOffCheck) {
-          setSnackbar(t("validation.daysOffMismatch"), "error");
-        } else {
-          setSnackbar(t("actions.validationError"), "error");
-        }
-  
-        return;
-      }
-      setErrors({});
+      setErrors(validationErrors);
+      setSnackbar(t("actions.validationError"), "error");
+
+      return;
+    }
+    setErrors({});
 
     if (activeStep === sections.length - 1) {
-      await handleDataSave();
+      if (formData.basicSalary.value === 0) {
+        setSnackbar(t("validation.basicSalaryCanBeZero"), "error");
+        return;
+      } else {
+        await handleDataSave();
+      }
     } else {
       setActiveStep((prevActiveStep) => prevActiveStep + 1);
     }
@@ -66,7 +74,8 @@ function CustomStepperForEmployee({ sections, mode = 'add', initialData = {} }) 
 
   const handleDataSave = useCallback(async () => {
     try {
-      if (modeRef.current === 'edit') {
+      console.log("handleDataSave triggered");
+      if (modeRef.current === "edit") {
         await updateData({
           ...formData,
           id: initialDataRef.current.id,
@@ -78,9 +87,10 @@ function CustomStepperForEmployee({ sections, mode = 'add', initialData = {} }) 
       }
       setTimeout(() => navigate("/employee"), 100);
     } catch (error) {
-      const errorMessage = error.response?.status === 409 
-        ? t("actions.duplicate_error") 
-        : t("actions.add_error");
+      const errorMessage =
+        error.response?.status === 409
+          ? t("actions.duplicate_error")
+          : t("actions.add_error");
       setSnackbar(errorMessage, "error");
     }
   }, [formData, t, updateData, saveData, navigate, setSnackbar]);
@@ -115,13 +125,15 @@ function CustomStepperForEmployee({ sections, mode = 'add', initialData = {} }) 
             </Box>
           </div>
         ))}
-        <Stack direction="row" spacing={2} sx={{ marginTop: 2, justifyContent: "flex-end" }}>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleNext}
-          >
-            {activeStep === sections.length - 1 ? t("button.finish") : t("button.next")}
+        <Stack
+          direction="row"
+          spacing={2}
+          sx={{ marginTop: 2, justifyContent: "flex-end" }}
+        >
+          <Button variant="contained" color="primary" onClick={handleNext}>
+            {activeStep === sections.length - 1
+              ? t("button.finish")
+              : t("button.next")}
           </Button>
           {activeStep > 0 && (
             <Button variant="outlined" color="primary" onClick={handleBack}>
@@ -154,12 +166,12 @@ CustomStepperForEmployee.propTypes = {
       ).isRequired,
     })
   ).isRequired,
-  mode: PropTypes.oneOf(['add', 'edit']),
+  mode: PropTypes.oneOf(["add", "edit"]),
   initialData: PropTypes.object,
 };
 
 CustomStepperForEmployee.defaultProps = {
-  mode: 'add',
+  mode: "add",
   initialData: {},
 };
 

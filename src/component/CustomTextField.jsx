@@ -1,6 +1,6 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { TextField, Grid } from '@mui/material';
+import React from "react";
+import PropTypes from "prop-types";
+import { TextField, Grid } from "@mui/material";
 
 const RegisterForm = ({ fields, formData, onChange, errors }) => {
   return (
@@ -13,7 +13,11 @@ const RegisterForm = ({ fields, formData, onChange, errors }) => {
               type={fieldData.type || field.type}
               label={fieldData.label || field.label}
               name={fieldData.name || field.name}
-              value={fieldData.value || ''}
+              value={
+                fieldData.value !== undefined && fieldData.value !== null
+                  ? fieldData.value
+                  : ""
+              }
               onChange={onChange}
               error={!!errors[fieldData.name]}
               helperText={errors[fieldData.name]}
@@ -21,8 +25,10 @@ const RegisterForm = ({ fields, formData, onChange, errors }) => {
               required={fieldData.required || field.required}
               margin="normal"
               variant="outlined"
-              InputLabelProps={fieldData.type === 'date' ? { shrink: true } : {}}
-              InputProps={fieldData.name === 'remainingPaidVacationDays' || fieldData.name === 'employeeNumber' ? { readOnly: true } : {}}
+              InputLabelProps={
+                fieldData.type === "date" ? { shrink: true } : {}
+              }
+              InputProps={fieldData.readOnly ? { readOnly: true } : {}}
               disabled={fieldData.disabled || field.disabled}
             />
           </Grid>
