@@ -57,11 +57,7 @@ function CustomStepperForEmployee({
     setErrors({});
 
     if (activeStep === sections.length - 1) {
-      if (formData.basicSalary.value === 0) {
-        setSnackbar(t("validation.basicSalaryCanBeZero"), "error");
-      } else {
-        await handleDataSave();
-      }
+      await handleDataSave();
     } else {
       setActiveStep((prevStep) => prevStep + 1);
     }
@@ -73,7 +69,10 @@ function CustomStepperForEmployee({
 
   const handleDataSave = useCallback(async () => {
     try {
-      console.log("handleDataSave triggered");
+      if (formData.basicSalary.value === 0) {
+        setSnackbar(t("validation.basicSalaryCanBeZero"), "error");
+        return;
+      }
       if (modeRef.current === "edit") {
         await updateData({
           ...formData,
@@ -81,8 +80,7 @@ function CustomStepperForEmployee({
         });
         setSnackbar(t("actions.update_success"), "success");
       } else {
-        const deepCopyFormData = JSON.parse(JSON.stringify(formData));
-        await saveData(deepCopyFormData);
+        await saveData(formData);
         setSnackbar(t("actions.add_success"), "success");
       }
       setTimeout(() => navigate("/employee"), 100);
@@ -91,10 +89,11 @@ function CustomStepperForEmployee({
         ? t("actions.duplicate_error")
         : t("actions.add_error");
       setSnackbar(errorMessage, "error");
+      setFormData(formData);
   
       console.error("Error during data save:", error);
     }
-  }, [formData, t, updateData, saveData, navigate, setSnackbar]);
+  }, [formData, setFormData, t, updateData, saveData, navigate, setSnackbar]);
 
   const handleClear = useCallback(() => {
     clearFormData();

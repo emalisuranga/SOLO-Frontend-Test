@@ -119,7 +119,7 @@
     "daysOffMismatch": "Please check the number of days off. They do not match the expected values.",
     "alphanumericJapaneseOnly": "The field {{field}} can only contain letters, numbers, and Japanese characters.",
     "onlyKatakana": "The field {{field}} can only contain katakana characters.",
-    "basicSalaryCanBeZero": "Basic Salary is set to zero"
+    "basicSalaryCanBeZero": "Basic salary cannot be zero. Please enter a valid amount."
   },
   "months": {
     "january": "January",
