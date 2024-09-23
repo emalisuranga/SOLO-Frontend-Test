@@ -29,7 +29,7 @@
     "add_success": "Employee added successfully",
     "update_success": "Employee updated successfully",
     "delete_success": "Employee deleted successfully",
-    "add_error": "Failed to add Employee",
+    "add_error": "Unable to add the employee. Please check the details and try again.",
     "update_error": "Failed to update Employee",
     "delete_error": "Failed to delete employee",
     "salaryDataSaved": "Salary Data saved successfully!",
@@ -118,7 +118,8 @@
     "greaterThanZero": "{{field}} must be greater than zero.",
     "daysOffMismatch": "Please check the number of days off. They do not match the expected values.",
     "alphanumericJapaneseOnly": "The field {{field}} can only contain letters, numbers, and Japanese characters.",
-    "onlyKatakana": "The field {{field}} can only contain katakana characters."
+    "onlyKatakana": "The field {{field}} can only contain katakana characters.",
+    "basicSalaryCanBeZero": "Basic salary cannot be zero. Please enter a valid amount."
   },
   "months": {
     "january": "January",

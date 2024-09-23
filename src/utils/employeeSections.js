@@ -6,24 +6,28 @@ const formatDate = (dateString) => {
   return date.toISOString().split('T')[0]; // Extract only the date part
 };
 
-const createField = (name, type, required, defaultValue) => ({
+const createField = (name, type, required = false, defaultValue = '') => ({
   name,
   type,
-  label: t(`fields.${name}`), 
+  label: t(`fields.${name}`),  
   required,
   defaultValue,
+  readOnly: name === 'employeeNumber'
 });
 
-const createFields = (employee, fieldsConfig) => 
-  fieldsConfig.map(field => 
-    createField(
+const createFields = (employee, fieldsConfig) =>
+  fieldsConfig.map((field) => {
+    const fieldValue = field.type === 'date'
+      ? formatDate(employee?.[field.name]) 
+      : employee?.[field.name] || '';      
+
+    return createField(
       field.name,
       field.type,
-      field.label,
       field.required,
-      field.type === 'date' ? formatDate(employee?.[field.name]) : employee?.[field.name] || ''
-    )
-  );
+      fieldValue
+    );
+  });
 
   const getSections = (employee) => [
     {
@@ -33,7 +37,7 @@ const createFields = (employee, fieldsConfig) =>
         { name: "firstName", type: "text", required: true },
         { name: "furiganaLastName", type: "text", required: true },
         { name: "furiganaFirstName", type: "text", required: true },
-        { name: "employeeNumber", type: "text", required: true },
+        { name: "employeeNumber", type: "text", required: true, readOnly: true },
         { name: "phone", type: "text", required: true },
         { name: "address", type: "text", required: true },
         { name: "dateOfBirth", type: "date", required: true },
