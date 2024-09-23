@@ -201,7 +201,7 @@ function CustomStepperForSalary({ sections, initialData }) {
             variant="contained"
             color="primary"
             onClick={handleNext}
-            disabled={activeStep === sections.length}
+            disabled={activeStep === sections.length || showGenerateButton}
           >
             {activeStep === sections.length - 1 ? t("button.finish") : t("button.next")}
           </Button>
