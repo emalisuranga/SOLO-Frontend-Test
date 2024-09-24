@@ -1,8 +1,13 @@
 import getValidationSchema from "./validationSchemaForEmployee";
 import { getSalaryValidationSchema } from "./validationSchemaForSalary";
 import getSections from "./employeeSections";
-import { generatePaymentText } from "./dateUtils";
-import { parseInputValue, calculateDeductionsAndAllowance, shouldShowGenerateButton, calculateOvertimePayment } from '../helpers/salaryInputProcessors';
+import { generatePaymentText, getCurrentYearAndMonth } from "./dateUtils";
+import {
+  parseInputValue,
+  calculateDeductionsAndAllowance,
+  shouldShowGenerateButton,
+  calculateOvertimePayment,
+} from "../helpers/salaryInputProcessors";
 import { employeeStore } from "../store/employeeStore";
 
 const formatDate = (dateString) => {
@@ -15,11 +20,22 @@ const getFieldValue = (initialData, field) => {
   const { name, type } = field;
 
   if (initialData[name] !== undefined) {
-    if (['basicSalary', 'transportationCosts', 'familyAllowance', 'attendanceAllowance', 'leaveAllowance', 'specialAllowance', 'spouseDeduction', 'dependentDeduction'].includes(name)) {
+    if (
+      [
+        "basicSalary",
+        "transportationCosts",
+        "familyAllowance",
+        "attendanceAllowance",
+        "leaveAllowance",
+        "specialAllowance",
+        "spouseDeduction",
+        "dependentDeduction",
+      ].includes(name)
+    ) {
       return Number(initialData[name]);
     }
-    
-    return type === 'date' ? formatDate(initialData[name]) : initialData[name];
+
+    return type === "date" ? formatDate(initialData[name]) : initialData[name];
   }
 
   if (initialData.bankDetails?.[name] !== undefined) {
@@ -27,24 +43,24 @@ const getFieldValue = (initialData, field) => {
   }
 
   if (initialData.salaryDetails?.[name] !== undefined) {
-    return Number(initialData.salaryDetails[name]); 
+    return Number(initialData.salaryDetails[name]);
   }
 
   const defaultFields = [
-    'transportationCosts',
-    'familyAllowance',
-    'attendanceAllowance',
-    'leaveAllowance',
-    'specialAllowance',
-    'spouseDeduction',
-    'dependentDeduction',
+    "transportationCosts",
+    "familyAllowance",
+    "attendanceAllowance",
+    "leaveAllowance",
+    "specialAllowance",
+    "spouseDeduction",
+    "dependentDeduction",
   ];
 
   if (defaultFields.includes(name)) {
-    return 0; 
+    return 0;
   }
 
-  return ''; 
+  return "";
 };
 
 export const initializeFormData = (sections, initialData = {}, mode) => {
@@ -54,7 +70,7 @@ export const initializeFormData = (sections, initialData = {}, mode) => {
     section.fields.forEach((field) => {
       const fieldName = field.name;
 
-      if (mode === 'add' && fieldName === 'employeeNumber') {
+      if (mode === "add" && fieldName === "employeeNumber") {
         const nextEmployeeNumber = employeeStore().nextEmployeeNumber;
         formData[fieldName] = {
           ...field,
@@ -64,22 +80,24 @@ export const initializeFormData = (sections, initialData = {}, mode) => {
         const fieldValue = getFieldValue(initialData, field);
 
         const numericFields = [
-          'basicSalary', 
-          'transportationCosts',
-          'familyAllowance',
-          'attendanceAllowance',
-          'leaveAllowance',
-          'specialAllowance',
-          'spouseDeduction',
-          'dependentDeduction',
+          "basicSalary",
+          "transportationCosts",
+          "familyAllowance",
+          "attendanceAllowance",
+          "leaveAllowance",
+          "specialAllowance",
+          "spouseDeduction",
+          "dependentDeduction",
         ];
 
         formData[fieldName] = {
           ...field,
-          value: numericFields.includes(fieldName) 
-            ? Number(fieldValue || 0)  
-            : (fieldValue !== undefined ? fieldValue : ''), 
-          defaultValue: numericFields.includes(fieldName) ? 0 : '', 
+          value: numericFields.includes(fieldName)
+            ? Number(fieldValue || 0)
+            : fieldValue !== undefined
+            ? fieldValue
+            : "",
+          defaultValue: numericFields.includes(fieldName) ? 0 : "",
         };
       }
     });
@@ -160,8 +178,8 @@ export const handleFormChange = (formData, setFormData) => (event) => {
   setFormData({
     ...formData,
     [name]: {
-      ...formData[name],  
-      value: value,       
+      ...formData[name],
+      value: value,
     },
   });
 };
@@ -205,14 +223,7 @@ export const salaryValidation = async (formData, t) => {
 };
 
 export const transformFormDataForSalary = (formData, initialData) => {
-  const now = new Date();
-  let month = now.getMonth();
-  let year = now.getFullYear();
-
-  if (month === 0) {
-    month = 12;
-    year -= 1;
-  }
+  const { year, month } = getCurrentYearAndMonth();
   return {
     id: initialData.id,
     employeeId: initialData.employeeId
@@ -301,29 +312,39 @@ export const getInitialFormData = (employeeData = {}) => {
   return cleanInitializeFormData(employeeData);
 };
 
-export const handleFormChangeUtil = (formData, setFormData, setShowGenerateButton) => (event) => {
-  const { name, value } = event.target;
-  const parsedValue = parseInputValue(name, value);
-  const updatedFormData = { ...formData, [name]: parsedValue };
+export const handleFormChangeUtil =
+  (formData, setFormData, setShowGenerateButton) => (event) => {
+    const { name, value } = event.target;
+    const parsedValue = parseInputValue(name, value);
+    const updatedFormData = { ...formData, [name]: parsedValue };
 
-  if (["numberOfWorkingDays", "numberOfPaidHolidays", "numberOfNonPaidLeave"].includes(name)) {
-    const deductionsAndAllowance = calculateDeductionsAndAllowance(updatedFormData);
-    if (deductionsAndAllowance) {
-      updatedFormData.nonEmploymentDeduction = deductionsAndAllowance.nonEmploymentDeduction;
-      updatedFormData.holidayAllowance = deductionsAndAllowance.holidayAllowance;
+    if (
+      [
+        "numberOfWorkingDays",
+        "numberOfPaidHolidays",
+        "numberOfNonPaidLeave",
+      ].includes(name)
+    ) {
+      const deductionsAndAllowance =
+        calculateDeductionsAndAllowance(updatedFormData);
+      if (deductionsAndAllowance) {
+        updatedFormData.nonEmploymentDeduction =
+          deductionsAndAllowance.nonEmploymentDeduction;
+        updatedFormData.holidayAllowance =
+          deductionsAndAllowance.holidayAllowance;
+      }
     }
-  }
 
-  if (["overtime"].includes(name)) {
-    const overtimePay = calculateOvertimePayment(updatedFormData);
-    if (overtimePay) {
-      updatedFormData.overtimePay =overtimePay;
+    if (["overtime"].includes(name)) {
+      const overtimePay = calculateOvertimePayment(updatedFormData);
+      if (overtimePay) {
+        updatedFormData.overtimePay = overtimePay;
+      }
     }
-  }
 
-  if (shouldShowGenerateButton(name)) {
-    setShowGenerateButton(true);
-  }
+    if (shouldShowGenerateButton(name)) {
+      setShowGenerateButton(true);
+    }
 
-  setFormData(updatedFormData);
-};
+    setFormData(updatedFormData);
+  };
