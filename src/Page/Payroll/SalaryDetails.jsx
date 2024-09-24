@@ -15,7 +15,7 @@ const SalaryDetailsTable = () => {
     useSalaryStore();
 
   const currentYear = new Date().getFullYear();
-  const lastMonth = new Date().getMonth() === 0 ? 12 : new Date().getMonth(); // If current month is January, set lastMonth to December
+  const lastMonth = new Date().getMonth() + 1;
 
   const [month, setMonth] = useState(lastMonth);
   const [year, setYear] = useState(currentYear);
