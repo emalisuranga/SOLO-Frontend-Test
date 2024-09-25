@@ -101,7 +101,7 @@
     "spouseDeduction": "配偶者控除",
     "dependentDeduction": "扶養控除",
     "numberOfNonPaidLeave": "役職",
-    "employeeCategory": "従業員区分",
+    "category": "従業員区分",
     "employeeCategories": {
       "executive": "役員",
       "nonExecutive": "従業員"

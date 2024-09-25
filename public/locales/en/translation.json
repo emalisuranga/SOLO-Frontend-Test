@@ -97,7 +97,7 @@
     "spouseDeduction": "Spouse Deduction",
     "dependentDeduction": "Dependent Deduction",
     "numberOfNonPaidLeave": "Number of Non-Paid Leave",
-    "employeeCategory": "Official Position",
+    "category": "Official Position",
     "employeeCategories": {
     "executive": "Executive",
     "nonExecutive": "Non-Executive"
