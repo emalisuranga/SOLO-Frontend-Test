@@ -6,13 +6,14 @@ const formatDate = (dateString) => {
   return date.toISOString().split('T')[0]; // Extract only the date part
 };
 
-const createField = (name, type, required = false, defaultValue = '') => ({
+const createField = (name, type, required = false, defaultValue = '', options = [], readOnly = false) => ({
   name,
   type,
   label: t(`fields.${name}`),  
   required,
   defaultValue,
-  readOnly: name === 'employeeNumber'
+  options,  
+  readOnly,
 });
 
 const createFields = (employee, fieldsConfig) =>
@@ -25,9 +26,16 @@ const createFields = (employee, fieldsConfig) =>
       field.name,
       field.type,
       field.required,
-      fieldValue
+      fieldValue,
+      field.options || [],  
+      field.readOnly || field.name === 'employeeNumber' 
     );
   });
+
+  const employeeCategories = [
+    { value: 'EXECUTIVE', label: t('fields.employeeCategories.executive') },
+    { value: 'NON_EXECUTIVE', label: t('fields.employeeCategories.nonExecutive') },
+  ];
 
   const getSections = (employee) => [
     {
@@ -44,6 +52,11 @@ const createFields = (employee, fieldsConfig) =>
         { name: "joinDate", type: "date", required: true },
         { name: "department", type: "text", required: true },
         { name: "jobTitle", type: "text", required: true },
+        { name: "employeeCategory", 
+          type: "select", 
+          required: true, 
+          options: employeeCategories, 
+        },
         { name: "spouseDeduction", type: "text", required: true },
         { name: "dependentDeduction", type: "text", required: true },
       ]),

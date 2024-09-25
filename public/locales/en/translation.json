@@ -96,7 +96,12 @@
     "slipName": "Slip Name",
     "spouseDeduction": "Spouse Deduction",
     "dependentDeduction": "Dependent Deduction",
-    "numberOfNonPaidLeave": "Number of Non-Paid Leave"
+    "numberOfNonPaidLeave": "Number of Non-Paid Leave",
+    "employeeCategory": "Official Position",
+    "employeeCategories": {
+    "executive": "Executive",
+    "nonExecutive": "Non-Executive"
+  }
   },
   "sections": {
     "personalInfo": "Employee Info",
