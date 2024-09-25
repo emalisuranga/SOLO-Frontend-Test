@@ -59,7 +59,14 @@ const SalarySlipDetails = () => {
     } catch (error) {
       setSnackbar(t("actions.fetchSalarySlipError"), "error");
     }
-  }, [employeeId, paymentDetailsId, fetchSalarySlipDetails, setSalarySlip, t, setSnackbar]);
+  }, [
+    employeeId,
+    paymentDetailsId,
+    fetchSalarySlipDetails,
+    setSalarySlip,
+    t,
+    setSnackbar,
+  ]);
 
   useEffect(() => {
     fetchAndSetSalarySlipDetails();
@@ -77,7 +84,7 @@ const SalarySlipDetails = () => {
       if (remarks !== "") {
         setSnackbar(t("actions.remark_submit_message"), "success");
       }
-  
+
       exportAsPDF();
     } catch (error) {
       console.error("Error updating remarks:", error);
@@ -372,7 +379,7 @@ const SalarySlipDetails = () => {
                 </VerticalTableCell>
                 <ColoredTableCell>
                   <SmallTypography variant="body2" align="center">
-                    役員報酬
+                    {salarySlip.employee.category === "EXECUTIVE" ? "役員報酬" : "基本給"}
                   </SmallTypography>
                 </ColoredTableCell>
                 <ColoredTableCell>
