@@ -6,12 +6,6 @@ const requiredNumberField = (t, fieldName) =>
     .typeError(t("validation.numbersOnly", { field: t(`fields.${fieldName}`) }))
     .required(t("validation.required", { field: t(`fields.${fieldName}`) }));
 
-// Reusable function for number fields with no required validation
-const numberField = (t, fieldName) => 
-  Yup.number()
-    .typeError(t("validation.numbersOnly", { field: t(`fields.${fieldName}`) }));
-
-// Reusable function for number fields with minimum value validation
 const requiredNumberWithMinField = (t, fieldName, minValue = 1) => 
   Yup.number()
     .typeError(t("validation.numbersOnly", { field: t(`fields.${fieldName}`) }))
