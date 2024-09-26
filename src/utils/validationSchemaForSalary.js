@@ -1,57 +1,40 @@
 import * as Yup from "yup";
 
+// Reusable function for number fields with required validation
+const requiredNumberField = (t, fieldName) => 
+  Yup.number()
+    .typeError(t("validation.numbersOnly", { field: t(`fields.${fieldName}`) }))
+    .required(t("validation.required", { field: t(`fields.${fieldName}`) }));
+
+// Reusable function for number fields with no required validation
+const numberField = (t, fieldName) => 
+  Yup.number()
+    .typeError(t("validation.numbersOnly", { field: t(`fields.${fieldName}`) }));
+
+// Reusable function for number fields with minimum value validation
+const requiredNumberWithMinField = (t, fieldName, minValue = 1) => 
+  Yup.number()
+    .typeError(t("validation.numbersOnly", { field: t(`fields.${fieldName}`) }))
+    .required(t("validation.required", { field: t(`fields.${fieldName}`) }))
+    .min(minValue, t("validation.greaterThanZero", { field: t(`fields.${fieldName}`) }));
+
 export const getSalaryValidationSchema = (t) => {
   return Yup.object().shape({
-    scheduledWorkingDays: Yup.number()
-      .typeError(
-        t("validation.number", { field: t("fields.scheduledWorkingDays") })
-      )
-      .required(
-        t("validation.required", { field: t("fields.scheduledWorkingDays") })
-      ),
-    numberOfWorkingDays: Yup.number()
-      .typeError(
-        t("validation.number", { field: t("fields.numberOfWorkingDays") })
-      )
-      .required(
-        t("validation.required", { field: t("fields.numberOfWorkingDays") })
-      )
-      .min(1, t("validation.greaterThanZero", { field: t("fields.numberOfWorkingDays") })),
-    numberOfPaidHolidays: Yup.number()
-      .typeError(
-        t("validation.number", { field: t("fields.numberOfPaidHolidays") })
-      )
-      .required(
-        t("validation.required", { field: t("fields.numberOfPaidHolidays") })
-      )
-      .test(
-        "less-than-remaining",
-        t("validation.lessThanRemainingVacationDays", {
-          numberOfPaidHolidays: t("fields.numberOfPaidHolidays"),
-          remainingPaidVacationDays: t("fields.remainingPaidVacationDays"),
-        }),
-        function (value) {
-          const { remainingPaidVacationDays } = this.parent;
-          return value <= remainingPaidVacationDays;
-        }
-      ),
-    numberOfNonPaidLeave: Yup.number()
-      .typeError(
-        t("validation.number", { field: t("fields.numberOfNonPaidLeave") })
-      )
-      .required(
-        t("validation.required", { field: t("fields.numberOfNonPaidLeave") })
-      ),
-    remainingPaidVacationDays: Yup.number()
-      .typeError(
-        t("validation.number", { field: t("fields.remainingPaidVacationDays") })
-      )
-      .required(
-        t("validation.required", {
-          field: t("fields.remainingPaidVacationDays"),
-        })
-      ),
-    // Custom validation for checking the correctness of days off
+    scheduledWorkingDays: requiredNumberField(t, "scheduledWorkingDays"),
+    numberOfWorkingDays: requiredNumberWithMinField(t, "numberOfWorkingDays"),
+    numberOfPaidHolidays: requiredNumberField(t, "numberOfPaidHolidays").test(
+      "less-than-remaining",
+      t("validation.lessThanRemainingVacationDays", {
+        numberOfPaidHolidays: t("fields.numberOfPaidHolidays"),
+        remainingPaidVacationDays: t("fields.remainingPaidVacationDays"),
+      }),
+      function (value) {
+        const { remainingPaidVacationDays } = this.parent;
+        return value <= remainingPaidVacationDays;
+      }
+    ),
+    numberOfNonPaidLeave: requiredNumberField(t, "numberOfNonPaidLeave"),
+    remainingPaidVacationDays: requiredNumberField(t, "remainingPaidVacationDays"),
     daysOffCheck: Yup.mixed().test(
       "check-days-off",
       t("validation.daysOffMismatch"),
