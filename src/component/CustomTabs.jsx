@@ -7,10 +7,9 @@ import useFormStore from "../store/formStore";
 import useEmployeeStore from '../store/employeeStore';
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import CustomSnackbar from "./Common/CustomSnackbar";
 import { validateForm,initializeFormData, handleFormChange as handleChangeUtil } from "../utils/formUtils";
-import { handleSuccess, handleError } from "../utils/responseHandlers";
 import Loading from "../component/Common/Loading";
+import { useSnackbarStore } from "../store/snackbarStore";
 
 function CustomTabs({ sections, mode = 'add', initialData = {} }) {
   const navigate = useNavigate();
@@ -24,18 +23,16 @@ function CustomTabs({ sections, mode = 'add', initialData = {} }) {
   }));
 
   const [value, setValue] = useState(0);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
   const { saveData, updateData,loading } = useEmployeeStore();
   const initialDataRef = useRef(initialData);
   const modeRef = useRef(mode);
+  const setSnackbar = useSnackbarStore((state) => state.setSnackbar);
 
   useEffect(() => {
-    const initialFormData = initializeFormData(sections, initialData);
+    const initialFormData = initializeFormData(sections, initialData, mode);
     setFormData(initialFormData);
     setErrors({});
-  }, [sections, initialData, setFormData, setErrors]);
+  }, [sections, initialData, setFormData, setErrors, mode]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -47,14 +44,12 @@ function CustomTabs({ sections, mode = 'add', initialData = {} }) {
     const validationErrors = await validateForm(formData, t);
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
-      setSnackbarSeverity('error');
-      setSnackbarMessage(t("actions.validationError"));
-      setSnackbarOpen(true);
+      setSnackbar(t("actions.validationError"), "error");
       return false;
     }
     setErrors({});
     return true;
-  }, [formData, t, setErrors, setSnackbarSeverity, setSnackbarMessage, setSnackbarOpen]);
+  }, [formData, t, setErrors, setSnackbar]);
 
   const handleDataSave = useCallback(async () => {
     try {
@@ -65,20 +60,20 @@ function CustomTabs({ sections, mode = 'add', initialData = {} }) {
           bankDetails: [{ id: initialDataRef.current.bankDetails.id }],
           salaryDetails: [{ id: initialDataRef.current.salaryDetails.id }]
         });
-        handleSuccess(setSnackbarMessage, setSnackbarSeverity, setSnackbarOpen, t("actions.update_success"));
+        setSnackbar(t("actions.update_success"), "success");
       } else {
         await saveData(formData);
-        handleSuccess(setSnackbarMessage, setSnackbarSeverity, setSnackbarOpen, t("actions.add_success"));
+        setSnackbar(t("actions.add_success"), "success");
       }
-      setTimeout(() => navigate("/employee"), 0);
+      setTimeout(() => navigate("/employee"), 100);
     } catch (error) {
       const errorMessage = error.response && error.response.status === 409 
       ? t("actions.duplicate_error") 
       : t("actions.add_error");
-      handleError(setSnackbarMessage, setSnackbarSeverity, setSnackbarOpen, error, errorMessage);
+      setSnackbar(errorMessage, "error");
       console.error("Failed to save data", error);
     }
-  }, [formData, t, updateData, saveData, setSnackbarMessage, setSnackbarSeverity, setSnackbarOpen, navigate]);
+  }, [formData, t, updateData, saveData, navigate, setSnackbar]);
 
   const handleSubmit = useCallback(async (event) => {
     event.preventDefault();
@@ -87,10 +82,6 @@ function CustomTabs({ sections, mode = 'add', initialData = {} }) {
       await handleDataSave();
     }
   }, [handleDataSave, validateAndSetErrors]);
-
-  const handleCloseSnackbar = () => {
-    setSnackbarOpen(false);
-  };
 
   const handleClear = () => {
     clearFormData();
@@ -124,7 +115,6 @@ function CustomTabs({ sections, mode = 'add', initialData = {} }) {
           </Button>
         </Stack>
       </Box>
-      <CustomSnackbar open={snackbarOpen} message={snackbarMessage} severity={snackbarSeverity} onClose={handleCloseSnackbar} />
     </form>
   );
 }

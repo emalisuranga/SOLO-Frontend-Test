@@ -2,6 +2,9 @@ import * as Yup from "yup";
 
 const getValidationSchema = (t) => {
   return Yup.object().shape({
+    employeeNumber: Yup.string()
+      .matches(/^[A-Za-z0-9\u3040-\u30FF\u4E00-\u9FFF]+$/, t("validation.alphanumericJapaneseOnly", { field: t("fields.employeeNumber") }))
+      .required(t("validation.required", { field: t("fields.employeeNumber") })),
     firstName: Yup.string()
       .matches(
         /^[A-Za-z\s\u3040-\u30FF\u4E00-\u9FFF]+$/,
@@ -16,16 +19,16 @@ const getValidationSchema = (t) => {
       .required(t("validation.required", { field: t("fields.lastName") })),
     furiganaFirstName: Yup.string()
       .matches(
-        /^[A-Za-z\s\u3040-\u30FF\u4E00-\u9FFF]+$/,
-        t("validation.lettersOnly", { field: t("fields.furiganaFirstName") })
+        /^[\u30A0-\u30FFー]+$/,
+        t("validation.onlyKatakana", { field: t("fields.furiganaFirstName") })
       )
       .required(
         t("validation.required", { field: t("fields.furiganaFirstName") })
       ),
     furiganaLastName: Yup.string()
       .matches(
-        /^[A-Za-z\s\u3040-\u30FF\u4E00-\u9FFF]+$/,
-        t("validation.lettersOnly", { field: t("fields.furiganaLastName") })
+        /^[\u30A0-\u30FFー]+$/,
+        t("validation.onlyKatakana", { field: t("fields.furiganaLastName") })
       )
       .required(
         t("validation.required", { field: t("fields.furiganaLastName") })
@@ -46,6 +49,10 @@ const getValidationSchema = (t) => {
       .typeError(t("validation.invalidDate", { field: t("fields.joinDate") })),
     department: Yup.string().required(
       t("validation.required", { field: t("fields.department") })
+    ),
+    jobTitle: Yup.string().matches(
+      /^[A-Za-z\s\u3040-\u30FF\u4E00-\u9FFF]*$/,
+      t("validation.lettersOnly", { field: t("fields.jobTitle") })
     ),
     bankAccountNumber: Yup.number()
       .nullable()
@@ -110,14 +117,15 @@ const getValidationSchema = (t) => {
       .required(
         t("validation.required", { field: t("fields.specialAllowance") })
       ),
-      spouseDeduction: Yup.number()
-      .typeError(
-        t("validation.number", { field: t("fields.spouseDeduction") })
-      ),
-      dependentDeduction: Yup.number()
-      .typeError(
-        t("validation.number", { field: t("fields.dependentDeduction") })
-      ),
+    spouseDeduction: Yup.number().typeError(
+      t("validation.number", { field: t("fields.spouseDeduction") })
+    ),
+    dependentDeduction: Yup.number().typeError(
+      t("validation.number", { field: t("fields.dependentDeduction") })
+    ),
+    category: Yup.string().required(
+      t("validation.required", { field: t("fields.employeeCategory") })
+    ),
   });
 };
 

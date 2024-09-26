@@ -70,7 +70,7 @@ const ViewSalaryDetails = () => {
       <Box sx={{ p: 3 }}>
         <Card>
           <CardContent>
-            <Typography variant="h4" gutterBottom>{`${salaryDetails.employee.firstName} ${salaryDetails.employee.lastName}`}</Typography>
+            <Typography variant="h4" gutterBottom>{`${salaryDetails.employee.lastName} ${salaryDetails.employee.firstName}`}</Typography>
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <Typography variant="h6" gutterBottom>{t("sections.summary")}</Typography>

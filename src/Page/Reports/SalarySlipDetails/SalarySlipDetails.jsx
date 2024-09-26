@@ -1,4 +1,4 @@
-import React, { useState, useEffect,  useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Table,
   TableBody,
@@ -25,35 +25,48 @@ import {
 import SalarySlipPrint from "../SalarySlipPrint";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { handleSuccess, handleError } from "../../../utils/responseHandlers";
-import CustomSnackbar from "../../../component/Common/CustomSnackbar";
-import { formatSalarySlipData } from '../../../utils/formatUtils';
+import { formatSalarySlipData } from "../../../utils/formatUtils";
+import { useSnackbarStore } from "../../../store/snackbarStore";
 
 const SalarySlipDetails = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { employeeId, paymentDetailsId } = useParams();
-  const { salarySlip, loading, error, fetchSalarySlipDetails, updateRemarks, setSalarySlip } =
-    useSalarySlipStore();
+  const {
+    salarySlip,
+    loading,
+    error,
+    fetchSalarySlipDetails,
+    updateRemarks,
+    setSalarySlip,
+  } = useSalarySlipStore();
   const [remarks, setRemarks] = useState("");
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
+  const setSnackbar = useSnackbarStore((state) => state.setSnackbar);
 
   const fetchAndSetSalarySlipDetails = useCallback(async () => {
     try {
-      const result = await fetchSalarySlipDetails(parseInt(employeeId, 10), parseInt(paymentDetailsId, 10));
+      const result = await fetchSalarySlipDetails(
+        parseInt(employeeId, 10),
+        parseInt(paymentDetailsId, 10)
+      );
       if (result) {
         const formattedData = formatSalarySlipData(result);
         setSalarySlip(formattedData);
-        handleSuccess(setSnackbarMessage, setSnackbarSeverity, setSnackbarOpen, t("actions.fetchSalarySlipSuccess"));
+        setSnackbar(t("actions.fetchSalarySlipSuccess"), "success");
       } else {
-        throw new Error('Data not found');
+        throw new Error("Data not found");
       }
     } catch (error) {
-      handleError(setSnackbarMessage, setSnackbarSeverity, setSnackbarOpen, error, t("actions.fetchSalarySlipError"));
+      setSnackbar(t("actions.fetchSalarySlipError"), "error");
     }
-  }, [employeeId, paymentDetailsId, fetchSalarySlipDetails, setSalarySlip, t]);
+  }, [
+    employeeId,
+    paymentDetailsId,
+    fetchSalarySlipDetails,
+    setSalarySlip,
+    t,
+    setSnackbar,
+  ]);
 
   useEffect(() => {
     fetchAndSetSalarySlipDetails();
@@ -61,34 +74,22 @@ const SalarySlipDetails = () => {
 
   useEffect(() => {
     if (salarySlip && salarySlip.remarks !== undefined) {
-      setRemarks(salarySlip.remarks || "");
+      setRemarks(salarySlip.remarks ? salarySlip.remarks.trim() : "");
     }
   }, [salarySlip]);
 
   const handleSubmit = async () => {
     try {
       await updateRemarks(paymentDetailsId, remarks);
-      handleSuccess(
-        setSnackbarMessage,
-        setSnackbarSeverity,
-        setSnackbarOpen,
-        t("actions.remark_submit_message")
-      );
+      if (remarks !== "") {
+        setSnackbar(t("actions.remark_submit_message"), "success");
+      }
+
       exportAsPDF();
     } catch (error) {
       console.error("Error updating remarks:", error);
-      handleError(
-        setSnackbarMessage,
-        setSnackbarSeverity,
-        setSnackbarOpen,
-        error,
-        t("actions.update_error")
-      );
+      setSnackbar(t("actions.update_error"), "error");
     }
-  };
-
-  const handleCloseSnackbar = () => {
-    setSnackbarOpen(false);
   };
 
   const exportAsPDF = async () => {
@@ -108,14 +109,12 @@ const SalarySlipDetails = () => {
     const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
     pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, pdfHeight);
-    const fileName = `${salarySlip.slipName}_${salarySlip.employee.firstName}_${salarySlip.employee.lastName}.pdf`;
+    const fileName = `${salarySlip.slipName}_${salarySlip.employee.lastName}_${salarySlip.employee.firstName}.pdf`;
     pdf.save(fileName);
   };
 
   if (loading) {
-    return (
-        <Loading />
-    );
+    return <Loading />;
   }
 
   if (error) {
@@ -190,7 +189,7 @@ const SalarySlipDetails = () => {
                     alignItems: "center",
                   }}
                 >
-                  <SmallTypography variant="body1">{`${salarySlip.employee.firstName} ${salarySlip.employee.lastName}`}</SmallTypography>
+                  <SmallTypography variant="body1">{`${salarySlip.employee.lastName} ${salarySlip.employee.firstName}`}</SmallTypography>
                   <SmallTypography variant="body1">殿</SmallTypography>
                 </Box>
               </CustomTableCell>
@@ -208,10 +207,9 @@ const SalarySlipDetails = () => {
                   </SmallTypography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography
-                    variant="body2"
-                    align="center"
-                  ></SmallTypography>
+                  <SmallTypography variant="body2" align="center">
+                    {`${salarySlip.employee.department}`}
+                  </SmallTypography>
                 </CustomTableCell>
               </TableRow>
               <TableRow>
@@ -221,10 +219,9 @@ const SalarySlipDetails = () => {
                   </SmallTypography>
                 </CustomTableCell>
                 <CustomTableCell>
-                  <SmallTypography
-                    variant="body2"
-                    align="center"
-                  ></SmallTypography>
+                  <SmallTypography variant="body2" align="center">
+                    {`${salarySlip.employee.jobTitle}`}
+                  </SmallTypography>
                 </CustomTableCell>
               </TableRow>
               <TableRow>
@@ -235,7 +232,7 @@ const SalarySlipDetails = () => {
                 </CustomTableCell>
                 <CustomTableCell>
                   <SmallTypography variant="body2" align="center">
-                    {`${salarySlip.employeeId}`}
+                    {`${salarySlip.employee.employeeNumber}`}
                   </SmallTypography>
                 </CustomTableCell>
               </TableRow>
@@ -243,68 +240,11 @@ const SalarySlipDetails = () => {
           </Table>
         </Box>
 
-        <Grid container spacing={2} sx={{ mt: 1 }}>
-          <Grid item xs={5}>
-            <SmallTypography variant="body2" align="left">
-            {salarySlip.slipName}
-            </SmallTypography>
-          </Grid>
-          <Grid item xs={6}>
-            <Typography variant="body2" align="left">
-              給料明細書
-            </Typography>
-          </Grid>
-        </Grid>
-
-        <Box
-          sx={{
-            mt: 1,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
+        <Grid
+          container
+          columnSpacing={{ md: 30 }}
+          sx={{ mt: 1, marginTop: "50px" }}
         >
-          <Table sx={{ width: 1000 }}>
-            <TableBody>
-              <TableRow>
-                <ColoredTableCell>
-                  <SmallTypography variant="body2" align="center">
-                    部門名
-                  </SmallTypography>
-                </ColoredTableCell>
-                <CustomTableCell>
-                  <SmallTypography variant="body2" align="center">
-                    {`${salarySlip.employee.department}`}
-                  </SmallTypography>
-                </CustomTableCell>
-                <ColoredTableCell>
-                  <SmallTypography variant="body2" align="center">
-                    社員NO
-                  </SmallTypography>
-                </ColoredTableCell>
-                <CustomTableCell>
-                  <SmallTypography
-                    variant="body2"
-                    align="center"
-                  >{`${salarySlip.employeeId}`}</SmallTypography>
-                </CustomTableCell>
-                <ColoredTableCell>
-                  <SmallTypography variant="body2" align="center">
-                    氏名
-                  </SmallTypography>
-                </ColoredTableCell>
-                <CustomTableCell>
-                  <SmallTypography
-                    variant="body2"
-                    align="center"
-                  >{`${salarySlip.employee.firstName} ${salarySlip.employee.lastName}`}</SmallTypography>
-                </CustomTableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </Box>
-
-        <Grid container columnSpacing={{ md: 30 }} sx={{ mt: 1 }}>
           <Grid item xs={8}>
             <Table sx={{ height: 100, width: "100%" }}>
               <TableBody>
@@ -439,7 +379,7 @@ const SalarySlipDetails = () => {
                 </VerticalTableCell>
                 <ColoredTableCell>
                   <SmallTypography variant="body2" align="center">
-                    役員報酬
+                    {salarySlip.employee.category === "EXECUTIVE" ? "役員報酬" : "基本給"}
                   </SmallTypography>
                 </ColoredTableCell>
                 <ColoredTableCell>
@@ -464,7 +404,7 @@ const SalarySlipDetails = () => {
                 </ColoredTableCell>
                 <ColoredTableCell>
                   <SmallTypography variant="body2" align="center">
-                    精勤手当
+                    休日手当
                   </SmallTypography>
                 </ColoredTableCell>
                 <CustomTableCell>
@@ -594,9 +534,7 @@ const SalarySlipDetails = () => {
                 </CustomTableCell>
                 <CustomTableCell>
                   <SmallTypography variant="body2" align="center">
-                    {`${
-                      salarySlip.totalEarnings
-                    }`}
+                    {`${salarySlip.totalEarnings}`}
                   </SmallTypography>
                 </CustomTableCell>
               </TableRow>
@@ -689,7 +627,7 @@ const SalarySlipDetails = () => {
                 </CustomTableCell>
                 <CustomTableCell>
                   <SmallTypography variant="body2" align="center">
-                  {`${salarySlip.deductions.socialInsurance}`}
+                    {`${salarySlip.deductions.socialInsurance}`}
                   </SmallTypography>
                 </CustomTableCell>
               </TableRow>
@@ -807,12 +745,6 @@ const SalarySlipDetails = () => {
           {t("button.backToSalaryDetails")}
         </Button>
       </Stack>
-      <CustomSnackbar
-        open={snackbarOpen}
-        message={snackbarMessage}
-        severity={snackbarSeverity}
-        onClose={handleCloseSnackbar}
-      />
     </Box>
   );
 };

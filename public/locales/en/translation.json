@@ -29,7 +29,7 @@
     "add_success": "Employee added successfully",
     "update_success": "Employee updated successfully",
     "delete_success": "Employee deleted successfully",
-    "add_error": "Failed to add Employee",
+    "add_error": "Unable to add the employee. Please check the details and try again.",
     "update_error": "Failed to update Employee",
     "delete_error": "Failed to delete employee",
     "salaryDataSaved": "Salary Data saved successfully!",
@@ -45,6 +45,7 @@
     "fetchSalarySlipSuccess": "Salary slip details fetched successfully"
   },
   "fields": {
+    "employeeNumber": "Employee Number",
     "firstName": "First Name",
     "lastName": "Last Name",
     "furiganaFirstName": "Furigana First Name",
@@ -54,6 +55,7 @@
     "dateOfBirth": "Date of Birth",
     "joinDate": "Join Date",
     "department": "Department",
+    "jobTitle": "Job Title",
     "bankAccountNumber": "Bank Account Number",
     "bankName": "Bank Name",
     "branchCode": "Branch Code",
@@ -103,7 +105,12 @@
     "pensionStartMonthlySalary": "Pension Start Monthly Salary",
     "pensionEndMonthlySalary": "Pension End Monthly Salary",
     "pensionStartSalary": "Pension Start Salary",
-    "pensionEndSalary": "Pension End Salary"
+    "pensionEndSalary": "Pension End Salary",
+    "category": "Official Position",
+    "employeeCategories": {
+    "executive": "Executive",
+    "nonExecutive": "Non-Executive"
+  }
   },
   "sections": {
     "personalInfo": "Employee Info",
@@ -125,7 +132,10 @@
     "invalidDate": "{{field}} must be a valid date.",
     "lessThanRemainingVacationDays": "{{numberOfPaidHolidays}} must be less than {{remainingPaidVacationDays}}.",
     "greaterThanZero": "{{field}} must be greater than zero.",
-    "daysOffMismatch": "Please check the number of days off. They do not match the expected values."
+    "daysOffMismatch": "Please check the number of days off. They do not match the expected values.",
+    "alphanumericJapaneseOnly": "The field {{field}} can only contain letters, numbers, and Japanese characters.",
+    "onlyKatakana": "The field {{field}} can only contain katakana characters.",
+    "basicSalaryCanBeZero": "Basic salary cannot be zero. Please enter a valid amount."
   },
   "months": {
     "january": "January",

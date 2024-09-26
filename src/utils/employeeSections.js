@@ -6,38 +6,57 @@ const formatDate = (dateString) => {
   return date.toISOString().split('T')[0]; // Extract only the date part
 };
 
-const createField = (name, type, required, defaultValue) => ({
+const createField = (name, type, required = false, defaultValue = '', options = [], readOnly = false) => ({
   name,
   type,
-  label: t(`fields.${name}`), 
+  label: t(`fields.${name}`),  
   required,
   defaultValue,
+  options,  
+  readOnly,
 });
 
-const createFields = (employee, fieldsConfig) => 
-  fieldsConfig.map(field => 
-    createField(
+const createFields = (employee, fieldsConfig) =>
+  fieldsConfig.map((field) => {
+    const fieldValue = field.type === 'date'
+      ? formatDate(employee?.[field.name]) 
+      : employee?.[field.name] || '';      
+
+    return createField(
       field.name,
       field.type,
-      field.label,
       field.required,
-      field.type === 'date' ? formatDate(employee?.[field.name]) : employee?.[field.name] || ''
-    )
-  );
+      fieldValue,
+      field.options || [],  
+      field.readOnly || field.name === 'employeeNumber' 
+    );
+  });
+
+  const employeeCategories = [
+    { value: 'EXECUTIVE', label: t('fields.employeeCategories.executive') },
+    { value: 'NON_EXECUTIVE', label: t('fields.employeeCategories.nonExecutive') },
+  ];
 
   const getSections = (employee) => [
     {
       label: t("sections.personalInfo"),
       fields: createFields(employee, [
-        { name: "firstName", type: "text", required: true },
         { name: "lastName", type: "text", required: true },
-        { name: "furiganaFirstName", type: "text", required: true },
+        { name: "firstName", type: "text", required: true },
         { name: "furiganaLastName", type: "text", required: true },
+        { name: "furiganaFirstName", type: "text", required: true },
+        { name: "employeeNumber", type: "text", required: true, readOnly: true },
         { name: "phone", type: "text", required: true },
         { name: "address", type: "text", required: true },
         { name: "dateOfBirth", type: "date", required: true },
         { name: "joinDate", type: "date", required: true },
         { name: "department", type: "text", required: true },
+        { name: "jobTitle", type: "text" },
+        { name: "category", 
+          type: "select", 
+          required: true, 
+          options: employeeCategories, 
+        },
         { name: "spouseDeduction", type: "text", required: true },
         { name: "dependentDeduction", type: "text", required: true },
       ]),

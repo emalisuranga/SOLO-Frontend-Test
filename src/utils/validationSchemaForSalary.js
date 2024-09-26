@@ -47,24 +47,119 @@ export const getSalaryValidationSchema = (t) => {
         return checkCorrectDayOff === currantDayOff;
       }
     ),
-    overtime: requiredNumberField(t, "overtime"),
-    timeLate: requiredNumberField(t, "timeLate"),
-    timeLeavingEarly: requiredNumberField(t, "timeLeavingEarly"),
-    transportationCosts: requiredNumberField(t, "transportationCosts"),
-    attendanceAllowance: requiredNumberField(t, "attendanceAllowance"),
-    familyAllowance: requiredNumberField(t, "familyAllowance"),
-    leaveAllowance: requiredNumberField(t, "leaveAllowance"),
-    specialAllowance: requiredNumberField(t, "specialAllowance"),
-    healthInsurance: requiredNumberField(t, "healthInsurance"),
-    employeePensionInsurance: requiredNumberField(t, "employeePensionInsurance"),
-    employmentInsurance: numberField(t, "employmentInsurance"),
-    longTermCareInsurance: requiredNumberField(t, "longTermCareInsurance"),
-    incomeTax: numberField(t, "incomeTax"),
-    residentTax: requiredNumberField(t, "residentTax"),
-    advancePayment: requiredNumberField(t, "advancePayment"),
-    yearEndAdjustment: requiredNumberField(t, "yearEndAdjustment"),
-    holidayAllowance: requiredNumberField(t, "holidayAllowance"),
-    refundAmount: requiredNumberField(t, "refundAmount"),
-    nonEmploymentDeduction: requiredNumberField(t, "nonEmploymentDeduction"),
+    overtime: Yup.number()
+      .typeError(t("validation.number", { field: t("fields.overtime") }))
+      .required(t("validation.required", { field: t("fields.overtime") })),
+    timeLate: Yup.number()
+      .typeError(t("validation.number", { field: t("fields.timeLate") }))
+      .required(t("validation.required", { field: t("fields.timeLate") })),
+    timeLeavingEarly: Yup.number()
+      .typeError(
+        t("validation.number", { field: t("fields.timeLeavingEarly") })
+      )
+      .required(
+        t("validation.required", { field: t("fields.timeLeavingEarly") })
+      ),
+    transportationCosts: Yup.number()
+      .typeError(
+        t("validation.number", { field: t("fields.transportationCosts") })
+      )
+      .required(
+        t("validation.required", { field: t("fields.transportationCosts") })
+      ),
+    attendanceAllowance: Yup.number()
+      .typeError(
+        t("validation.number", { field: t("fields.attendanceAllowance") })
+      )
+      .required(
+        t("validation.required", { field: t("fields.attendanceAllowance") })
+      ),
+    familyAllowance: Yup.number()
+      .typeError(t("validation.number", { field: t("fields.familyAllowance") }))
+      .required(
+        t("validation.required", { field: t("fields.familyAllowance") })
+      ),
+    leaveAllowance: Yup.number()
+      .typeError(t("validation.number", { field: t("fields.leaveAllowance") }))
+      .required(
+        t("validation.required", { field: t("fields.leaveAllowance") })
+      ),
+    specialAllowance: Yup.number()
+      .typeError(
+        t("validation.number", { field: t("fields.specialAllowance") })
+      )
+      .required(
+        t("validation.required", { field: t("fields.specialAllowance") })
+      ),
+    healthInsurance: Yup.number()
+      .typeError(t("validation.number", { field: t("fields.healthInsurance") }))
+      .required(
+        t("validation.required", { field: t("fields.healthInsurance") })
+      ),
+    employeePensionInsurance: Yup.number()
+      .typeError(
+        t("validation.number", { field: t("fields.employeePensionInsurance") })
+      )
+      .required(
+        t("validation.required", {
+          field: t("fields.employeePensionInsurance"),
+        })
+      ),
+    employmentInsurance: Yup.number()
+      .typeError(
+        t("validation.number", { field: t("fields.employmentInsurance") })
+      ),
+    longTermCareInsurance: Yup.number()
+      .typeError(
+        t("validation.number", { field: t("fields.longTermCareInsurance") })
+      )
+      .required(
+        t("validation.required", { field: t("fields.longTermCareInsurance") })
+      ),
+    incomeTax: Yup.number()
+      .typeError(t("validation.number", { field: t("fields.incomeTax") })),
+    residentTax: Yup.number()
+      .typeError(t("validation.number", { field: t("fields.residentTax") }))
+      .required(t("validation.required", { field: t("fields.residentTax") })),
+    advancePayment: Yup.number()
+      .typeError(t("validation.number", { field: t("fields.advancePayment") }))
+      .required(
+        t("validation.required", { field: t("fields.advancePayment") })
+      ),
+    yearEndAdjustment: Yup.number()
+      .typeError(
+        t("validation.number", { field: t("fields.yearEndAdjustment") })
+      )
+      .required(
+        t("validation.required", { field: t("fields.yearEndAdjustment") })
+      ),
+    holidayAllowance: Yup.number()
+      .typeError(
+        t("validation.number", { field: t("fields.holidayAllowance") })
+      )
+      .required(
+        t("validation.required", { field: t("fields.holidayAllowance") })
+      ),
+    refundAmount: Yup.number()
+      .typeError(
+        t("validation.number", { field: t("fields.refundAmount") })
+      )
+      .required(
+        t("validation.required", { field: t("fields.refundAmount") })
+      ),
+    nonEmploymentDeduction: Yup.number()
+      .typeError(
+        t("validation.number", { field: t("fields.nonEmploymentDeduction") })
+      )
+      .required(
+        t("validation.required", { field: t("fields.nonEmploymentDeduction") })
+      ),
+      overtimePay: Yup.number()
+      .typeError(
+        t("validation.number", { field: t("fields.overtimePay") })
+      )
+      .required(
+        t("validation.required", { field: t("fields.overtimePay") })
+      ),
   });
 };

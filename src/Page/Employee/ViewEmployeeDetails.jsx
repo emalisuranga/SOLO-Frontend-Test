@@ -88,7 +88,7 @@ const EmployeeDetails = () => {
       <Box sx={{ p: 3 }}>
         <Card>
           <CardContent>
-            <Typography variant="h4" gutterBottom>{`${employee.firstName} ${employee.lastName}`}</Typography>
+            <Typography variant="h4" gutterBottom>{`${employee.lastName} ${employee.firstName} (ID: ${employee.employeeNumber})`}</Typography>
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <Typography variant="h6" gutterBottom>{t("fields.personalInformation")}</Typography>
@@ -98,6 +98,7 @@ const EmployeeDetails = () => {
               {renderEmployeeDetail(t("fields.dateOfBirth"), formatDate(employee.dateOfBirth))}
               {renderEmployeeDetail(t("fields.joinDate"), formatDate(employee.joinDate))}
               {renderEmployeeDetail(t("fields.department"), employee.department)}
+              {renderEmployeeDetail(t("fields.jobTitle"), employee.jobTitle)}
               
               <Grid item xs={12}>
                 <Typography variant="h6" gutterBottom>{t("sections.bankDetails")}</Typography>

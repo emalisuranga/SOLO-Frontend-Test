@@ -39,10 +39,10 @@ const AddSalary = () => {
         <Box sx={{ p: 3 }}>
           <EmployeeInfoContainer>
             <EmployeeInfo variant="h3" gutterBottom>
-              {`${selectedEmployee.firstName} ${selectedEmployee.lastName}`}
+              {`${selectedEmployee.lastName} ${selectedEmployee.firstName}`}
             </EmployeeInfo>
             <EmployeeInfo variant="h4" gutterBottom>
-              {selectedEmployee.id}
+              {selectedEmployee.employeeNumber}
             </EmployeeInfo>
           </EmployeeInfoContainer>
           <AddSalaryDetailsSteps

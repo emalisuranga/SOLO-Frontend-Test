@@ -32,7 +32,6 @@ export const parseInputValue = (name, value) => {
       const currantDayOff = numberOfNonPaidLeave + numberOfPaidHolidays;
   
       if (checkCorrectDayOff !== currantDayOff) {
-        console.log("Please check the number of days off");
         return null;
       }
   
@@ -72,3 +71,9 @@ export const parseInputValue = (name, value) => {
       "longTermCareInsurance",
     ].includes(name);
   };
+
+  export const calculateOvertimePayment = (workDetails) => {
+    const { basicSalary, scheduledWorkingDays, overtime } = workDetails;
+    const calculatedValue = (((basicSalary / scheduledWorkingDays) / 8) * 1.25) * overtime;
+    return Math.floor(calculatedValue) + (calculatedValue % 1 !== 0 ? 1 : 0);
+};

@@ -14,7 +14,7 @@ const getYears = (currentYear) => {
 const SalaryFilter = ({ month, year, onMonthChange, onYearChange, onSearch }) => {
     const { t } = useTranslation();
   const currentYear = new Date().getFullYear();
-  const lastMonth = new Date().getMonth(); 
+  const lastMonth = new Date().getMonth() + 1; 
 
   const getAvailableMonths = () => {
     if (year === currentYear) {
