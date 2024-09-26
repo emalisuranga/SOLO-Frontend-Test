@@ -59,7 +59,7 @@ export default function SideBar() {
 
   const settingsItems = [
     { text: t('navigation.settings.socialInsurance'), icon: <SocialIcon />, path: '/settings/pension-insurance-calculation' },
-    { text: t('navigation.settings.monthlyRemuneration'), icon: <RemunerationIcon />, path: '/settings/monthly-remuneration' },
+    // { text: t('navigation.settings.monthlyRemuneration'), icon: <RemunerationIcon />, path: '/settings/monthly-remuneration' },
   ];
 
   return (

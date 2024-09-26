@@ -3,13 +3,13 @@ import { Box, Button, Stack, Tab, Tabs } from "@mui/material";
 import PropTypes from "prop-types";
 import CustomTabPanel from "../../../component/CustomTabPanel";
 import RegisterForm from "../../../component/RegisterForm";
-import CustomSnackbar from "../../../component/Common/CustomSnackbar";
+import { useSnackbarStore } from "../../../store/snackbarStore";
 import useFormStore from "../../../store/formStore";
 import useSocialInsuranceCalculationStore from "../../../store/useSocialInsuranceCalculationStore";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { cleanInitializeFormData, validateForm, initializeFormData, handleChangeUtil } from "../../../utils/socialInsuranceFormUtils";
-import { handleSuccess, handleError } from "../../../utils/responseHandlers";
+import Loading from "../../../component/Common/Loading";
 
 const InsurancePensionForm = ({ sections }) => {
   const { t } = useTranslation();
@@ -22,12 +22,10 @@ const InsurancePensionForm = ({ sections }) => {
       setErrors: state.setErrors,
       errors: state.errors,
     }));
-  const { socialInsuranceCalculation, updateSocialInsuranceCalculation } =
+  const { socialInsuranceCalculation, updateSocialInsuranceCalculation, loading } =
     useSocialInsuranceCalculationStore();
 
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
+  const setSnackbar = useSnackbarStore((state) => state.setSnackbar);
   const [value, setValue] = useState(0);
 
   useEffect(() => {
@@ -41,25 +39,23 @@ const InsurancePensionForm = ({ sections }) => {
   const handleDataSave = useCallback(async () => {
     try {
       await updateSocialInsuranceCalculation(socialInsuranceCalculation.id, formData);
-      handleSuccess(setSnackbarMessage, setSnackbarSeverity, setSnackbarOpen, t("actions.update_success"));
+      setSnackbar(t("actions.update_success"), "success");
     } catch (error) {
-      handleError(setSnackbarMessage, setSnackbarSeverity, setSnackbarOpen, error, t("actions.update_error"));
+      setSnackbar(t("actions.validationError"), "error");
       console.error("Failed to save data", error);
     }
-  }, [formData, t, updateSocialInsuranceCalculation, socialInsuranceCalculation]);
+  }, [formData, t, updateSocialInsuranceCalculation, socialInsuranceCalculation, setSnackbar]);
 
   const validateAndSetErrors = useCallback(async () => {
     const validationErrors = await validateForm(formData, t);
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
-      setSnackbarSeverity("error");
-      setSnackbarMessage(t("actions.validationError"));
-      setSnackbarOpen(true);
+      setSnackbar(t("actions.validationError"), "error");
       return false;
     }
     setErrors({});
     return true;
-  }, [formData, t, setErrors, setSnackbarSeverity, setSnackbarMessage, setSnackbarOpen]);
+  }, [formData, t, setErrors, setSnackbar ]);
 
   const handleSubmit = useCallback(
     async (event) => {
@@ -67,10 +63,11 @@ const InsurancePensionForm = ({ sections }) => {
       const isValid = await validateAndSetErrors();
       if (isValid) {
         await handleDataSave();
+        setSnackbar(t("actions.update_success"), "success");
       }
       setTimeout(() => navigate("/"), 100);
     },
-    [handleDataSave, validateAndSetErrors, navigate]
+    [ handleDataSave, validateAndSetErrors, navigate, t, setSnackbar ]
   );
 
   const handleClear = () => {
@@ -82,9 +79,9 @@ const InsurancePensionForm = ({ sections }) => {
     setValue(newValue);
   };
 
-  const handleCloseSnackbar = () => {
-    setSnackbarOpen(false);
-  };
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <form onSubmit={handleSubmit}>
@@ -108,7 +105,6 @@ const InsurancePensionForm = ({ sections }) => {
           </Button>
         </Stack>
       </Box>
-      <CustomSnackbar open={snackbarOpen} message={snackbarMessage} severity={snackbarSeverity} onClose={handleCloseSnackbar} />
     </form>
   );
 };
