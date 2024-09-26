@@ -7,11 +7,13 @@ import CustomSnackbar from "../../../component/Common/CustomSnackbar";
 import useFormStore from "../../../store/formStore";
 import useSocialInsuranceCalculationStore from "../../../store/useSocialInsuranceCalculationStore";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { cleanInitializeFormData, validateForm, initializeFormData, handleChangeUtil } from "../../../utils/socialInsuranceFormUtils";
 import { handleSuccess, handleError } from "../../../utils/responseHandlers";
 
 const InsurancePensionForm = ({ sections }) => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const { formData, setFormData, clearFormData, setErrors, errors } =
     useFormStore((state) => ({
       formData: state.formData,
@@ -36,32 +38,15 @@ const InsurancePensionForm = ({ sections }) => {
 
   const handleFormChange = handleChangeUtil(formData, setFormData);
 
-  // const handleFormChange = useCallback(
-  //   (event) => {
-  //     const { name, value } = event.target;
-  //     console.log("Field changed:", name, "Value:", value);
-      
-  //     setFormData((prevData) => {
-  //       const newData = {
-  //         ...prevData,
-  //         [name]: value,
-  //       };
-  //       console.log("Updated formData:", newData);
-  //       return newData;
-  //     });
-  //   },
-  //   [setFormData]
-  // );
-
   const handleDataSave = useCallback(async () => {
     try {
-      await updateSocialInsuranceCalculation(formData.id, formData);
+      await updateSocialInsuranceCalculation(socialInsuranceCalculation.id, formData);
       handleSuccess(setSnackbarMessage, setSnackbarSeverity, setSnackbarOpen, t("actions.update_success"));
     } catch (error) {
       handleError(setSnackbarMessage, setSnackbarSeverity, setSnackbarOpen, error, t("actions.update_error"));
       console.error("Failed to save data", error);
     }
-  }, [formData, t, updateSocialInsuranceCalculation]);
+  }, [formData, t, updateSocialInsuranceCalculation, socialInsuranceCalculation]);
 
   const validateAndSetErrors = useCallback(async () => {
     const validationErrors = await validateForm(formData, t);
@@ -83,8 +68,9 @@ const InsurancePensionForm = ({ sections }) => {
       if (isValid) {
         await handleDataSave();
       }
+      setTimeout(() => navigate("/"), 100);
     },
-    [handleDataSave, validateAndSetErrors]
+    [handleDataSave, validateAndSetErrors, navigate]
   );
 
   const handleClear = () => {

@@ -8,8 +8,8 @@ i18n
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
-    fallbackLng: 'en',
-    lng: 'en', // Explicitly set the language to Japanese
+    fallbackLng: 'ja',
+    lng: 'ja', // Explicitly set the language to Japanese
     debug: true,
     interpolation: {
       escapeValue: false, 
