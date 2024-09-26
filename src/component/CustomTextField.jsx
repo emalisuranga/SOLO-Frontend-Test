@@ -1,15 +1,18 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { TextField, Grid } from "@mui/material";
+import { TextField, Grid, MenuItem } from "@mui/material";
 
 const RegisterForm = ({ fields, formData, onChange, errors }) => {
   return (
     <Grid container spacing={2}>
       {fields.map((field) => {
         const fieldData = formData[field.name] || {};
+        const isSelectField = field.type === "select";
+
         return (
           <Grid item xs={12} sm={6} key={field.name}>
             <TextField
+              select={isSelectField} 
               type={fieldData.type || field.type}
               label={fieldData.label || field.label}
               name={fieldData.name || field.name}
@@ -30,7 +33,15 @@ const RegisterForm = ({ fields, formData, onChange, errors }) => {
               }
               InputProps={fieldData.readOnly ? { readOnly: true } : {}}
               disabled={fieldData.disabled || field.disabled}
-            />
+            >
+              {isSelectField && field.options
+                ? field.options.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))
+                : null}
+            </TextField>
           </Grid>
         );
       })}
@@ -45,6 +56,13 @@ RegisterForm.propTypes = {
       type: PropTypes.string.isRequired,
       label: PropTypes.string.isRequired,
       required: PropTypes.bool,
+      options: PropTypes.arrayOf( 
+        PropTypes.shape({
+          value: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+            .isRequired,
+          label: PropTypes.string.isRequired,
+        })
+      ),
     })
   ).isRequired,
   formData: PropTypes.object.isRequired,
