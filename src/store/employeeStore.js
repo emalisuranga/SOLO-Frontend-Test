@@ -88,6 +88,18 @@ const useEmployeeStore = create((set) => ({
       throw error;
     }
   },
+  getAllDeletedEmployees: async () => {
+    set({ loading: true, error: null });
+    try {
+      const response = await api.get('/employees/deleted-employees');
+      set({ loading: false });
+      return response.data.data;
+    } catch (error) {
+      console.error("Error fetching deleted employees:", error);
+      set({ error: "Error fetching next employee number", loading: false });
+      throw error;
+    }
+  },
 }));
 
 

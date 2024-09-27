@@ -12,20 +12,20 @@ import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Collapse from '@mui/material/Collapse';
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import CurrencyYenIcon from '@mui/icons-material/CurrencyYen';
-import SettingsIcon from '@mui/icons-material/Settings';
-import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
-import SocialIcon from '@mui/icons-material/Security'; // Example icon
-import RemunerationIcon from '@mui/icons-material/AttachMoney'; // Example icon
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+// import DashboardIcon from '@mui/icons-material/Dashboard';
+// import CurrencyYenIcon from '@mui/icons-material/CurrencyYen';
+// import SettingsIcon from '@mui/icons-material/Settings';
+// import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
+// import SocialIcon from '@mui/icons-material/Security'; 
+// import RemunerationIcon from '@mui/icons-material/AttachMoney'; 
+// import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+// import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { Dashboard as DashboardIcon, CurrencyYen as CurrencyYenIcon, Settings as SettingsIcon, PeopleAlt as PeopleAltIcon, Security as SocialIcon, ExpandLess as ExpandLessIcon, ExpandMore as ExpandMoreIcon, Restore as RestoreIcon } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
 
-import { AppBar, Drawer, DrawerHeader, StyledListItemButton } from './SideBar.styles';  // Import the styled component
-
+import { AppBar, Drawer, DrawerHeader, StyledListItemButton } from './SideBar.styles';  
 export default function SideBar() {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -59,6 +59,7 @@ export default function SideBar() {
 
   const settingsItems = [
     { text: t('navigation.settings.socialInsurance'), icon: <SocialIcon />, path: '/settings/pension-insurance-calculation' },
+    { text: t('navigation.settings.employeeRestoration'), icon: <RestoreIcon />, path: '/settings/employee-restoration' },
     // { text: t('navigation.settings.monthlyRemuneration'), icon: <RemunerationIcon />, path: '/settings/monthly-remuneration' },
   ];
 

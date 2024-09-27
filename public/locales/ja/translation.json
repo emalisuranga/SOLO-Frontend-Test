@@ -193,7 +193,17 @@
     "settings": {
       "label": "設定",
       "socialInsurance": "社会保険計算",
-      "monthlyRemuneration": "月額報酬"
+      "monthlyRemuneration": "月額報酬",
+      "employeeRestoration": "従業員の復元"
     }
+  },
+  "employeeRestoration": {
+    "title": "従業員の復元",
+    "description": "以前に削除された従業員を復元します。",
+    "restoreButton": "復元",
+    "noDeletedEmployees": "削除された従業員が見つかりません。",
+    "restorationSuccess": "従業員が正常に復元されました。",
+    "restorationError": "従業員の復元中にエラーが発生しました。",
+    "restore": "復元"
   }
 }

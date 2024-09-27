@@ -189,7 +189,17 @@
     "settings": {
       "label": "Settings",
       "socialInsurance": "Social Insurance",
-      "monthlyRemuneration": "Monthly Remuneration"
+      "monthlyRemuneration": "Monthly Remuneration",
+      "employeeRestoration": "Employee Restoration"
     }
+  },
+  "employeeRestoration": {
+    "title": "Employee Restoration",
+    "description": "Restore previously deleted employees.",
+    "restoreButton": "Restore",
+    "noDeletedEmployees": "No deleted employees found.",
+    "restorationSuccess": "Employee restored successfully.",
+    "restorationError": "Error restoring the employee.",
+    "restore": "Restore"
   }
 }
