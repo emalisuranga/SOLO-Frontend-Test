@@ -86,6 +86,7 @@ function CustomTabs({ sections, mode = 'add', initialData = {} }) {
   const handleClear = () => {
     clearFormData();
   };
+  
   if (loading) {
     return (
         <Loading />
