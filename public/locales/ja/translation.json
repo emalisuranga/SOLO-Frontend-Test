@@ -46,7 +46,11 @@
     "remark_submit_message": "備考付きでフォームが送信されました。",
     "duplicate_error": "同じ詳細を持つ従業員がすでに存在します。 情報を確認してもう一度お試しください。",
     "fetchSalarySlipError": "給与明細書データの取得に失敗しました。",
-    "fetchSalarySlipSuccess": "給与明細書データが正常に取得されました。"
+    "fetchSalarySlipSuccess": "給与明細書データが正常に取得されました。",
+    "delete": "削除",
+    "cancel": "キャンセル",
+    "restore": "復元",
+    "confirm": "確認"
   },
   "fields": {
     "employeeNumber": "社員番号*",
@@ -204,6 +208,10 @@
     "noDeletedEmployees": "削除された従業員が見つかりません。",
     "restorationSuccess": "従業員が正常に復元されました。",
     "restorationError": "従業員の復元中にエラーが発生しました。",
-    "restore": "復元"
+    "restore": "復元",
+    "confirmRestore": {
+      "title": "復元の確認",
+      "description": "この従業員を復元してもよろしいですか？"
+    }
   }
 }

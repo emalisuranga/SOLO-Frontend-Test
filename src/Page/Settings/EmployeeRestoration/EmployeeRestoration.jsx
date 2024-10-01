@@ -2,19 +2,21 @@ import React, { useEffect, useState, useCallback } from "react";
 import { Box, Typography, Grid } from "@mui/material";
 import useEmployeeStore from "../../../store/employeeStore";
 import Loading from "../../../component/Common/Loading";
-import Error from "../../../component/Common/Error";
 import EmployeeSearch from "../../../component/EmployeeSearch";
 import ActionableTable from "../../../component/ActionableTable";
+import ConfirmationDialog from "../../../component/ConfirmationDialog";
 import { useTranslation } from "react-i18next";
 
 const EmployeeRestoration = () => {
   const { t } = useTranslation();
-  const { getAllDeletedEmployees, loading, error } = useEmployeeStore();
+  const { getAllDeletedEmployees, undoDeleteEmployee, loading } = useEmployeeStore();
 
   const [deletedEmployees, setDeletedEmployees] = useState([]);
-  const [selectedEmployee, setSelectedEmployee] = useState([]);
+  const [selectedEmployee, setSelectedEmployee] = useState(null);
   const [searchName, setSearchName] = useState("");
   const [searchId, setSearchId] = useState("");
+  const [openDialog, setOpenDialog] = useState(false);
+  const [currentEmployee, setCurrentEmployee] = useState(null);
 
   const columns = [
     { headerName: "table.employeeId", field: "employeeNumber" },
@@ -31,7 +33,6 @@ const EmployeeRestoration = () => {
       try {
         const employees = await getAllDeletedEmployees();
         setDeletedEmployees(employees);
-        setSelectedEmployee(employees);
       } catch (err) {
         console.error("Error fetching deleted employees:", err);
       }
@@ -45,7 +46,7 @@ const EmployeeRestoration = () => {
       const selectedName = event.target.value;
       setSearchName(selectedName);
       const selectedEmployee = deletedEmployees.find(
-        (item) => `${item.firstName} ${item.lastName}` === selectedName
+        (item) => `${item.lastName} ${item.firstName}` === selectedName
       );
       setSearchId(selectedEmployee ? selectedEmployee.id : "");
     },
@@ -71,21 +72,18 @@ const EmployeeRestoration = () => {
   const handleSearch = useCallback(() => {
     let idToSearch = searchId;
   
-    // Find employee by name if no ID is provided
     if (!searchId && searchName) {
       const selectedEmployee = deletedEmployees.find(
-        (item) => `${item.firstName} ${item.lastName}` === searchName
+        (item) => `${item.lastName} ${item.firstName}` === searchName
       );
       idToSearch = selectedEmployee ? selectedEmployee.id : '';
     }
   
-    // Check if there is a valid ID to search for
     if (idToSearch) {
-      // Find the employee in the current employeeList without making an API call
       const employee = deletedEmployees.find(item => item.id === parseInt(idToSearch, 10));
   
       if (employee) {
-        setSelectedEmployee(employee);  // Pass the found employee to the onSearch handler
+        setSelectedEmployee(employee);  
       } else {
         console.error('Employee not found.');
       }
@@ -94,40 +92,43 @@ const EmployeeRestoration = () => {
     }
   }, [searchId, searchName, deletedEmployees, setSelectedEmployee]);
 
-  const handleRestore = async () => {
-    // if (selectedEmployee.length > 0) {
-    //   try {
-    //     const response = await api.post('/employees/restore', { employeeIds: selectedEmployee.map(item => item.id) });
-    //     if (response.status === 200) {
-    //       setDeletedEmployees(deletedEmployees.filter((item) => !selectedEmployee.includes(item)));
-    //       setSelectedEmployee([]);
-    //     } else {
-    //       console.error('Failed to restore employees:', response.data);
-    //     } 
-    //   } catch (err) {
-    //     console.error('Failed to restore employees:', err);
-    //   }
-    // }
+  const handleRestore = (currentRow) => {
+    setCurrentEmployee(currentRow);
+    setOpenDialog(true);
+  };
+
+  const handleDialogClose = () => {
+    setOpenDialog(false);
+    setCurrentEmployee(null);
+  };
+
+  const handleDeleteConfirm = () => {
+    onDelete(currentEmployee.id);
+    handleDialogClose();
+  };
+
+  const onDelete = async (employeeId) => {
+    try {
+      await undoDeleteEmployee( employeeId, t );
+      
+      const updatedDeletedEmployees = await getAllDeletedEmployees();
+      setDeletedEmployees(updatedDeletedEmployees);
+    } catch (error) {
+      console.error("Error restoring the employee:", error);
+    }
   };
 
   const actions = [
     {
       label: t("employeeRestoration.restore"),
-      onClick: handleRestore()
+      onClick: (row) => handleRestore(row),
     }
   ];
 
-  // Loading state
   if (loading) {
     return <Loading />;
   }
 
-  // Error state
-  if (error) {
-    return <Error message={error} />;
-  }
-
-  // Empty state handling
   if (deletedEmployees.length === 0) {
     return (
       <Box sx={{ flexGrow: 1, p: 3 }}>
@@ -153,12 +154,10 @@ const EmployeeRestoration = () => {
             <Typography variant="h5">
               {t("employeeRestoration.title")}
             </Typography>
-            {/* Add any additional controls like a button for going back */}
           </Box>
         </Grid>
 
         <Grid item xs={12}>
-          {/* Replace with a table or list component displaying deleted employees */}
           <EmployeeSearch
             employeeList={deletedEmployees}
             searchName={searchName}
@@ -167,8 +166,27 @@ const EmployeeRestoration = () => {
             handleIdChange={handleIdChange}
             handleSearch={handleSearch}
           />
-          <ActionableTable data={selectedEmployee}  columns={columns} actions={actions}/>
+          {selectedEmployee ? (
+          <Grid item xs={12}>
+            <ActionableTable data={[selectedEmployee]} columns={columns} actions={actions}/>
+          </Grid>
+        ) : (
+          <Grid item xs={12}>
+             <ActionableTable data={deletedEmployees}  columns={columns} actions={actions}/>
+          </Grid>
+        )}
         </Grid>
+
+        <ConfirmationDialog
+        open={openDialog}
+        onClose={handleDialogClose}
+        onConfirm={handleDeleteConfirm}
+        titleKey="employeeRestoration.confirmRestore.title"                  
+        descriptionKey="employeeRestoration.confirmRestore.description"      
+        confirmTextKey="actions.delete"                 
+        cancelTextKey="actions.cancel"                 
+      />
+
       </Grid>
     </Box>
   );

@@ -42,7 +42,11 @@
     "remark_submit_message": "Form submitted with remarks",
     "duplicate_error": "An employee with the same details already exists. Please check the information and try again.",
     "fetchSalarySlipError": "Failed to fetch salary slip details",
-    "fetchSalarySlipSuccess": "Salary slip details fetched successfully"
+    "fetchSalarySlipSuccess": "Salary slip details fetched successfully",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "restore": "Restore",
+    "confirm": "Confirm"
   },
   "fields": {
     "employeeNumber": "Employee Number",
@@ -200,6 +204,10 @@
     "noDeletedEmployees": "No deleted employees found.",
     "restorationSuccess": "Employee restored successfully.",
     "restorationError": "Error restoring the employee.",
-    "restore": "Restore"
+    "restore": "Restore",
+    "confirmRestore": {
+      "title": "Confirm Restoration",
+      "description": "Are you sure you want to restore this employee?"
+    }
   }
 }
