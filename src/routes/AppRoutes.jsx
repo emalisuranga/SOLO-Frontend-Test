@@ -15,6 +15,7 @@ const EditSalary = lazy(() => import('../Page/Payroll/EditSalary'));
 const SalarySlipDetails = lazy(() => import('../Page/Reports/SalarySlipDetails/SalarySlipDetails'));
 const SalarySlipPrint = lazy(() => import('../Page/Reports/SalarySlipPrint'));
 const EditSocialInsuranceCalculation = lazy(() => import('../Page/Settings/InsurancePensionCalculation/EditSocialInsuranceCalculation'));
+const EmployeeRestoration = lazy(() => import('../Page/Settings/EmployeeRestoration/EmployeeRestoration'));
 
 const AppRoutes = () => (
   <ErrorBoundary>
@@ -33,6 +34,7 @@ const AppRoutes = () => (
         <Route path="/salary-slip/:employeeId/:paymentDetailsId" element={<SalarySlipDetails />} />
         <Route path="/salary-slip-print/:employeeId/:paymentDetailsId" element={<SalarySlipPrint />} />
         <Route path="/settings/pension-insurance-calculation" element={<EditSocialInsuranceCalculation />} />
+        <Route path="/settings/employee-restoration" element={<EmployeeRestoration />} />
       </Routes>
     </Suspense>
    </ErrorBoundary>
