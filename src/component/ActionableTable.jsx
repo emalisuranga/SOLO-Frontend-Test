@@ -36,13 +36,6 @@ const EmployeeTable = ({
     setCurrentRow(null);
   };
 
-    //   const handleDeleteClick = () => {
-    //     if (currentRow) {
-    //       onDeleteConfirm(currentRow);
-    //       handleActionClose();
-    //     }
-    //   };
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };

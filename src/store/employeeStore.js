@@ -1,8 +1,9 @@
 import { create } from "zustand";
 import axios from "axios";
+import { useSnackbarStore } from "./snackbarStore";
 
 const api = axios.create({
-  baseURL: process.env.REACT_APP_API_BASE_URL || 'http://localhost:3000/api',
+  baseURL: process.env.REACT_APP_API_BASE_URL || "http://localhost:3000/api",
 });
 
 const useEmployeeStore = create((set) => ({
@@ -11,7 +12,7 @@ const useEmployeeStore = create((set) => ({
   loading: false,
   error: null,
   nextEmployeeNumber: "",
-  
+
   fetchEmployees: async () => {
     set({ loading: true, error: null });
     try {
@@ -35,10 +36,10 @@ const useEmployeeStore = create((set) => ({
   },
   fetchEmployeeNamesAndIds: async () => {
     try {
-      const response = await api.get('/employees/employee-names-ids');
+      const response = await api.get("/employees/employee-names-ids");
       return response.data.data;
     } catch (error) {
-      console.error('Error fetching employee names and IDs:', error);
+      console.error("Error fetching employee names and IDs:", error);
       set({ error: error.message || "An error occurred", loading: false });
       throw error;
     }
@@ -79,8 +80,11 @@ const useEmployeeStore = create((set) => ({
   fetchNextEmployeeNumber: async () => {
     set({ loading: true, error: null });
     try {
-      const response = await api.get('/employees/next-employee-number');
-      set({ nextEmployeeNumber: response.data.data.nextEmployeeNumber, loading: false });
+      const response = await api.get("/employees/next-employee-number");
+      set({
+        nextEmployeeNumber: response.data.data.nextEmployeeNumber,
+        loading: false,
+      });
       return response.data.data.nextEmployeeNumber;
     } catch (error) {
       console.error("Error fetching next employee number:", error);
@@ -91,7 +95,7 @@ const useEmployeeStore = create((set) => ({
   getAllDeletedEmployees: async () => {
     set({ loading: true, error: null });
     try {
-      const response = await api.get('/employees/deleted-employees');
+      const response = await api.get("/employees/deleted-employees");
       set({ loading: false });
       return response.data.data;
     } catch (error) {
@@ -100,9 +104,23 @@ const useEmployeeStore = create((set) => ({
       throw error;
     }
   },
+  undoDeleteEmployee: async (id, t) => {
+    set({ loading: true, error: null });
+    try {
+      const response = await api.put(`/employees/undo-delete/${id}`);
+      set({ loading: false });
+      const { setSnackbar } = useSnackbarStore.getState();
+      setSnackbar(t("employeeRestoration.restorationSuccess"), "success");
+      return response.data.data;
+    } catch (error) {
+      console.error("Error restoring employee:", error);
+      set({ error: t("employeeRestoration.restorationError"), loading: false });
+      const { setSnackbar } = useSnackbarStore.getState();
+      setSnackbar(t("employeeRestoration.restorationError"), "error"); 
+      throw error;
+    }
+  },
 }));
-
-
 
 export default useEmployeeStore;
 export const employeeStore = useEmployeeStore.getState;
