@@ -96,8 +96,17 @@ const useEmployeeStore = create((set) => ({
     set({ loading: true, error: null });
     try {
       const response = await api.get("/employees/deleted-employees");
+      const restoredEmployees = response.data.data;
+
+      if (Array.isArray(restoredEmployees)) {
+        restoredEmployees.forEach((employee) => {
+          if (employee.employeeNumber && employee.employeeNumber.includes('_deleted')) {
+            employee.employeeNumber = employee.employeeNumber.replace('_deleted', '');
+          }
+        });
+      }
       set({ loading: false });
-      return response.data.data;
+      return restoredEmployees;
     } catch (error) {
       console.error("Error fetching deleted employees:", error);
       set({ error: "Error fetching next employee number", loading: false });
