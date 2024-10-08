@@ -25,6 +25,11 @@
   "Month": "Month",
   "Year": "Year",
   "printPDF": "Print PDF",
+  "chooseEmployeeCategory": "Choose Employee Category",
+  "employeeCategoryDescription": "Please choose the type of employee you would like to add to the database: Monthly, Daily, or Hourly.",
+  "monthlyBasic": "Monthly Basic",
+  "dailyBasic": "Daily Basic",
+  "hourlyBasic": "Hourly Basic",
   "actions": {
     "add_success": "Employee added successfully",
     "update_success": "Employee updated successfully",

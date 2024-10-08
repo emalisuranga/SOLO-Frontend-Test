@@ -5,10 +5,12 @@ import { useTranslation } from 'react-i18next';
 import EmployeeTable from './EmployeeTable';
 import useEmployeeStore from '../../store/employeeStore';
 import EmployeeSearch from "./EmployeeSearch";
+import MultiOptionDialog from "../../component/MultiOptionDialog";
 
 const EmployeeDetails = () => {
   const { t } = useTranslation();
   const [selectedEmployee, setSelectedEmployee] = useState(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
   const navigate = useNavigate();
 
   const { employees, loading, fetchEmployees } = useEmployeeStore((state) => ({
@@ -17,12 +19,40 @@ const EmployeeDetails = () => {
     fetchEmployees: state.fetchEmployees,
   }));
 
+  const OPTION_KEYS = {
+    MONTHLY_BASIC: "monthlyBasic",
+    DAILY_BASIC: "dailyBasic",
+    HOURLY_BASIC: "hourlyBasic",
+  };
+
+  const BUTTON_COLORS = {
+    MONTHLY_BASIC: "primary",
+    DAILY_BASIC: "secondary",
+    HOURLY_BASIC: "success",
+  };
+
   useEffect(() => {
     fetchEmployees();
   }, [fetchEmployees]);
 
   const handleSearch = (employee) => {
     setSelectedEmployee(employee);
+  };
+
+  const handleDialogClose = () => {
+    setDialogOpen(false);
+  };
+
+  const handleOptionSelect = (selectedOption) => {
+    console.log("Selected Option:", selectedOption);
+    // Navigate to the correct path based on the selected option
+    if (selectedOption === "monthlyBasic") {
+      navigate("/add-employee");
+    } else if (selectedOption === "dailyBasic") {
+      navigate("/add-employee/DAILY_BASIC");
+    } else if (selectedOption === "hourlyBasic") {
+      navigate("/add-employee/HOURLY_BASIC");
+    }
   };
 
   if (loading) {
@@ -39,7 +69,8 @@ const EmployeeDetails = () => {
         <Grid item xs={12}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
             <Typography variant="h5">{t('Employee Details')}</Typography>
-            <Button variant="contained" onClick={() => navigate("/add-employee")}>{t('addEmployee')}</Button>
+            {/* <Button variant="contained" onClick={() => navigate("/add-employee")}>{t('addEmployee')}</Button> */}
+             <Button variant="contained" onClick={() => setDialogOpen(true)}>{t('addEmployee')}</Button>
           </Box>
         </Grid>
         <EmployeeSearch onSearch={handleSearch} />
@@ -56,6 +87,16 @@ const EmployeeDetails = () => {
           </Grid>
         )}
       </Grid>
+
+      <MultiOptionDialog
+        open={dialogOpen}
+        onClose={handleDialogClose}
+        onSelect={handleOptionSelect}
+        titleKey="chooseEmployeeCategory" 
+        descriptionKey="employeeCategoryDescription" 
+        optionKeys={Object.values(OPTION_KEYS)}
+        optionButtonColors={Object.values(BUTTON_COLORS)}
+      />
     </Box>
   );
 };

@@ -80,7 +80,7 @@ const useEmployeeStore = create((set) => ({
   fetchNextEmployeeNumber: async () => {
     set({ loading: true, error: null });
     try {
-      const response = await api.get("/employees/next-employee-number");
+      const response = await api.get("/employees/next-employee-number/EXECUTIVE");
       set({
         nextEmployeeNumber: response.data.data.nextEmployeeNumber,
         loading: false,
