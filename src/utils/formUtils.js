@@ -9,6 +9,7 @@ import {
   calculateOvertimePayment,
 } from "../helpers/salaryInputProcessors";
 import { employeeStore } from "../store/employeeStore";
+import * as Yup from 'yup';
 
 const formatDate = (dateString) => {
   if (!dateString) return "";
@@ -184,6 +185,26 @@ export const handleFormChange = (formData, setFormData) => (event) => {
   });
 };
 
+// export const validateForm = async (formData, t) => {
+//   const validationSchema = getValidationSchema(t);
+//   const formValues = Object.keys(formData).reduce((acc, key) => {
+//     acc[key] = formData[key].value;
+//     return acc;
+//   }, {});
+
+//   try {
+//     await validationSchema.validate(formValues, { abortEarly: false });
+//     return {};
+//   } catch (validationError) {
+//     const validationErrors = {};
+//     if (validationError.inner) {
+//       validationError.inner.forEach((error) => {
+//         validationErrors[error.path] = error.message;
+//       });
+//     }
+//     return validationErrors;
+//   }
+// };
 export const validateForm = async (formData, t) => {
   const validationSchema = getValidationSchema(t);
   const formValues = Object.keys(formData).reduce((acc, key) => {
@@ -191,9 +212,18 @@ export const validateForm = async (formData, t) => {
     return acc;
   }, {});
 
+  const filteredSchema = Yup.object(
+    Object.keys(formData).reduce((acc, key) => {
+      if (validationSchema.fields[key]) {
+        acc[key] = validationSchema.fields[key]; 
+      }
+      return acc;
+    }, {})
+  );
+
   try {
-    await validationSchema.validate(formValues, { abortEarly: false });
-    return {};
+    await filteredSchema.validate(formValues, { abortEarly: false });
+    return {}; 
   } catch (validationError) {
     const validationErrors = {};
     if (validationError.inner) {
@@ -201,7 +231,7 @@ export const validateForm = async (formData, t) => {
         validationErrors[error.path] = error.message;
       });
     }
-    return validationErrors;
+    return validationErrors; 
   }
 };
 
