@@ -31,9 +31,9 @@
   "exportAsPDF": "PDFとして保存",
   "chooseEmployeeCategory": "従業員の種類を選択してください。",
   "employeeCategoryDescription": "データベースに追加する従業員のタイプを選択してください：月給、日給、または時給。",
-  "monthlyBasic": "月給",
-  "dailyBasic": "日給",
-  "hourlyBasic": "時給",
+  "MONTHLY_BASIC": "月給",
+  "DAILY_BASIC": "日給",
+  "HOURLY_BASIC": "時給",
   "actions": {
     "add_success": "個人情報データが正常に追加されました。",
     "update_success": "個人情報データが正常に更新されました。",
@@ -124,7 +124,9 @@
     "employeeCategories": {
       "executive": "役員",
       "nonExecutive": "従業員"
-    }
+    },
+    "dailyRate": "日給",         
+    "hourlyRate": "時給"
   },
   "sections": {
     "personalInfo": "個人情報",

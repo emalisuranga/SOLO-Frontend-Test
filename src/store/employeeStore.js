@@ -6,12 +6,13 @@ const api = axios.create({
   baseURL: process.env.REACT_APP_API_BASE_URL || "http://localhost:3000/api",
 });
 
-const useEmployeeStore = create((set) => ({
+const useEmployeeStore = create((set, get) => ({
   employees: [],
   employee: null,
   loading: false,
   error: null,
   nextEmployeeNumber: "",
+  employeeCategory: "",
 
   fetchEmployees: async () => {
     set({ loading: true, error: null });
@@ -78,9 +79,10 @@ const useEmployeeStore = create((set) => ({
     }
   },
   fetchNextEmployeeNumber: async () => {
+    const employeeCategory = get().employeeCategory;
     set({ loading: true, error: null });
     try {
-      const response = await api.get("/employees/next-employee-number/EXECUTIVE");
+      const response = await api.get(`/employees/next-employee-number/${employeeCategory}`);
       set({
         nextEmployeeNumber: response.data.data.nextEmployeeNumber,
         loading: false,
@@ -120,6 +122,7 @@ const useEmployeeStore = create((set) => ({
       throw error;
     }
   },
+  setEmployeeCategory: (category) => set({ employeeCategory: category }),
 }));
 
 export default useEmployeeStore;

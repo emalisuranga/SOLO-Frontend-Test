@@ -13,16 +13,17 @@ const EmployeeDetails = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const navigate = useNavigate();
 
-  const { employees, loading, fetchEmployees } = useEmployeeStore((state) => ({
+  const { employees, loading, fetchEmployees, setEmployeeCategory } = useEmployeeStore((state) => ({
     employees: state.employees,
     loading: state.loading,
     fetchEmployees: state.fetchEmployees,
+    setEmployeeCategory: state.setEmployeeCategory,
   }));
 
   const OPTION_KEYS = {
-    MONTHLY_BASIC: "monthlyBasic",
-    DAILY_BASIC: "dailyBasic",
-    HOURLY_BASIC: "hourlyBasic",
+    MONTHLY_BASIC: "MONTHLY_BASIC",
+    DAILY_BASIC: "DAILY_BASIC",
+    HOURLY_BASIC: "HOURLY_BASIC",
   };
 
   const BUTTON_COLORS = {
@@ -45,14 +46,8 @@ const EmployeeDetails = () => {
 
   const handleOptionSelect = (selectedOption) => {
     console.log("Selected Option:", selectedOption);
-    // Navigate to the correct path based on the selected option
-    if (selectedOption === "monthlyBasic") {
-      navigate("/add-employee");
-    } else if (selectedOption === "dailyBasic") {
-      navigate("/add-employee/DAILY_BASIC");
-    } else if (selectedOption === "hourlyBasic") {
-      navigate("/add-employee/HOURLY_BASIC");
-    }
+    setEmployeeCategory(selectedOption);
+    navigate("/add-employee");
   };
 
   if (loading) {
