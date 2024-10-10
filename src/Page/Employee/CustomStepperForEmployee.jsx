@@ -83,6 +83,9 @@ function CustomStepperForEmployee({
         });
         setSnackbar(t("actions.update_success"), "success");
       } else {
+        if (employeeCategory !== "MONTHLY_BASIC") {
+          formData["category"] = { name: "category", value: employeeCategory };
+        }
         await saveData(formData);
         setSnackbar(t("actions.add_success"), "success");
       }
@@ -96,7 +99,7 @@ function CustomStepperForEmployee({
   
       console.error("Error during data save:", error);
     }
-  }, [formData, setFormData, t, updateData, saveData, navigate, setSnackbar]);
+  }, [formData, setFormData, t, updateData, saveData, navigate, setSnackbar, employeeCategory]);
 
   const handleClear = useCallback(() => {
     clearFormData();

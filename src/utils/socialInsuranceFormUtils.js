@@ -35,7 +35,6 @@ export const cleanInitializeFormData = () => {
 };
 
 export const handleChangeUtil = (formData, setFormData) => (event) => {
-  console.log("Field changed:", event.target.name, "Value:", event.target.value);
   const { name, value } = event.target;
   setFormData({
     ...formData,

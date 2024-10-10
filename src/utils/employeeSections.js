@@ -6,17 +6,17 @@ const formatDate = (dateString) => {
   return date.toISOString().split('T')[0]; // Extract only the date part
 };
 
-const createField = (name, type, required = false, defaultValue = '', options = [], readOnly = false, label = '') => ({
+const createField = (name, type, required = false, value = '', options = [], readOnly = false, label = '') => ({
   name,
   type,
   label: label || t(`fields.${name}`),  
   required,
-  defaultValue,
+  value,
   options,  
   readOnly,
 });
 
-const createFields = ( employee, fieldsConfig, employeeCategory ) =>
+const createFields = ( employee, fieldsConfig ) =>
   fieldsConfig.map((field) => {
     const fieldValue = field.type === 'date'
       ? formatDate(employee?.[field.name]) 
@@ -89,7 +89,7 @@ const createFields = ( employee, fieldsConfig, employeeCategory ) =>
           },
           { name: "transportationCosts", type: "text", required: true },
           { name: "familyAllowance", type: "text", required: true },
-          !isBasicType && { name: "attendanceAllowance", type: "text", required: true },
+          { name: "attendanceAllowance", type: "text", required: true },
           { name: "leaveAllowance", type: "text", required: true },
           { name: "specialAllowance", type: "text", required: true },
         ].filter(Boolean), employeeCategory),

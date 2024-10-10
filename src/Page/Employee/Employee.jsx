@@ -45,7 +45,6 @@ const EmployeeDetails = () => {
   };
 
   const handleOptionSelect = (selectedOption) => {
-    console.log("Selected Option:", selectedOption);
     setEmployeeCategory(selectedOption);
     navigate("/add-employee");
   };
