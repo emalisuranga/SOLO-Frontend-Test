@@ -32,7 +32,7 @@ function CustomStepperForEmployee({
     })
   );
 
-  const { saveData, updateData, loading } = useEmployeeStore();
+  const { saveData, updateData, loading, employeeCategory } = useEmployeeStore();
   const setSnackbar = useSnackbarStore((state) => state.setSnackbar);
   const initialDataRef = useRef(initialData);
   const modeRef = useRef(mode);
@@ -40,9 +40,12 @@ function CustomStepperForEmployee({
 
   useEffect(() => {
     const initialFormData = initializeFormData(sections, initialData, mode);
+    if (employeeCategory === '') {
+      navigate("/employee");
+    }
     setFormData(initialFormData);
     setErrors({});
-  }, [sections, initialData, setFormData, setErrors, mode]);
+  }, [sections, initialData, setFormData, setErrors, mode, employeeCategory, navigate]);
 
   const handleFormChange = handleChangeUtil(formData, setFormData);
 
