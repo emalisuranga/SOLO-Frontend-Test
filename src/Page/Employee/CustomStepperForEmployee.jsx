@@ -76,6 +76,9 @@ function CustomStepperForEmployee({
         setSnackbar(t("validation.basicSalaryCanBeZero"), "error");
         return;
       }
+      if (employeeCategory !== "MONTHLY_BASIC") {
+        formData["category"] = { name: "category", value: employeeCategory };
+      }
       if (modeRef.current === "edit") {
         await updateData({
           ...formData,
@@ -83,9 +86,6 @@ function CustomStepperForEmployee({
         });
         setSnackbar(t("actions.update_success"), "success");
       } else {
-        if (employeeCategory !== "MONTHLY_BASIC") {
-          formData["category"] = { name: "category", value: employeeCategory };
-        }
         await saveData(formData);
         setSnackbar(t("actions.add_success"), "success");
       }
