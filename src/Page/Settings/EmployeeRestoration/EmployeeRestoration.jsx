@@ -15,6 +15,7 @@ const EmployeeRestoration = () => {
   const [selectedEmployee, setSelectedEmployee] = useState(null);
   const [searchName, setSearchName] = useState("");
   const [searchId, setSearchId] = useState("");
+  const [searchCategory, setSearchCategory] = useState("");
   const [openDialog, setOpenDialog] = useState(false);
   const [currentEmployee, setCurrentEmployee] = useState(null);
 
@@ -27,12 +28,23 @@ const EmployeeRestoration = () => {
     { headerName: "table.basicSalary", field: "basicSalary", render: (row) => row.salaryDetails?.basicSalary || 0 }
   ];
 
-  // Fetch deleted employees on component mount
+  const employeeCategories = [
+    { id: 'MONTHLY_BASIC', value: t('MONTHLY_BASIC') },
+    { id: 'DAILY_BASIC', value: t('DAILY_BASIC') },
+    { id: 'HOURLY_BASIC', value: t('HOURLY_BASIC') },
+  ];
+
+  const monthlyEmployeeCategories = {
+    NON_EXECUTIVE: 'NON_EXECUTIVE',
+    EXECUTIVE: 'EXECUTIVE'
+  };
+
   useEffect(() => {
     const fetchDeletedEmployees = async () => {
       try {
         const employees = await getAllDeletedEmployees();
         setDeletedEmployees(employees);
+        setSelectedEmployee(employees);
       } catch (err) {
         console.error("Error fetching deleted employees:", err);
       }
@@ -40,6 +52,16 @@ const EmployeeRestoration = () => {
 
     fetchDeletedEmployees();
   }, [getAllDeletedEmployees]);
+
+  const determineSearchCategory = useCallback((selectedEmployee) => {
+    const category = selectedEmployee?.category;
+  
+    if (category === monthlyEmployeeCategories.EXECUTIVE || category === monthlyEmployeeCategories.NON_EXECUTIVE) {
+      return "MONTHLY_BASIC";
+    }
+    
+    return category || "";
+  }, [monthlyEmployeeCategories.EXECUTIVE, monthlyEmployeeCategories.NON_EXECUTIVE]);
 
   const handleNameChange = useCallback(
     (event) => {
@@ -49,8 +71,9 @@ const EmployeeRestoration = () => {
         (item) => `${item.lastName} ${item.firstName}` === selectedName
       );
       setSearchId(selectedEmployee ? selectedEmployee.id : "");
+      setSearchCategory(determineSearchCategory(selectedEmployee))
     },
-    [deletedEmployees]
+    [deletedEmployees, determineSearchCategory]
   );
 
   const handleIdChange = useCallback(
@@ -65,8 +88,31 @@ const EmployeeRestoration = () => {
           ? `${selectedEmployee.lastName} ${selectedEmployee.firstName}`
           : ""
       );
+      setSearchCategory(determineSearchCategory(selectedEmployee))
     },
-    [deletedEmployees]
+    [deletedEmployees, determineSearchCategory]
+  );
+
+  const handleEmployeeCategoriesChange = useCallback(
+    (event) => {
+      const selectedCategory = event.target.value;
+      setSearchCategory(selectedCategory);
+  
+      let filteredEmployees;
+  
+      if (selectedCategory === 'MONTHLY_BASIC') {
+        filteredEmployees = deletedEmployees.filter(
+          (employee) =>
+            employee.category === monthlyEmployeeCategories.EXECUTIVE || employee.category === monthlyEmployeeCategories.NON_EXECUTIVE
+        );
+      } else {
+        filteredEmployees = deletedEmployees.filter(
+          (employee) => employee.category === selectedCategory
+        );
+      }
+      setSelectedEmployee(filteredEmployees);
+    },
+    [deletedEmployees, setSearchCategory, setSelectedEmployee, monthlyEmployeeCategories.EXECUTIVE, monthlyEmployeeCategories.NON_EXECUTIVE]
   );
 
   const handleSearch = useCallback(() => {
@@ -83,7 +129,7 @@ const EmployeeRestoration = () => {
       const employee = deletedEmployees.find(item => item.id === parseInt(idToSearch, 10));
   
       if (employee) {
-        setSelectedEmployee(employee);  
+        setSelectedEmployee([employee]);
       } else {
         console.error('Employee not found.');
       }
@@ -159,16 +205,20 @@ const EmployeeRestoration = () => {
 
         <Grid item xs={12}>
           <EmployeeSearch
-            employeeList={deletedEmployees}
+            employeeList={selectedEmployee}
             searchName={searchName}
             searchId={searchId}
+            searchCategory={searchCategory}
+            employeeCategories={employeeCategories}
             handleNameChange={handleNameChange}
             handleIdChange={handleIdChange}
             handleSearch={handleSearch}
+            handleEmployeeCategoriesChange={handleEmployeeCategoriesChange}
           />
+          {/* <ActionableTable data={deletedEmployees}  columns={columns} actions={actions}/> */}
           {selectedEmployee ? (
           <Grid item xs={12}>
-            <ActionableTable data={[selectedEmployee]} columns={columns} actions={actions}/>
+            <ActionableTable data={selectedEmployee} columns={columns} actions={actions}/>
           </Grid>
         ) : (
           <Grid item xs={12}>
