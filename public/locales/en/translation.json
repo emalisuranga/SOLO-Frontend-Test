@@ -27,6 +27,8 @@
   "printPDF": "Print PDF",
   "chooseEmployeeCategory": "Choose Employee Category",
   "employeeCategoryDescription": "Please choose the type of employee you would like to add to the database: Monthly, Daily, or Hourly.",
+  "chooseSalarySlipEmployeeCategory": "Choose Employee Category for Salary Slip",
+  "employeeSalarySlipCategoryDescription": "Please select the appropriate employee category for the salary slip.",
   "MONTHLY_BASIC": "Monthly Basic",
   "DAILY_BASIC": "Daily Basic",
   "HOURLY_BASIC": "Hourly Basic",

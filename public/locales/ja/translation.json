@@ -31,6 +31,8 @@
   "exportAsPDF": "PDFとして保存",
   "chooseEmployeeCategory": "従業員の種類を選択してください。",
   "employeeCategoryDescription": "データベースに追加する従業員のタイプを選択してください：月給、日給、または時給。",
+  "chooseSalarySlipEmployeeCategory": "給与明細の従業員カテゴリを選択してください",
+  "employeeSalarySlipCategoryDescription": "給与明細に適切な従業員カテゴリを選択してください。",
   "MONTHLY_BASIC": "月給",
   "DAILY_BASIC": "日給",
   "HOURLY_BASIC": "時給",
