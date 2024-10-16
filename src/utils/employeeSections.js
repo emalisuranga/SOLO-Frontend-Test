@@ -6,12 +6,12 @@ const formatDate = (dateString) => {
   return date.toISOString().split('T')[0]; // Extract only the date part
 };
 
-const createField = (name, type, required = false, value = '', options = [], readOnly = false, label = '') => ({
+const createField = (name, type, required = false, value = null, options = [], readOnly = false, label = '') => ({
   name,
   type,
   label: label || t(`fields.${name}`),  
   required,
-  value,
+  value: value === '' ? null : value,
   options,  
   readOnly,
 });
@@ -26,7 +26,7 @@ const createFields = ( employee, fieldsConfig ) =>
       field.name,
       field.type,
       field.required,
-      fieldValue,
+      fieldValue === '' ? null : fieldValue,
       field.options || [],  
       field.readOnly || field.name === 'employeeNumber' ,
       field.label 
@@ -57,7 +57,7 @@ const createFields = ( employee, fieldsConfig ) =>
           { name: "department", type: "text", required: true },
           { name: "jobTitle", type: "text" },
           !isBasicType && {
-            name: "category",
+            name: "subcategory",
             type: "select",
             required: true,
             options: employeeCategories,

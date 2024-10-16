@@ -10,13 +10,16 @@ const AddEmployee = () => {
   useEffect(() => {
     const fetchAndSetNextEmployeeNumber = async () => {
       try {
+        if (!employeeCategory) {
+          return;
+        }
         await fetchNextEmployeeNumber();
       } catch (error) {
       }
     };
 
     fetchAndSetNextEmployeeNumber();
-  }, [ fetchNextEmployeeNumber]);
+  }, [ fetchNextEmployeeNumber, employeeCategory]);
 
   const sections = getSections({}, employeeCategory);
 

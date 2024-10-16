@@ -91,15 +91,23 @@ export const initializeFormData = (sections, initialData = {}, mode) => {
           "dependentDeduction",
         ];
 
-        formData[fieldName] = {
-          ...field,
-          value: numericFields.includes(fieldName)
-            ? Number(fieldValue || 0)
-            : fieldValue !== undefined
-            ? fieldValue
-            : "",
-          defaultValue: numericFields.includes(fieldName) ? 0 : "",
-        };
+        if (fieldName === "subcategory" && fieldValue === "") {
+          formData[fieldName] = {
+            ...field,
+            value: null, 
+            defaultValue: null,
+          };
+        } else {
+          formData[fieldName] = {
+            ...field,
+            value: numericFields.includes(fieldName)
+              ? Number(fieldValue || 0)
+              : fieldValue !== undefined
+              ? fieldValue
+              : "",
+            defaultValue: numericFields.includes(fieldName) ? 0 : "",
+          };
+        }
       }
     });
   });
@@ -206,6 +214,7 @@ export const handleFormChange = (formData, setFormData) => (event) => {
 //   }
 // };
 export const validateForm = async (formData, t) => {
+  console.dir(formData);
   const validationSchema = getValidationSchema(t);
   const formValues = Object.keys(formData).reduce((acc, key) => {
     acc[key] = formData[key].value;
@@ -231,6 +240,7 @@ export const validateForm = async (formData, t) => {
         validationErrors[error.path] = error.message;
       });
     }
+    console.log(validationErrors);
     return validationErrors; 
   }
 };

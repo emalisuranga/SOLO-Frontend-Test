@@ -39,10 +39,10 @@ function CustomStepperForEmployee({
   const [activeStep, setActiveStep] = useState(0);
 
   useEffect(() => {
-    const initialFormData = initializeFormData(sections, initialData, mode);
     if (employeeCategory === '') {
       navigate("/employee");
     }
+    const initialFormData = initializeFormData(sections, initialData, mode);
     setFormData(initialFormData);
     setErrors({});
   }, [sections, initialData, setFormData, setErrors, mode, employeeCategory, navigate]);
@@ -76,9 +76,11 @@ function CustomStepperForEmployee({
         setSnackbar(t("validation.basicSalaryCanBeZero"), "error");
         return;
       }
-      if (employeeCategory !== "MONTHLY_BASIC") {
-        formData["category"] = { name: "category", value: employeeCategory };
-      }
+      formData["category"] = { name: "category", value: employeeCategory };
+      // if (employeeCategory !== "MONTHLY_BASIC") {
+      //   formData["category"] = { name: "subcategory", value: '' };
+      // }
+      console.dir(formData);
       if (modeRef.current === "edit") {
         await updateData({
           ...formData,

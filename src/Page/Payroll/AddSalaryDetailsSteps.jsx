@@ -30,7 +30,7 @@ function CustomStepperForSalary({ sections, initialData }) {
       errors: state.errors,
     }));
   const { saveSalary, updateSalary, calculateSalaryDetails, generateIncomeTax, loading } = useSalaryStore();
-  const { fetchEmployeeDetails } = useEmployeeStore();
+  const { fetchEmployeeDetails, employeeCategory} = useEmployeeStore();
 
   const [activeStep, setActiveStep] = useState(0);
   const [showGenerateButton, setShowGenerateButton] = useState(false);
@@ -42,16 +42,16 @@ function CustomStepperForSalary({ sections, initialData }) {
       let initialFormData = {};
       if (!initialData?.employeeId) {
         const employeeData = await fetchEmployeeDetails(initialData.id);
-        initialFormData = initializeAddSalaryFormData(sections, employeeData);
+        initialFormData = initializeAddSalaryFormData(sections, employeeData, employeeCategory);
       } else {
-        initialFormData = initializeUpdateSalaryFormData(sections, initialData);
+        initialFormData = initializeUpdateSalaryFormData(sections, initialData, employeeCategory);
       }
       setFormData(initialFormData);
     };
 
     fetchData();
     setErrors({});
-  }, [sections, initialData, setFormData, fetchEmployeeDetails, setErrors]);
+  }, [ sections, initialData, setFormData, fetchEmployeeDetails, setErrors, employeeCategory ]);
 
   const handleNext = async () => {
     const validationErrors = await salaryValidation(formData, t);

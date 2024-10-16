@@ -1,5 +1,7 @@
 import { t } from 'i18next';
 import { generatePaymentText } from './dateUtils';
+import { DEFAULT_SCHEDULED_WORKING_DAYS } from "../constants/constants";
+
 
 const formatDate = (dateString) => {
   if (!dateString) return '';
@@ -25,11 +27,16 @@ const createFields = (data, fieldsConfig) =>
     )
   );
 
-const getSalarySections = (data) => [
+const getSalarySections = (data, employeeCategory) => [
   {
     label: t("sections.attendanceWorkDetails"),
     fields: createFields(data, [
-      { name: "scheduledWorkingDays", type: "text", required: true, defaultValue: 21 },
+      { 
+        name: "scheduledWorkingDays", 
+        type: "text", 
+        required: true, 
+        defaultValue: employeeCategory === "MONTHLY_BASIC" ? DEFAULT_SCHEDULED_WORKING_DAYS : 0,  // Conditionally set defaultValue
+      },
       { name: "numberOfWorkingDays", type: "text", required: true, defaultValue: 0 },
       { name: "numberOfNonPaidLeave", type: "text", required: true, defaultValue: 0 },
       { name: "numberOfPaidHolidays", type: "text", required: true, defaultValue: 0 },
