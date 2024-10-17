@@ -122,13 +122,15 @@
     "pensionStartSalary": "年金開始給与",
     "pensionEndSalary": "年金終了給与",
     "numberOfNonPaidLeave": "役職",
-    "category": "従業員区分",
+    "subcategory": "従業員区分",
+    "employeeCategory": "従業員区分",
     "employeeCategories": {
       "executive": "役員",
       "nonExecutive": "従業員"
     },
     "dailyRate": "日給",         
-    "hourlyRate": "時給"
+    "hourlyRate": "時給",
+    "numberOfHours": "勤務時間数"
   },
   "sections": {
     "personalInfo": "個人情報",

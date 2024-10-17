@@ -117,13 +117,15 @@
     "pensionEndMonthlySalary": "Pension End Monthly Salary",
     "pensionStartSalary": "Pension Start Salary",
     "pensionEndSalary": "Pension End Salary",
-    "category": "Official Position",
+    "subcategory": "Official Position",
+    "employeeCategory": "Employee Category",
     "employeeCategories": {
       "executive": "Executive",
       "nonExecutive": "Non-Executive"
     },
     "dailyRate": "Daily Rate",
-    "hourlyRate": "Hourly Rate"
+    "hourlyRate": "Hourly Rate",
+    "numberOfHours": "Number of Hours"
   },
   "sections": {
     "personalInfo": "Employee Info",
