@@ -14,7 +14,6 @@ const EmployeeSearch = ({ onSearch }) => {
 
   useEffect(() => {
     if (employeeCategory === '') {
-      console.log(employeeCategory);
       navigate("/salary-details", { replace: true });
     }
     const fetchNamesAndIds = async () => {

@@ -15,7 +15,7 @@ const SalaryDetailsTable = () => {
   const navigate = useNavigate();
   const { salaries, fetchSalaryDetailsByMonth, loading, error } =
     useSalaryStore();
-  const { setEmployeeCategory } = useEmployeeStore();
+  const { setEmployeeCategory, employeeCategory } = useEmployeeStore();
   const currentYear = new Date().getFullYear();
   const lastMonth = new Date().getMonth() + 1;
   const [month, setMonth] = useState(lastMonth);

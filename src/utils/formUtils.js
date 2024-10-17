@@ -275,18 +275,16 @@ export const transformFormDataForSalary = (formData, initialData) => {
     dateOfBirth: initialData.dateOfBirth
       ? initialData.dateOfBirth
       : initialData.employee.dateOfBirth,
+    category: initialData.category,
     workDetails: {
       scheduledWorkingDays: parseInt(formData.scheduledWorkingDays, 10),
       numberOfWorkingDays: parseInt(formData.numberOfWorkingDays, 10),
-      numberOfPaidHolidays: parseInt(formData.numberOfPaidHolidays, 10),
-      remainingPaidVacationDays: parseInt(
-        formData.remainingPaidVacationDays,
-        10
-      ),
+      numberOfPaidHolidays: parseInt(formData.numberOfPaidHolidays || 0, 10),
+      remainingPaidVacationDays: parseInt(formData.remainingPaidVacationDays || 0,10),
       overtime: parseFloat(formData.overtime),
       timeLate: parseFloat(formData.timeLate),
       timeLeavingEarly: parseFloat(formData.timeLeavingEarly),
-      numberOfNonPaidLeave: parseInt(formData.numberOfNonPaidLeave, 10),
+      numberOfNonPaidLeave: parseInt(formData.numberOfNonPaidLeave || 0, 10),
     },
     earnings: {
       basicSalary: parseFloat(
@@ -324,6 +322,8 @@ export const transformFormDataForIncomeTax = (formData, initialData) => {
     employeeId: initialData.employeeId
       ? initialData.employeeId
       : initialData.id,
+    category: initialData.category,
+    numberOfWorkingDays: parseInt(formData.numberOfWorkingDays, 10),
     earnings: {
       basicSalary: parseFloat(
         initialData.salaryDetails

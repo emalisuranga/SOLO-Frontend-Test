@@ -5,8 +5,8 @@ import EmployeeSearch from "../Employee/EmployeeSearch";
 import getSalarySections from "../../utils/salarySections";
 import LoadingAnimation from "../../component/LoadingAnimation";
 import styled from "styled-components";
-
 import AddSalaryDetailsSteps from "./AddSalaryDetailsSteps";
+import useEmployeeStore from "../../store/employeeStore";
 
 const EmployeeInfoContainer = styled(Box)`
   display: flex;
@@ -24,11 +24,12 @@ const AddSalary = () => {
   const handleSubmit = (formData) => {};
 
   const [selectedEmployee, setSelectedEmployee] = useState(null);
+  const {  employeeCategory} = useEmployeeStore();
 
   const handleSearch = (employee) => {
     setSelectedEmployee(employee);
   };
-  const sections = getSalarySections(selectedEmployee);
+  const sections = getSalarySections(selectedEmployee, employeeCategory);
 
   return (
     <React.Fragment>

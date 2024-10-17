@@ -77,10 +77,9 @@ function CustomStepperForEmployee({
         return;
       }
       formData["category"] = { name: "category", value: employeeCategory };
-      // if (employeeCategory !== "MONTHLY_BASIC") {
-      //   formData["category"] = { name: "subcategory", value: '' };
-      // }
-      console.dir(formData);
+      if (employeeCategory !== "MONTHLY_BASIC") {
+        formData["subcategory"] = { name: "subcategory", value: null };
+      }
       if (modeRef.current === "edit") {
         await updateData({
           ...formData,

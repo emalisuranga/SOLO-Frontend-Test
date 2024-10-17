@@ -19,7 +19,7 @@ const EmployeeSearch = ({
     <Grid item xs={12}>
       <Box sx={{ display: "flex", gap: 2, mb: 2 }}>
         <TextField
-          label={t("fields.category")}
+          label={t("fields.employeeCategory")}
           variant="outlined"
           value={searchCategory}
           onChange={handleEmployeeCategoriesChange}
