@@ -45,18 +45,17 @@ const getSalarySections = (data, employeeCategory) => {
       required: true,
       defaultValue: 0,
     },
-    { name: "overtime", type: "text", required: true, defaultValue: 0 },
-    { name: "timeLate", type: "text", required: true, defaultValue: 0 },
-    { name: "timeLeavingEarly", type: "text", required: true, defaultValue: 0 },
     { name: "slipName", type: "text", required: true, defaultValue: generatePaymentText() },
   ];
-
-  // Add leave-related fields only if not in DAILY_BASIC or HOURLY_BASIC category
-  if (!isBasicType) {
+  
+  if (employeeCategory !== 'HOURLY_BASIC') {
     attendanceFields.push(
-      { name: "numberOfNonPaidLeave", type: "text", required: true, defaultValue: 0 },
-      { name: "numberOfPaidHolidays", type: "text", required: true, defaultValue: 0 },
-      { name: "remainingPaidVacationDays", type: "text", required: true, defaultValue: 0 }
+    { name: "remainingPaidVacationDays", type: "text", required: true, defaultValue: 0 },
+    { name: "numberOfNonPaidLeave", type: "text", required: true, defaultValue: 0 },
+    { name: "numberOfPaidHolidays", type: "text", required: true, defaultValue: 0 },
+    { name: "overtime", type: "text", required: true, defaultValue: 0 },
+    { name: "timeLeavingEarly", type: "text", required: true, defaultValue: 0 },
+    { name: "timeLate", type: "text", required: true, defaultValue: 0 },
     );
   }
 
