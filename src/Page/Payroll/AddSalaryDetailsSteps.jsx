@@ -83,7 +83,6 @@ function CustomStepperForSalary({ sections, initialData, mode = "ADD", }) {
       return;
     }
     setErrors({});
-    console.dir(formData);
 
     if (activeStep === sections.length - 2) {
       let initialFormData = {};

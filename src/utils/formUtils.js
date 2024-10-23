@@ -213,7 +213,6 @@ export const handleFormChange = (formData, setFormData) => (event) => {
 //   }
 // };
 export const validateForm = async (formData, t) => {
-  console.dir(formData);
   const validationSchema = getValidationSchema(t);
   const formValues = Object.keys(formData).reduce((acc, key) => {
     acc[key] = formData[key].value;

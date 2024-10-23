@@ -118,7 +118,6 @@ const EmployeeDetails = () => {
           (employee) => employee.category === selectedCategory
         );
       }
-      console.dir(filteredEmployees);
       setSelectedEmployee(filteredEmployees);
     },
     [
