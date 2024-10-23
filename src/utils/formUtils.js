@@ -154,7 +154,7 @@ export const initializeAddSalaryFormData = (sections, employeeData = {}) => {
 
 export const initializeUpdateSalaryFormData = (sections, salaryData = {}) => {
   const formData = {};
-  const { workDetails, earnings, deductions, slipName } = salaryData;
+  const { workDetails, earnings, deductions, slipName, employee} = salaryData;
 
   sections.forEach(({ fields }) => {
     fields.forEach(({ name, defaultValue }) => {
@@ -172,8 +172,7 @@ export const initializeUpdateSalaryFormData = (sections, salaryData = {}) => {
     });
   });
 
-  formData.basicSalary =
-    earnings?.basicSalary !== undefined ? earnings.basicSalary : 0;
+  formData.basicSalary = employee?.salaryDetails.basicSalary  ? employee.salaryDetails.basicSalary : earnings.basicSalary ;
   formData.slipName = slipName || generatePaymentText();
   formData.overtimePay = earnings.overtimePay || 0;
   formData.socialInsurance = deductions.socialInsurance || 0;
@@ -275,7 +274,7 @@ export const transformFormDataForSalary = (formData, initialData) => {
     dateOfBirth: initialData.dateOfBirth
       ? initialData.dateOfBirth
       : initialData.employee.dateOfBirth,
-    category: initialData.category,
+    category: initialData.category || initialData.employee.category,
     workDetails: {
       scheduledWorkingDays: parseInt(formData.scheduledWorkingDays, 10),
       numberOfWorkingDays: parseInt(formData.numberOfWorkingDays, 10),
@@ -287,11 +286,7 @@ export const transformFormDataForSalary = (formData, initialData) => {
       numberOfNonPaidLeave: parseInt(formData.numberOfNonPaidLeave || 0, 10),
     },
     earnings: {
-      basicSalary: parseFloat(
-        initialData.salaryDetails
-          ? initialData.salaryDetails.basicSalary
-          : initialData.earnings.basicSalary
-      ),
+      basicSalary: parseFloat(formData.basicSalary),
       overtimePay: parseFloat(formData.overtimePay),
       transportationCosts: parseFloat(formData.transportationCosts),
       attendanceAllowance: parseFloat(formData.attendanceAllowance),
@@ -352,39 +347,32 @@ export const getInitialFormData = (employeeData = {}) => {
   return cleanInitializeFormData(employeeData);
 };
 
-export const handleFormChangeUtil =
-  (formData, setFormData, setShowGenerateButton) => (event) => {
-    const { name, value } = event.target;
-    const parsedValue = parseInputValue(name, value);
-    const updatedFormData = { ...formData, [name]: parsedValue };
+export const handleFormChangeUtil = (formData, setFormData, setShowGenerateButton, employeeCategory) => (event) => {
+  const { name, value } = event.target;
+  const parsedValue = parseInputValue(name, value);
+  const updatedFormData = { ...formData, [name]: parsedValue };
 
-    if (
-      [
-        "numberOfWorkingDays",
-        "numberOfPaidHolidays",
-        "numberOfNonPaidLeave",
-      ].includes(name)
-    ) {
-      const deductionsAndAllowance =
-        calculateDeductionsAndAllowance(updatedFormData);
-      if (deductionsAndAllowance) {
-        updatedFormData.nonEmploymentDeduction =
-          deductionsAndAllowance.nonEmploymentDeduction;
-        updatedFormData.holidayAllowance =
-          deductionsAndAllowance.holidayAllowance;
-      }
+  if (
+    employeeCategory !== 'HOURLY_BASIC' &&
+    ["numberOfWorkingDays", "numberOfPaidHolidays", "numberOfNonPaidLeave"].includes(name)
+  ) {
+    const deductionsAndAllowance = calculateDeductionsAndAllowance(updatedFormData);
+    if (deductionsAndAllowance) {
+      updatedFormData.nonEmploymentDeduction = deductionsAndAllowance.nonEmploymentDeduction;
+      updatedFormData.holidayAllowance = deductionsAndAllowance.holidayAllowance;
     }
+  }
 
-    if (["overtime"].includes(name)) {
-      const overtimePay = calculateOvertimePayment(updatedFormData);
-      if (overtimePay) {
-        updatedFormData.overtimePay = overtimePay;
-      }
+  if (["overtime"].includes(name)) {
+    const overtimePay = calculateOvertimePayment(updatedFormData);
+    if (overtimePay) {
+      updatedFormData.overtimePay = overtimePay;
     }
+  }
 
-    if (shouldShowGenerateButton(name)) {
-      setShowGenerateButton(true);
-    }
+  if (shouldShowGenerateButton(name)) {
+    setShowGenerateButton(true);
+  }
 
-    setFormData(updatedFormData);
-  };
+  setFormData(updatedFormData);
+};

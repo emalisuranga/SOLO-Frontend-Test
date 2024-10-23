@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import PropTypes from "prop-types";
 import { Stack, Button, Box, Stepper, Step, StepLabel, Typography } from "@mui/material";
 import RegisterForm from "../../component/RegisterForm";
@@ -19,7 +19,7 @@ import Loading from "../../component/Common/Loading";
 import { useSnackbarStore } from "../../store/snackbarStore";
 import { EMPLOYEE_CATEGORY } from "../../constants/constants";
 
-function CustomStepperForSalary({ sections, initialData }) {
+function CustomStepperForSalary({ sections, initialData, mode = "ADD", }) {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { formData, setFormData, clearFormData, setErrors, errors } =
@@ -31,7 +31,7 @@ function CustomStepperForSalary({ sections, initialData }) {
       errors: state.errors,
     }));
   const { saveSalary, updateSalary, calculateSalaryDetails, generateIncomeTax, loading } = useSalaryStore();
-  const { fetchEmployeeDetails, employeeCategory} = useEmployeeStore();
+  const {  employeeCategory} = useEmployeeStore();
 
   const [activeStep, setActiveStep] = useState(0);
   const [showGenerateButton, setShowGenerateButton] = useState(false);
@@ -39,13 +39,34 @@ function CustomStepperForSalary({ sections, initialData }) {
 
   const memoizedSections = useMemo(() => sections, [sections]);
   const memoizedInitialData = useMemo(() => initialData, [initialData]);
+  const modeRef = useRef(mode);
 
   useEffect(() => {
     let initialFormData = {};
-    initialFormData = initializeAddSalaryFormData(memoizedSections, memoizedInitialData);
+    if(modeRef.current === "EDIT") {
+      initialFormData = initializeUpdateSalaryFormData(memoizedSections, memoizedInitialData);
+    } else {
+      initialFormData = initializeAddSalaryFormData(memoizedSections, memoizedInitialData);
+    }
     setFormData(initialFormData);
     setErrors({});
   }, [ memoizedSections, memoizedInitialData, setFormData, setErrors]);
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     let initialFormData = {};
+  //     if (!initialData?.employeeId) {
+  //       const employeeData = await fetchEmployeeDetails(initialData.id);
+  //       initialFormData = initializeAddSalaryFormData(sections, employeeData);
+  //     } else {
+  //       initialFormData = initializeUpdateSalaryFormData(sections, initialData);
+  //     }
+  //     setFormData(initialFormData);
+  //   };
+
+  //   fetchData();
+  //   setErrors({});
+  // }, [sections, initialData, setFormData, fetchEmployeeDetails, setErrors]);
 
   const handleNext = async () => {
     const validationErrors = await salaryValidation(formData, t);
@@ -62,6 +83,7 @@ function CustomStepperForSalary({ sections, initialData }) {
       return;
     }
     setErrors({});
+    console.dir(formData);
 
     if (activeStep === sections.length - 2) {
       let initialFormData = {};
@@ -178,11 +200,7 @@ function CustomStepperForSalary({ sections, initialData }) {
     updateFormDataWithResponse,
   ]);
 
-  const handleFormChange = handleFormChangeUtil(
-    formData,
-    setFormData,
-    setShowGenerateButton
-  );
+  const handleFormChange = handleFormChangeUtil(formData, setFormData, setShowGenerateButton, employeeCategory);
 
   if (loading) {
     return <Loading />;

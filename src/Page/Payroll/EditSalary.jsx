@@ -63,6 +63,7 @@ const EditSalary = () => {
             sections={sections}
             onSubmit={handleSubmit}
             initialData={salary}
+            mode="EDIT"
           />
     </React.Fragment>
   );

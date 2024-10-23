@@ -9,10 +9,10 @@ const formatDate = (dateString) => {
   return date.toISOString().split('T')[0]; 
 };
 
-const createField = (name, type, required, defaultValue) => ({
+const createField = (name, type, required, defaultValue, label) => ({
   name,
   type,
-  label: t(`fields.${name}`),
+  label: t(`fields.${label || name}`),
   required,
   defaultValue,
 });
@@ -23,7 +23,8 @@ const createFields = (data, fieldsConfig) =>
       field.name,
       field.type,
       field.required,
-      field.type === 'date' ? formatDate(data?.[field.name]) : data?.[field.name] || field.defaultValue || ''
+      field.type === 'date' ? formatDate(data?.[field.name]) : data?.[field.name] || field.defaultValue || '',
+      field.label 
     )
   );
 
@@ -38,7 +39,8 @@ const getSalarySections = (data, employeeCategory) => {
       defaultValue: employeeCategory === "MONTHLY_BASIC" ? DEFAULT_SCHEDULED_WORKING_DAYS : 0,
     },
     {
-      name: isBasicType && employeeCategory === 'HOURLY_BASIC' ? "numberOfHours" : "numberOfWorkingDays",
+      name: "numberOfWorkingDays",
+      label: isBasicType && employeeCategory === 'HOURLY_BASIC' ? "numberOfHours" : "numberOfWorkingDays",
       type: "text",
       required: true,
       defaultValue: 0,
