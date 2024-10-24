@@ -105,28 +105,13 @@ const EmployeeDetails = () => {
       const selectedCategory = event.target.value;
       setSearchCategory(selectedCategory);
 
-      let filteredEmployees;
+      let filteredEmployees = employees.filter(
+        (employee) => employee.category === selectedCategory
+      );
 
-      if (selectedCategory === "MONTHLY_BASIC") {
-        filteredEmployees = employees.filter(
-          (employee) =>
-            employee.category === monthlyEmployeeCategories.EXECUTIVE ||
-            employee.category === monthlyEmployeeCategories.NON_EXECUTIVE
-        );
-      } else {
-        filteredEmployees = employees.filter(
-          (employee) => employee.category === selectedCategory
-        );
-      }
       setSelectedEmployee(filteredEmployees);
     },
-    [
-      employees,
-      setSearchCategory,
-      setSelectedEmployee,
-      monthlyEmployeeCategories.EXECUTIVE,
-      monthlyEmployeeCategories.NON_EXECUTIVE,
-    ]
+    [ employees, setSearchCategory, setSelectedEmployee ]
   );
 
   const handleSearch = useCallback(() => {

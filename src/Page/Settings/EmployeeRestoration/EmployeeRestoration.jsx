@@ -208,7 +208,15 @@ const EmployeeRestoration = () => {
 
   if (deletedEmployees.length === 0) {
     return (
-      <Box sx={{ flexGrow: 1, p: 3 }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "100vh", 
+          p: 3,
+        }}
+      >
         <Typography variant="h6" align="center">
           {t("employeeRestoration.noDeletedEmployees")}
         </Typography>

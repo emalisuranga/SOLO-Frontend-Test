@@ -52,12 +52,12 @@ const SalarySlipDetails = () => {
       if (result) {
         const formattedData = formatSalarySlipData(result);
         setSalarySlip(formattedData);
-        setSnackbar(t("actions.fetchSalarySlipSuccess"), "success");
       } else {
         throw new Error("Data not found");
       }
     } catch (error) {
       setSnackbar(t("actions.fetchSalarySlipError"), "error");
+      navigate("/salary-details");
     }
   }, [
     employeeId,
@@ -66,6 +66,7 @@ const SalarySlipDetails = () => {
     setSalarySlip,
     t,
     setSnackbar,
+    navigate,
   ]);
 
   useEffect(() => {
@@ -73,8 +74,8 @@ const SalarySlipDetails = () => {
   }, [fetchAndSetSalarySlipDetails]);
 
   useEffect(() => {
-    if (salarySlip && salarySlip.remarks !== undefined) {
-      setRemarks(salarySlip.remarks ? salarySlip.remarks.trim() : "");
+    if (salarySlip?.remarks !== undefined) {
+      setRemarks(salarySlip.remarks?.trim() || "");
     }
   }, [salarySlip]);
 
@@ -379,7 +380,9 @@ const SalarySlipDetails = () => {
                 </VerticalTableCell>
                 <ColoredTableCell>
                   <SmallTypography variant="body2" align="center">
-                    {salarySlip.employee.category === "EXECUTIVE" ? "役員報酬" : "基本給"}
+                    {salarySlip.employee.subcategory === "EXECUTIVE"
+                      ? "役員報酬"
+                      : "基本給"}
                   </SmallTypography>
                 </ColoredTableCell>
                 <ColoredTableCell>
@@ -716,7 +719,7 @@ const SalarySlipDetails = () => {
           type="text"
           label={t("fields.remarks")}
           name="remarks"
-          value={remarks === null ? "" : remarks}
+          value={remarks ?? ""} // Use nullish coalescing to default to an empty string
           onChange={(e) => setRemarks(e.target.value)}
           fullWidth
           sx={{ mt: 4 }}
