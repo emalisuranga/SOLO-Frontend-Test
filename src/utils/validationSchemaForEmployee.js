@@ -123,9 +123,9 @@ const getValidationSchema = (t) => {
     dependentDeduction: Yup.number().typeError(
       t("validation.number", { field: t("fields.dependentDeduction") })
     ),
-    category: Yup.string().required(
-      t("validation.required", { field: t("fields.employeeCategory") })
-    ),
+    // subcategory: Yup.string().required(
+    //   t("validation.required", { field: t("fields.employeeCategory") })
+    // ),
   });
 };
 

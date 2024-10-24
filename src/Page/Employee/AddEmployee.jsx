@@ -5,20 +5,23 @@ import useEmployeeStore from "../../store/employeeStore";
 import CustomStepperForEmployee from "./CustomStepperForEmployee";
 
 const AddEmployee = () => {
-  const { fetchNextEmployeeNumber } = useEmployeeStore();
+  const { fetchNextEmployeeNumber, employeeCategory  } = useEmployeeStore();
 
   useEffect(() => {
     const fetchAndSetNextEmployeeNumber = async () => {
       try {
+        if (!employeeCategory) {
+          return;
+        }
         await fetchNextEmployeeNumber();
       } catch (error) {
       }
     };
 
     fetchAndSetNextEmployeeNumber();
-  }, [ fetchNextEmployeeNumber]);
+  }, [ fetchNextEmployeeNumber, employeeCategory]);
 
-  const sections = getSections();
+  const sections = getSections({}, employeeCategory);
 
   // const handleSubmit = (formData) => {};
 

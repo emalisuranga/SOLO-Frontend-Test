@@ -8,7 +8,7 @@ import CustomStepperForEmployee from "./CustomStepperForEmployee";
 
 const EditEmployee = () => {
   const { id } = useParams();
-  const { employee, fetchEmployeeDetails } = useEmployeeStore();
+  const { employee, fetchEmployeeDetails, employeeCategory } = useEmployeeStore();
   const [loading, setLoading] = useState(true);
   const [sections, setSections] = useState([]);
 
@@ -27,10 +27,11 @@ const EditEmployee = () => {
 
   useEffect(() => {
     if (employee) {
-      const sectionsData = getSections(employee);
+      const sectionsData = getSections(employee, employeeCategory);
       setSections(sectionsData);
     }
-  }, [employee]);
+  }, [employee, employeeCategory]);
+  
 
 
   if (loading) {

@@ -25,6 +25,13 @@
   "Month": "Month",
   "Year": "Year",
   "printPDF": "Print PDF",
+  "chooseEmployeeCategory": "Choose Employee Category",
+  "employeeCategoryDescription": "Please choose the type of employee you would like to add to the database: Monthly, Daily, or Hourly.",
+  "chooseSalarySlipEmployeeCategory": "Choose Employee Category for Salary Slip",
+  "employeeSalarySlipCategoryDescription": "Please select the appropriate employee category for the salary slip.",
+  "MONTHLY_BASIC": "Monthly Basic",
+  "DAILY_BASIC": "Daily Basic",
+  "HOURLY_BASIC": "Hourly Basic",
   "actions": {
     "add_success": "Employee added successfully",
     "update_success": "Employee updated successfully",
@@ -110,11 +117,15 @@
     "pensionEndMonthlySalary": "Pension End Monthly Salary",
     "pensionStartSalary": "Pension Start Salary",
     "pensionEndSalary": "Pension End Salary",
-    "category": "Official Position",
+    "subcategory": "Official Position",
+    "employeeCategory": "Employee Category",
     "employeeCategories": {
-    "executive": "Executive",
-    "nonExecutive": "Non-Executive"
-  }
+      "executive": "Executive",
+      "nonExecutive": "Non-Executive"
+    },
+    "dailyRate": "Daily Rate",
+    "hourlyRate": "Hourly Rate",
+    "numberOfHours": "Number of Hours"
   },
   "sections": {
     "personalInfo": "Employee Info",

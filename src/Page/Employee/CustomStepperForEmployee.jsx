@@ -32,17 +32,20 @@ function CustomStepperForEmployee({
     })
   );
 
-  const { saveData, updateData, loading } = useEmployeeStore();
+  const { saveData, updateData, loading, employeeCategory } = useEmployeeStore();
   const setSnackbar = useSnackbarStore((state) => state.setSnackbar);
   const initialDataRef = useRef(initialData);
   const modeRef = useRef(mode);
   const [activeStep, setActiveStep] = useState(0);
 
   useEffect(() => {
+    if (employeeCategory === '') {
+      navigate("/employee");
+    }
     const initialFormData = initializeFormData(sections, initialData, mode);
     setFormData(initialFormData);
     setErrors({});
-  }, [sections, initialData, setFormData, setErrors, mode]);
+  }, [sections, initialData, setFormData, setErrors, mode, employeeCategory, navigate]);
 
   const handleFormChange = handleChangeUtil(formData, setFormData);
 
@@ -73,6 +76,10 @@ function CustomStepperForEmployee({
         setSnackbar(t("validation.basicSalaryCanBeZero"), "error");
         return;
       }
+      formData["category"] = { name: "category", value: employeeCategory };
+      if (employeeCategory !== "MONTHLY_BASIC") {
+        formData["subcategory"] = { name: "subcategory", value: null };
+      }
       if (modeRef.current === "edit") {
         await updateData({
           ...formData,
@@ -93,7 +100,7 @@ function CustomStepperForEmployee({
   
       console.error("Error during data save:", error);
     }
-  }, [formData, setFormData, t, updateData, saveData, navigate, setSnackbar]);
+  }, [formData, setFormData, t, updateData, saveData, navigate, setSnackbar, employeeCategory]);
 
   const handleClear = useCallback(() => {
     clearFormData();

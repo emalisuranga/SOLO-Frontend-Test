@@ -9,6 +9,7 @@ import {
   calculateOvertimePayment,
 } from "../helpers/salaryInputProcessors";
 import { employeeStore } from "../store/employeeStore";
+import * as Yup from 'yup';
 
 const formatDate = (dateString) => {
   if (!dateString) return "";
@@ -90,15 +91,23 @@ export const initializeFormData = (sections, initialData = {}, mode) => {
           "dependentDeduction",
         ];
 
-        formData[fieldName] = {
-          ...field,
-          value: numericFields.includes(fieldName)
-            ? Number(fieldValue || 0)
-            : fieldValue !== undefined
-            ? fieldValue
-            : "",
-          defaultValue: numericFields.includes(fieldName) ? 0 : "",
-        };
+        if (fieldName === "subcategory" && fieldValue === "") {
+          formData[fieldName] = {
+            ...field,
+            value: null, 
+            defaultValue: null,
+          };
+        } else {
+          formData[fieldName] = {
+            ...field,
+            value: numericFields.includes(fieldName)
+              ? Number(fieldValue || 0)
+              : fieldValue !== undefined
+              ? fieldValue
+              : "",
+            defaultValue: numericFields.includes(fieldName) ? 0 : "",
+          };
+        }
       }
     });
   });
@@ -145,7 +154,7 @@ export const initializeAddSalaryFormData = (sections, employeeData = {}) => {
 
 export const initializeUpdateSalaryFormData = (sections, salaryData = {}) => {
   const formData = {};
-  const { workDetails, earnings, deductions, slipName } = salaryData;
+  const { workDetails, earnings, deductions, slipName, employee} = salaryData;
 
   sections.forEach(({ fields }) => {
     fields.forEach(({ name, defaultValue }) => {
@@ -163,8 +172,7 @@ export const initializeUpdateSalaryFormData = (sections, salaryData = {}) => {
     });
   });
 
-  formData.basicSalary =
-    earnings?.basicSalary !== undefined ? earnings.basicSalary : 0;
+  formData.basicSalary = employee?.salaryDetails.basicSalary  ? employee.salaryDetails.basicSalary : earnings.basicSalary ;
   formData.slipName = slipName || generatePaymentText();
   formData.overtimePay = earnings.overtimePay || 0;
   formData.socialInsurance = deductions.socialInsurance || 0;
@@ -184,6 +192,26 @@ export const handleFormChange = (formData, setFormData) => (event) => {
   });
 };
 
+// export const validateForm = async (formData, t) => {
+//   const validationSchema = getValidationSchema(t);
+//   const formValues = Object.keys(formData).reduce((acc, key) => {
+//     acc[key] = formData[key].value;
+//     return acc;
+//   }, {});
+
+//   try {
+//     await validationSchema.validate(formValues, { abortEarly: false });
+//     return {};
+//   } catch (validationError) {
+//     const validationErrors = {};
+//     if (validationError.inner) {
+//       validationError.inner.forEach((error) => {
+//         validationErrors[error.path] = error.message;
+//       });
+//     }
+//     return validationErrors;
+//   }
+// };
 export const validateForm = async (formData, t) => {
   const validationSchema = getValidationSchema(t);
   const formValues = Object.keys(formData).reduce((acc, key) => {
@@ -191,9 +219,18 @@ export const validateForm = async (formData, t) => {
     return acc;
   }, {});
 
+  const filteredSchema = Yup.object(
+    Object.keys(formData).reduce((acc, key) => {
+      if (validationSchema.fields[key]) {
+        acc[key] = validationSchema.fields[key]; 
+      }
+      return acc;
+    }, {})
+  );
+
   try {
-    await validationSchema.validate(formValues, { abortEarly: false });
-    return {};
+    await filteredSchema.validate(formValues, { abortEarly: false });
+    return {}; 
   } catch (validationError) {
     const validationErrors = {};
     if (validationError.inner) {
@@ -201,7 +238,8 @@ export const validateForm = async (formData, t) => {
         validationErrors[error.path] = error.message;
       });
     }
-    return validationErrors;
+    console.log(validationErrors);
+    return validationErrors; 
   }
 };
 
@@ -235,25 +273,19 @@ export const transformFormDataForSalary = (formData, initialData) => {
     dateOfBirth: initialData.dateOfBirth
       ? initialData.dateOfBirth
       : initialData.employee.dateOfBirth,
+    category: initialData.category || initialData.employee.category,
     workDetails: {
       scheduledWorkingDays: parseInt(formData.scheduledWorkingDays, 10),
       numberOfWorkingDays: parseInt(formData.numberOfWorkingDays, 10),
-      numberOfPaidHolidays: parseInt(formData.numberOfPaidHolidays, 10),
-      remainingPaidVacationDays: parseInt(
-        formData.remainingPaidVacationDays,
-        10
-      ),
+      numberOfPaidHolidays: parseInt(formData.numberOfPaidHolidays || 0, 10),
+      remainingPaidVacationDays: parseInt(formData.remainingPaidVacationDays || 0,10),
       overtime: parseFloat(formData.overtime),
       timeLate: parseFloat(formData.timeLate),
       timeLeavingEarly: parseFloat(formData.timeLeavingEarly),
-      numberOfNonPaidLeave: parseInt(formData.numberOfNonPaidLeave, 10),
+      numberOfNonPaidLeave: parseInt(formData.numberOfNonPaidLeave || 0, 10),
     },
     earnings: {
-      basicSalary: parseFloat(
-        initialData.salaryDetails
-          ? initialData.salaryDetails.basicSalary
-          : initialData.earnings.basicSalary
-      ),
+      basicSalary: parseFloat(formData.basicSalary),
       overtimePay: parseFloat(formData.overtimePay),
       transportationCosts: parseFloat(formData.transportationCosts),
       attendanceAllowance: parseFloat(formData.attendanceAllowance),
@@ -284,6 +316,8 @@ export const transformFormDataForIncomeTax = (formData, initialData) => {
     employeeId: initialData.employeeId
       ? initialData.employeeId
       : initialData.id,
+    category: initialData.category,
+    numberOfWorkingDays: parseInt(formData.numberOfWorkingDays, 10),
     earnings: {
       basicSalary: parseFloat(
         initialData.salaryDetails
@@ -312,39 +346,32 @@ export const getInitialFormData = (employeeData = {}) => {
   return cleanInitializeFormData(employeeData);
 };
 
-export const handleFormChangeUtil =
-  (formData, setFormData, setShowGenerateButton) => (event) => {
-    const { name, value } = event.target;
-    const parsedValue = parseInputValue(name, value);
-    const updatedFormData = { ...formData, [name]: parsedValue };
+export const handleFormChangeUtil = (formData, setFormData, setShowGenerateButton, employeeCategory) => (event) => {
+  const { name, value } = event.target;
+  const parsedValue = parseInputValue(name, value);
+  const updatedFormData = { ...formData, [name]: parsedValue };
 
-    if (
-      [
-        "numberOfWorkingDays",
-        "numberOfPaidHolidays",
-        "numberOfNonPaidLeave",
-      ].includes(name)
-    ) {
-      const deductionsAndAllowance =
-        calculateDeductionsAndAllowance(updatedFormData);
-      if (deductionsAndAllowance) {
-        updatedFormData.nonEmploymentDeduction =
-          deductionsAndAllowance.nonEmploymentDeduction;
-        updatedFormData.holidayAllowance =
-          deductionsAndAllowance.holidayAllowance;
-      }
+  if (
+    employeeCategory !== 'HOURLY_BASIC' &&
+    ["numberOfWorkingDays", "numberOfPaidHolidays", "numberOfNonPaidLeave"].includes(name)
+  ) {
+    const deductionsAndAllowance = calculateDeductionsAndAllowance(updatedFormData);
+    if (deductionsAndAllowance) {
+      updatedFormData.nonEmploymentDeduction = deductionsAndAllowance.nonEmploymentDeduction;
+      updatedFormData.holidayAllowance = deductionsAndAllowance.holidayAllowance;
     }
+  }
 
-    if (["overtime"].includes(name)) {
-      const overtimePay = calculateOvertimePayment(updatedFormData);
-      if (overtimePay) {
-        updatedFormData.overtimePay = overtimePay;
-      }
+  if (["overtime"].includes(name)) {
+    const overtimePay = calculateOvertimePayment(updatedFormData);
+    if (overtimePay) {
+      updatedFormData.overtimePay = overtimePay;
     }
+  }
 
-    if (shouldShowGenerateButton(name)) {
-      setShowGenerateButton(true);
-    }
+  if (shouldShowGenerateButton(name)) {
+    setShowGenerateButton(true);
+  }
 
-    setFormData(updatedFormData);
-  };
+  setFormData(updatedFormData);
+};

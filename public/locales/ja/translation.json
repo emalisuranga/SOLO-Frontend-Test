@@ -29,6 +29,13 @@
   "Year": "年",
   "printPDF": "PDFを印刷",
   "exportAsPDF": "PDFとして保存",
+  "chooseEmployeeCategory": "従業員の種類を選択してください。",
+  "employeeCategoryDescription": "データベースに追加する従業員のタイプを選択してください：月給、日給、または時給。",
+  "chooseSalarySlipEmployeeCategory": "給与明細の従業員カテゴリを選択してください",
+  "employeeSalarySlipCategoryDescription": "給与明細に適切な従業員カテゴリを選択してください。",
+  "MONTHLY_BASIC": "月給",
+  "DAILY_BASIC": "日給",
+  "HOURLY_BASIC": "時給",
   "actions": {
     "add_success": "個人情報データが正常に追加されました。",
     "update_success": "個人情報データが正常に更新されました。",
@@ -115,11 +122,15 @@
     "pensionStartSalary": "年金開始給与",
     "pensionEndSalary": "年金終了給与",
     "numberOfNonPaidLeave": "役職",
-    "category": "従業員区分",
+    "subcategory": "従業員区分",
+    "employeeCategory": "従業員区分",
     "employeeCategories": {
       "executive": "役員",
       "nonExecutive": "従業員"
-    }
+    },
+    "dailyRate": "日給",         
+    "hourlyRate": "時給",
+    "numberOfHours": "勤務時間数"
   },
   "sections": {
     "personalInfo": "個人情報",
