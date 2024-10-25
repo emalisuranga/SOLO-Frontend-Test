@@ -262,11 +262,17 @@ export const salaryValidation = async (formData, t) => {
 
 export const transformFormDataForSalary = (formData, initialData) => {
   const { year, month } = getCurrentYearAndMonth();
+  
+  const parseValue = (value, type) => {
+    if (value === null || value === '') return null;
+    if (type === 'int') return parseInt(value, 10);
+    if (type === 'float') return parseFloat(value);
+    return value;
+  };
+
   return {
     id: initialData.id,
-    employeeId: initialData.employeeId
-      ? initialData.employeeId
-      : initialData.id,
+    employeeId: initialData.employeeId ? initialData.employeeId : initialData.id,
     month: month,
     year: year,
     slipName: formData.slipName,
@@ -275,37 +281,37 @@ export const transformFormDataForSalary = (formData, initialData) => {
       : initialData.employee.dateOfBirth,
     category: initialData.category || initialData.employee.category,
     workDetails: {
-      scheduledWorkingDays: parseInt(formData.scheduledWorkingDays, 10),
-      numberOfWorkingDays: parseInt(formData.numberOfWorkingDays, 10),
-      numberOfPaidHolidays: parseInt(formData.numberOfPaidHolidays || 0, 10),
-      remainingPaidVacationDays: parseInt(formData.remainingPaidVacationDays || 0,10),
-      overtime: parseFloat(formData.overtime),
-      timeLate: parseFloat(formData.timeLate),
-      timeLeavingEarly: parseFloat(formData.timeLeavingEarly),
-      numberOfNonPaidLeave: parseInt(formData.numberOfNonPaidLeave || 0, 10),
+      scheduledWorkingDays: parseValue(formData.scheduledWorkingDays, 'int'),
+      numberOfWorkingDays: parseValue(formData.numberOfWorkingDays, 'float'),
+      numberOfPaidHolidays: parseValue(formData.numberOfPaidHolidays || 0, 'int'),
+      remainingPaidVacationDays: parseValue(formData.remainingPaidVacationDays || 0, 'int'),
+      overtime: parseValue(formData.overtime, 'float'),
+      timeLate: parseValue(formData.timeLate, 'float'),
+      timeLeavingEarly: parseValue(formData.timeLeavingEarly, 'float'),
+      numberOfNonPaidLeave: parseValue(formData.numberOfNonPaidLeave || 0, 'int'),
     },
     earnings: {
-      basicSalary: parseFloat(formData.basicSalary),
-      overtimePay: parseFloat(formData.overtimePay),
-      transportationCosts: parseFloat(formData.transportationCosts),
-      attendanceAllowance: parseFloat(formData.attendanceAllowance),
-      familyAllowance: parseFloat(formData.familyAllowance),
-      leaveAllowance: parseFloat(formData.leaveAllowance),
-      specialAllowance: parseFloat(formData.specialAllowance),
-      holidayAllowance: parseFloat(formData.holidayAllowance),
+      basicSalary: parseValue(formData.basicSalary, 'float'),
+      overtimePay: parseValue(formData.overtimePay, 'float'),
+      transportationCosts: parseValue(formData.transportationCosts, 'float'),
+      attendanceAllowance: parseValue(formData.attendanceAllowance, 'float'),
+      familyAllowance: parseValue(formData.familyAllowance, 'float'),
+      leaveAllowance: parseValue(formData.leaveAllowance, 'float'),
+      specialAllowance: parseValue(formData.specialAllowance, 'float'),
+      holidayAllowance: parseValue(formData.holidayAllowance, 'float'),
     },
     deductions: {
-      healthInsurance: parseFloat(formData.healthInsurance),
-      employeePensionInsurance: parseFloat(formData.employeePensionInsurance),
-      employmentInsurance: parseFloat(formData.employmentInsurance),
-      longTermCareInsurance: parseFloat(formData.longTermCareInsurance),
-      socialInsurance: parseFloat(formData.socialInsurance),
-      incomeTax: parseFloat(formData.incomeTax),
-      residentTax: parseFloat(formData.residentTax),
-      advancePayment: parseFloat(formData.advancePayment),
-      yearEndAdjustment: parseFloat(formData.yearEndAdjustment),
-      nonEmploymentDeduction: parseFloat(formData.nonEmploymentDeduction),
-      refundAmount: parseFloat(formData.refundAmount),
+      healthInsurance: parseValue(formData.healthInsurance, 'float'),
+      employeePensionInsurance: parseValue(formData.employeePensionInsurance, 'float'),
+      employmentInsurance: parseValue(formData.employmentInsurance, 'float'),
+      longTermCareInsurance: parseValue(formData.longTermCareInsurance, 'float'),
+      socialInsurance: parseValue(formData.socialInsurance, 'float'),
+      incomeTax: parseValue(formData.incomeTax, 'float'),
+      residentTax: parseValue(formData.residentTax, 'float'),
+      advancePayment: parseValue(formData.advancePayment, 'float'),
+      yearEndAdjustment: parseValue(formData.yearEndAdjustment, 'float'),
+      nonEmploymentDeduction: parseValue(formData.nonEmploymentDeduction, 'float'),
+      refundAmount: parseValue(formData.refundAmount, 'float'),
     },
   };
 };

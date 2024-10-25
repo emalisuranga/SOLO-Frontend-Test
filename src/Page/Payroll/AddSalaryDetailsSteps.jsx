@@ -52,22 +52,6 @@ function CustomStepperForSalary({ sections, initialData, mode = "ADD", }) {
     setErrors({});
   }, [ memoizedSections, memoizedInitialData, setFormData, setErrors]);
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     let initialFormData = {};
-  //     if (!initialData?.employeeId) {
-  //       const employeeData = await fetchEmployeeDetails(initialData.id);
-  //       initialFormData = initializeAddSalaryFormData(sections, employeeData);
-  //     } else {
-  //       initialFormData = initializeUpdateSalaryFormData(sections, initialData);
-  //     }
-  //     setFormData(initialFormData);
-  //   };
-
-  //   fetchData();
-  //   setErrors({});
-  // }, [sections, initialData, setFormData, fetchEmployeeDetails, setErrors]);
-
   const handleNext = async () => {
     const validationErrors = await salaryValidation(formData, t);
 
