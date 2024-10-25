@@ -5,27 +5,32 @@ import { TextField, Grid } from '@mui/material';
 const RegisterForm = ({ fields, formData, onChange, errors }) => {
   return (
     <Grid container spacing={2}>
-      {fields.map((field) => (
-        <Grid item xs={12} sm={6} key={field.name}>
-          <TextField
-            key={field.name}
-            type={field.type}
-            label={field.label}
-            name={field.name}
-            value={formData[field.name] !== undefined ? formData[field.name] : (field.defaultValue !== undefined ? field.defaultValue : '')}
-            onChange={onChange}
-            error={!!errors[field.name]}
-            helperText={errors[field.name]}
-            fullWidth
-            required={field.required}
-            margin="normal"
-            variant="outlined"
-            InputLabelProps={field.type === 'date' ? { shrink: true } : {}}
-            InputProps={field.name === 'remainingPaidVacationDays'|| field.name === 'employeeNumber' ? { readOnly: true } : {}}
-            disabled={field.disabled}
-          />
-        </Grid>
-      ))}
+      {fields.map(({ name, type, label, required, defaultValue, disabled }) => {
+        const value = formData[name] ?? defaultValue ?? '';
+        const isReadOnly = name === 'remainingPaidVacationDays' || name === 'employeeNumber';
+        const isDateField = type === 'date';
+
+        return (
+          <Grid item xs={12} sm={6} key={name}>
+            <TextField
+              type={type}
+              label={label}
+              name={name}
+              value={value}
+              onChange={onChange}
+              error={!!errors[name]}
+              helperText={errors[name]}
+              fullWidth
+              required={required}
+              margin="normal"
+              variant="outlined"
+              InputLabelProps={isDateField ? { shrink: true } : {}}
+              InputProps={isReadOnly ? { readOnly: true } : {}}
+              disabled={disabled}
+            />
+          </Grid>
+        );
+      })}
     </Grid>
   );
 };
@@ -37,6 +42,8 @@ RegisterForm.propTypes = {
       type: PropTypes.string.isRequired,
       label: PropTypes.string.isRequired,
       required: PropTypes.bool,
+      defaultValue: PropTypes.any,
+      disabled: PropTypes.bool,
     })
   ).isRequired,
   formData: PropTypes.object.isRequired,
