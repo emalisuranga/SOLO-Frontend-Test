@@ -264,7 +264,7 @@ export const transformFormDataForSalary = (formData, initialData) => {
   const { year, month } = getCurrentYearAndMonth();
   
   const parseValue = (value, type) => {
-    if (value === null || value === '') return null;
+    if (value === null || value === '') return 0;
     if (type === 'int') return parseInt(value, 10);
     if (type === 'float') return parseFloat(value);
     return value;
