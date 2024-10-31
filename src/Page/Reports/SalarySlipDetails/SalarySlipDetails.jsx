@@ -380,9 +380,7 @@ const SalarySlipDetails = () => {
                 </VerticalTableCell>
                 <ColoredTableCell>
                   <SmallTypography variant="body2" align="center">
-                    {salarySlip.employee.subcategory === "EXECUTIVE"
-                      ? "役員報酬"
-                      : "基本給"}
+                    {salarySlip.employee.subcategory === "EXECUTIVE" ? "役員報酬" : "基本給"}
                   </SmallTypography>
                 </ColoredTableCell>
                 <ColoredTableCell>
