@@ -270,7 +270,7 @@ const SalarySlipPrint = ({ salarySlip }) => {
                 </VerticalTableCellPrint>
                 <CustomTableCell>
                   <Typography variant="body2" align="center">
-                    {salarySlip.employee.category === "EXECUTIVE" ? "役員報酬" : "基本給"}
+                    {salarySlip.employee.subcategory === "EXECUTIVE" ? "役員報酬" : "基本給"}
                   </Typography>
                 </CustomTableCell>
                 <CustomTableCell>
