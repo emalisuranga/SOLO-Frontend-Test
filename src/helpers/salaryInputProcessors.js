@@ -91,9 +91,16 @@ export const shouldShowGenerateButton = (name) => {
   ].includes(name);
 };
 
-export const calculateOvertimePayment = (workDetails) => {
+export const calculateOvertimePayment = (workDetails, employeeCategory) => {
   const { basicSalary, scheduledWorkingDays, overtime } = workDetails;
-  const calculatedValue =
-    (basicSalary / scheduledWorkingDays / 8) * 1.25 * overtime;
+  console.log(basicSalary, scheduledWorkingDays, overtime);
+
+  let calculatedValue;
+  if (employeeCategory === 'DAILY_BASIC') {
+    calculatedValue = (basicSalary / 8) * 1.25 * overtime;
+  } else {
+    calculatedValue = (basicSalary / scheduledWorkingDays / 8) * 1.25 * overtime;
+  }
+
   return Math.floor(calculatedValue) + (calculatedValue % 1 !== 0 ? 1 : 0);
 };
