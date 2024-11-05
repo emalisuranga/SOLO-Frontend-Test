@@ -369,7 +369,7 @@ export const handleFormChangeUtil = (formData, setFormData, setShowGenerateButto
   }
 
   if (["overtime"].includes(name)) {
-    const overtimePay = calculateOvertimePayment(updatedFormData);
+    const overtimePay = calculateOvertimePayment(updatedFormData, employeeCategory);
     if (overtimePay) {
       updatedFormData.overtimePay = overtimePay;
     }
