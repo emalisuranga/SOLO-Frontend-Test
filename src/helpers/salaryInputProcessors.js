@@ -93,14 +93,15 @@ export const shouldShowGenerateButton = (name) => {
 
 export const calculateOvertimePayment = (workDetails, employeeCategory) => {
   const { basicSalary, scheduledWorkingDays, overtime } = workDetails;
-  console.log(basicSalary, scheduledWorkingDays, overtime);
+  const overtimeInDecimal = Math.floor(overtime) + ((overtime % 1) / 0.6);
 
   let calculatedValue;
   if (employeeCategory === 'DAILY_BASIC') {
-    calculatedValue = (basicSalary / 8) * 1.25 * overtime;
+    calculatedValue = (basicSalary / 8) * 1.25 * overtimeInDecimal;
   } else {
-    calculatedValue = (basicSalary / scheduledWorkingDays / 8) * 1.25 * overtime;
+    calculatedValue = (basicSalary / scheduledWorkingDays / 8) * 1.25 * overtimeInDecimal;
   }
 
-  return Math.floor(calculatedValue) + (calculatedValue % 1 !== 0 ? 1 : 0);
+  const finalPayment = Math.ceil(calculatedValue);
+  return finalPayment;
 };
