@@ -3,6 +3,7 @@ import { CircularProgress, Box } from "@mui/material";
 // import CustomTabsForSalary from "./CustomTabsForSalary";
 import { useParams, useNavigate } from 'react-router-dom';
 import useSalaryStore from '../../store/salaryStore';
+import useEmployeeStore from "../../store/employeeStore";
 import getSalarySections from '../../utils/salarySections';
 import EmployeeHeader from '../../Page/Employee/EmployeeHeader';
 import AddSalaryDetailsSteps from "./AddSalaryDetailsSteps";
@@ -10,6 +11,7 @@ import AddSalaryDetailsSteps from "./AddSalaryDetailsSteps";
 const EditSalary = () => {
   const { paymentId } = useParams();
   const { fetchSalaryDetailsById, salary } = useSalaryStore();
+  const { setEmployeeCategory } = useEmployeeStore();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [sections, setSections] = useState([]);
@@ -31,10 +33,12 @@ const EditSalary = () => {
 
   useEffect(() => {
     if (salary) {
-      const sectionsData = getSalarySections(salary);
+      const newEmployeeCategory = salary.employee?.category;
+      setEmployeeCategory(newEmployeeCategory);
+      const sectionsData = getSalarySections(salary, newEmployeeCategory);
       setSections(sectionsData);
     }
-  }, [salary]);
+  }, [salary, setEmployeeCategory]); 
 
   const handleSubmit = (formData) => {
     navigate('/salary-details');
@@ -63,6 +67,7 @@ const EditSalary = () => {
             sections={sections}
             onSubmit={handleSubmit}
             initialData={salary}
+            mode="EDIT"
           />
     </React.Fragment>
   );

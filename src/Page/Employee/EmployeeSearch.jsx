@@ -2,15 +2,20 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { Box, TextField, Button, MenuItem, Grid } from '@mui/material';
 import useEmployeeStore from '../../store/employeeStore';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from "react-router-dom";
 
 const EmployeeSearch = ({ onSearch }) => {
   const { t } = useTranslation();
-  const { fetchEmployeeNamesAndIds, fetchEmployeeDetails } = useEmployeeStore();
+  const { fetchEmployeeNamesAndIds, fetchEmployeeDetails, employeeCategory } = useEmployeeStore();
   const [employeeList, setEmployeeList] = useState([]);
   const [searchId, setSearchId] = useState('');
   const [searchName, setSearchName] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
+    if (employeeCategory === '') {
+      navigate("/salary-details", { replace: true });
+    }
     const fetchNamesAndIds = async () => {
       try {
         const namesAndIds = await fetchEmployeeNamesAndIds();
@@ -21,7 +26,7 @@ const EmployeeSearch = ({ onSearch }) => {
     };
 
     fetchNamesAndIds();
-  }, [fetchEmployeeNamesAndIds]);
+  }, [fetchEmployeeNamesAndIds, navigate, employeeCategory]);
 
   const handleSearch = useCallback(async () => {
     let idToSearch = searchId;

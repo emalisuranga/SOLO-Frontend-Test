@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import PropTypes from "prop-types";
 import { Stack, Button, Box, Stepper, Step, StepLabel, Typography } from "@mui/material";
 import RegisterForm from "../../component/RegisterForm";
@@ -17,8 +17,9 @@ import useSalaryStore from "../../store/salaryStore";
 import useEmployeeStore from "../../store/employeeStore";
 import Loading from "../../component/Common/Loading";
 import { useSnackbarStore } from "../../store/snackbarStore";
+import { EMPLOYEE_CATEGORY } from "../../constants/constants";
 
-function CustomStepperForSalary({ sections, initialData }) {
+function CustomStepperForSalary({ sections, initialData, mode = "ADD", }) {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { formData, setFormData, clearFormData, setErrors, errors } =
@@ -30,35 +31,33 @@ function CustomStepperForSalary({ sections, initialData }) {
       errors: state.errors,
     }));
   const { saveSalary, updateSalary, calculateSalaryDetails, generateIncomeTax, loading } = useSalaryStore();
-  const { fetchEmployeeDetails } = useEmployeeStore();
+  const {  employeeCategory} = useEmployeeStore();
 
   const [activeStep, setActiveStep] = useState(0);
   const [showGenerateButton, setShowGenerateButton] = useState(false);
   const setSnackbar = useSnackbarStore((state) => state.setSnackbar);
-  
+
+  const memoizedSections = useMemo(() => sections, [sections]);
+  const memoizedInitialData = useMemo(() => initialData, [initialData]);
+  const modeRef = useRef(mode);
 
   useEffect(() => {
-    const fetchData = async () => {
-      let initialFormData = {};
-      if (!initialData?.employeeId) {
-        const employeeData = await fetchEmployeeDetails(initialData.id);
-        initialFormData = initializeAddSalaryFormData(sections, employeeData);
-      } else {
-        initialFormData = initializeUpdateSalaryFormData(sections, initialData);
-      }
-      setFormData(initialFormData);
-    };
-
-    fetchData();
+    let initialFormData = {};
+    if(modeRef.current === "EDIT") {
+      initialFormData = initializeUpdateSalaryFormData(memoizedSections, memoizedInitialData);
+    } else {
+      initialFormData = initializeAddSalaryFormData(memoizedSections, memoizedInitialData);
+    }
+    setFormData(initialFormData);
     setErrors({});
-  }, [sections, initialData, setFormData, fetchEmployeeDetails, setErrors]);
+  }, [ memoizedSections, memoizedInitialData, setFormData, setErrors]);
 
   const handleNext = async () => {
     const validationErrors = await salaryValidation(formData, t);
 
-    if (Object.keys(validationErrors).length > 0) {
+    if (Object.keys(validationErrors).length > 0 && employeeCategory === EMPLOYEE_CATEGORY.MONTHLY_BASIC) {
       setErrors(validationErrors);
-  
+
       if (validationErrors.daysOffCheck) {
         setSnackbar(t("validation.daysOffMismatch"), "error");
       } else {
@@ -70,15 +69,14 @@ function CustomStepperForSalary({ sections, initialData }) {
     setErrors({});
 
     if (activeStep === sections.length - 2) {
-        let initialFormData = {};
-        const transformedData = transformFormDataForSalary(formData, initialData);
-        initialData = await calculateSalaryDetails(transformedData);
-        initialFormData = initializeUpdateSalaryFormData(sections, initialData);
-        setFormData(initialFormData);
-    }  
-    
-    if (activeStep === sections.length - 1) {
+      let initialFormData = {};
+      const transformedData = transformFormDataForSalary(formData, initialData);
+      initialData = await calculateSalaryDetails(transformedData);
+      initialFormData = initializeUpdateSalaryFormData(sections, initialData);
+      setFormData(initialFormData);
+    }
 
+    if (activeStep === sections.length - 1) {
       const transformedData = transformFormDataForSalary(formData, initialData);
 
       try {
@@ -101,14 +99,24 @@ function CustomStepperForSalary({ sections, initialData }) {
         if (response.error) {
           throw new Error(response.error);
         }
-        setSnackbar(initialData?.employeeId ? t("actions.salaryDataUpdated") : t("actions.salaryDataSaved"), "success");
+        setSnackbar(
+          initialData?.employeeId
+            ? t("actions.salaryDataUpdated")
+            : t("actions.salaryDataSaved"),
+          "success"
+        );
         setTimeout(
           () => navigate(`/salary-slip/${employeeId}/${savedSalaryId}`),
           2000
         );
       } catch (error) {
         console.error("Failed to save data", error);
-        setSnackbar(error.message.includes("already exist") ? t("actions.salaryDetailsExist") : t("actions.salaryDataSaveFailed"), "error");
+        setSnackbar(
+          error.message.includes("already exist")
+            ? t("actions.salaryDetailsExist")
+            : t("actions.salaryDataSaveFailed"),
+          "error"
+        );
       }
     } else {
       setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -140,37 +148,45 @@ function CustomStepperForSalary({ sections, initialData }) {
     }
   
     return currentFormData;
-  }, []);
+    },
+    []
+  );
 
   const handleGenerateIncomeTax = useCallback(async () => {
-    const transformedData = transformFormDataForIncomeTax(formData, initialData);
-  
+    const transformedData = transformFormDataForIncomeTax(
+      formData,
+      initialData
+    );
+
     try {
       const response = await generateIncomeTax(transformedData);
-  
+
       if (!response || response.error) {
         throw new Error(response?.error || "Failed to generate income tax");
       }
-  
+
       const newFormData = updateFormDataWithResponse(formData, response.data);
-  
+
       if (newFormData !== formData) {
         setFormData(newFormData);
       }
-  
+
       setShowGenerateButton(false);
-  
     } catch (error) {
       console.error("Error generating income tax:", error);
     }
-  }, [formData, setFormData, initialData, generateIncomeTax, updateFormDataWithResponse]);
+  }, [
+    formData,
+    setFormData,
+    initialData,
+    generateIncomeTax,
+    updateFormDataWithResponse,
+  ]);
 
-  const handleFormChange = handleFormChangeUtil(formData, setFormData, setShowGenerateButton);
+  const handleFormChange = handleFormChangeUtil(formData, setFormData, setShowGenerateButton, employeeCategory);
 
   if (loading) {
-    return (
-        <Loading />
-    );
+    return <Loading />;
   }
 
   return (
@@ -196,14 +212,20 @@ function CustomStepperForSalary({ sections, initialData }) {
             </Box>
           </div>
         ))}
-        <Stack direction="row" spacing={2} sx={{ marginTop: 2, justifyContent: "flex-end" }}>
+        <Stack
+          direction="row"
+          spacing={2}
+          sx={{ marginTop: 2, justifyContent: "flex-end" }}
+        >
           <Button
             variant="contained"
             color="primary"
             onClick={handleNext}
             disabled={activeStep === sections.length || showGenerateButton}
           >
-            {activeStep === sections.length - 1 ? t("button.finish") : t("button.next")}
+            {activeStep === sections.length - 1
+              ? t("button.finish")
+              : t("button.next")}
           </Button>
           {activeStep > 0 && (
             <Button variant="outlined" color="primary" onClick={handleBack}>
@@ -216,7 +238,11 @@ function CustomStepperForSalary({ sections, initialData }) {
             </Button>
           )}
           {showGenerateButton && (
-            <Button variant="contained" color="secondary" onClick={handleGenerateIncomeTax} >
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={handleGenerateIncomeTax}
+            >
               {t("button.generateIncomeTax")}
             </Button>
           )}

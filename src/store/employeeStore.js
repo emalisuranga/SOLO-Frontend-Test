@@ -6,12 +6,13 @@ const api = axios.create({
   baseURL: process.env.REACT_APP_API_BASE_URL || "http://localhost:3000/api",
 });
 
-const useEmployeeStore = create((set) => ({
+const useEmployeeStore = create((set, get) => ({
   employees: [],
   employee: null,
   loading: false,
   error: null,
   nextEmployeeNumber: "",
+  employeeCategory: "",
 
   fetchEmployees: async () => {
     set({ loading: true, error: null });
@@ -27,7 +28,7 @@ const useEmployeeStore = create((set) => ({
     set({ loading: true, error: null });
     try {
       const response = await api.get(`/employees/${id}`);
-      set({ employee: response.data.data, loading: false });
+      set({ employee: response.data.data, loading: false, employeeCategory: response.data.data.category });
       return response.data.data;
     } catch (error) {
       console.error("Error fetching employee details:", error);
@@ -36,7 +37,8 @@ const useEmployeeStore = create((set) => ({
   },
   fetchEmployeeNamesAndIds: async () => {
     try {
-      const response = await api.get("/employees/employee-names-ids");
+      const employeeCategory = get().employeeCategory;
+      const response = await api.get(`/employees/employee-names-ids/${employeeCategory}`);
       return response.data.data;
     } catch (error) {
       console.error("Error fetching employee names and IDs:", error);
@@ -78,9 +80,10 @@ const useEmployeeStore = create((set) => ({
     }
   },
   fetchNextEmployeeNumber: async () => {
+    const employeeCategory = get().employeeCategory;
     set({ loading: true, error: null });
     try {
-      const response = await api.get("/employees/next-employee-number");
+      const response = await api.get(`/employees/next-employee-number/${employeeCategory}`);
       set({
         nextEmployeeNumber: response.data.data.nextEmployeeNumber,
         loading: false,
@@ -120,6 +123,7 @@ const useEmployeeStore = create((set) => ({
       throw error;
     }
   },
+  setEmployeeCategory: (category) => set({ employeeCategory: category }),
 }));
 
 export default useEmployeeStore;
